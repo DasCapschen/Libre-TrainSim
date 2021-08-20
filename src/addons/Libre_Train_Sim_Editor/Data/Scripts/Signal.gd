@@ -3,9 +3,9 @@ extends Spatial
 const type = "Signal" # Never change this type!!
 onready var world = find_parent("World")
 
-
-
-export var status = 0 # 0: Red, 1: Green, -1: Off,
+# blinking if State == Green AND speed > 0
+# orange and red signals never blink!
+export var status = SignalState.Red
 
 var signalAfter = "" # SignalName of the following signal. Set by the route manager from the players train. Just works for the players route. Should only be used for visuals!!
 var signalAfterNode # Reference to the signal after it. Set by the route manager from the players train. Just works for the players route. Should only be used for visuals!!
@@ -19,11 +19,9 @@ var warnSpeed = -1 # Displays the speed of the following speedlimit. Just used f
 
 export var blockSignal = false
 
-var orange = false
-
-
 
 export var visualInstancePath = ""
+
 export (String) var attachedRail # Internal. Never change this via script.
 var attachedRailNode
 export var forward = true # Internal. Never change this via script.
@@ -31,17 +29,16 @@ export (int) var onRailPosition # Internal. Never change this via script.
 
 export (bool) var update setget setToRail # Just uesd for the editor. If it will be pressed, then the function set_get rail will be
 
-var timer = 0
-func _process(delta):
-	timer += delta
-	if timer < 0.5:
-		return
-	timer = 0
 
-	if not Engine.is_editor_hint():
-		if world.time[0] == setPassAtH and world.time[1] == setPassAtM and world.time[2] == setPassAtS:
-			status = 1
-	updateVisualInstance()
+signal red
+signal green
+signal orange
+signal off
+signal warn_speed_changed(new_speed)
+signal speed_changed(new_speed)
+
+
+var timer
 
 func updateVisualInstance():
 	update()
@@ -57,30 +54,87 @@ func updateVisualInstance():
 		return
 
 	if get_node_or_null("VisualInstance") == null:
-		# Load Visual Instance:
-		var visualInstanceResource = null
-		if visualInstancePath != "":
-			visualInstanceResource = load(visualInstancePath)
-		if visualInstanceResource == null:
-			visualInstanceResource = load("res://Resources/Basic/Signals/Default.tscn")
-		var visualInstance = visualInstanceResource.instance()
-		add_child(visualInstance)
-		visualInstance.name = "VisualInstance"
-		visualInstance.owner = self
+		create_visual_instance()
 
+
+func create_visual_instance():
+	print("creating visual instance")
+	var visualInstanceResource = null
+	if visualInstancePath != "":
+		visualInstanceResource = load(visualInstancePath)
+	if visualInstanceResource == null:
+		visualInstanceResource = load("res://Resources/Basic/Signals/Default.tscn")
+	var visualInstance = visualInstanceResource.instance()
+	add_child(visualInstance)
+	visualInstance.name = "VisualInstance"
+	visualInstance.owner = self
+	connect_visual_instance()
+	
+func connect_visual_instance():
+	var visualInstance = get_node_or_null("VisualInstance")
+	self.connect("red", visualInstance, "red")
+	self.connect("orange", visualInstance, "orange")
+	self.connect("green", visualInstance, "green")
+	self.connect("off", visualInstance, "off")
+	self.connect("speed_changed", visualInstance, "update_speed")
+	self.connect("warn_speed_changed", visualInstance, "update_warn_speed")
 
 
 func update():
 	if Engine.is_editor_hint() and blockSignal:
-		status = 1
+		set_state(SignalState.Green)
+	
 	if world == null:
 		world = find_parent("World")
+	
 	if signalAfterNode == null and signalAfter != "":
 		signalAfterNode = world.get_node("Signals/"+String(signalAfter))
+	
+	if not Engine.is_editor_hint() and world.time != null:
+		if world.time[0] >= setPassAtH and world.time[1] >= setPassAtM and world.time[2] >= setPassAtS:
+			set_state(SignalState.Green)
+	
+	# check next signal if this signal is not red.
+	# is next signal red? If yes, go Orange, else stay green
+	if status != SignalState.Red and signalAfterNode != null:
+		match signalAfterNode.status:
+			SignalState.Red:
+				set_state(SignalState.Orange)
+			_: # else...
+				set_state(SignalState.Green)
+	
 
 
+func set_state(new_state):
+	status = new_state
+	match new_state:
+		SignalState.Red:
+			emit_signal("red")
+		SignalState.Orange:
+			emit_signal("orange")
+		SignalState.Green:
+			emit_signal("green")
+		SignalState.Off:
+			emit_signal("off")
+	print("Emitted signal!")
+
+func set_speed(new_speed):
+	speed = new_speed
+	emit_signal("speed_changed", new_speed)
+
+func set_warn_speed(new_speed):
+	warnSpeed = new_speed
+	emit_signal("warn_speed_changed", new_speed)
 
 func _ready():
+	timer = Timer.new()
+	timer.connect("timeout", self, "updateVisualInstance")
+	self.add_child(timer)
+	timer.start()
+	
+	if get_node_or_null("VisualInstance") != null:
+		connect_visual_instance()
+	
 	# Set Signal while adding to the Signals node
 	if Engine.is_editor_hint() and not get_parent().name == "Signals":
 		if get_parent().is_in_group("Rail"):
@@ -90,22 +144,12 @@ func _ready():
 		signals.add_child(self)
 		update()
 		
-
-
 	if blockSignal:
-		status = 1
+		set_state(SignalState.Green)
 	
 	setToRail(true)
-
-
 	update()
-
 	
-
-
-
-
-
 
 
 func setToRail(newvar):
@@ -123,9 +167,7 @@ func setToRail(newvar):
 
 func giveSignalFree():
 	if blockSignal:
-		status = 1
-
-
+		set_state(SignalState.Green)
 
 func get_scenario_data():
 	var d = {}
@@ -138,18 +180,18 @@ func get_scenario_data():
 	return d
 
 func set_scenario_data(d):
-	status = d.status
+	set_state(d.status)
 	setPassAtH = d.setPassAtH
 	setPassAtM = d.setPassAtM
 	setPassAtS = d.setPassAtS
-	speed = d.speed
+	set_speed(d.speed)
 	blockSignal = d.get("blockSignal", false)
 
 
 func reset():
-	status = 0
+	set_state(SignalState.Red)
 	setPassAtH = 25
 	setPassAtM = 0
 	setPassAtS = 0
-	speed = -1
+	set_speed(-1)
 	blockSignal = false

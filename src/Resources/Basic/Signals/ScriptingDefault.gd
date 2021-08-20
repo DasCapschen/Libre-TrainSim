@@ -4,10 +4,15 @@ extends Node
 onready var Signal = get_parent()
 onready var world = find_parent("World")
 
-var orange = false
 var blinking = false
+var timer
 
 func _ready():
+	# blink once a second
+	timer = Timer.new()
+	timer.connect("timeout", self, "blink")
+	self.add_child(timer)
+	
 	$Viewport.set_clear_mode(Viewport.CLEAR_MODE_ONLY_NEXT_FRAME)
 	var texture = $Viewport.get_texture()
 	$Screen1.material_override = $Screen1.material_override.duplicate(true)
@@ -18,85 +23,72 @@ func _ready():
 	$Screen2.material_override = $Screen2.material_override.duplicate(true)
 	$Screen2.material_override.emission_texture = texture
 
-var timer = 0
-func _process(delta):
-	timer += delta
-	if timer > 1:
-		timer = 0
-		update()
-		Signal.orange = orange
-		
-func update():
-	if not Signal.is_in_group("Signal"):
-		printerr("Visual Instance is not directly attached at a SignalNode")
-		return
-	orange = false
-	if world == null:
-		world = find_parent("World")
-	update_screen2()
-	update_screen1()
-	if Signal.warnSpeed != -1 and Signal.status == 1 and not blinking:
-		off()
-		blinking = true
-		return
-	blinking = false
-	if Signal.status == 0:
-		red()
-	elif Signal.status == 1:
-		if Signal.signalAfterNode != null and Signal.signalAfterNode.status == 0:
-			orange()
-			orange = true
-			return
+
+func blink():
+	if blinking:
 		green()
-	elif Signal.status < 0:
+	else:
 		off()
-		
+	blinking = !blinking
+
 func green():
+	print("green")
 	$Red.visible = false
 	$Orange.visible = false
 	$Green.visible = true
+	if Signal.warnSpeed != -1:
+		timer.start()
 
 func red():
+	print("Red")
 	$Red.visible = true
 	$Orange.visible = false
 	$Green.visible = false
 	$Screen1.visible = false
 	$Screen2.visible = false
+	timer.stop()
 
 func orange():
+	print("orange")
 	$Red.visible = false
 	$Orange.visible = true
 	$Green.visible = false
+	timer.stop()
 	
 func off():
+	print("off")
 	$Red.visible = false
 	$Orange.visible = false
 	$Green.visible = false
-	
-	
-func update_screen2():
-	if Signal.speed != -1:
-		if Signal.speed - 100 >= 0:
-			var outputSpeed = int(Signal.speed / 10)
+	timer.stop()
+
+
+func update_speed(new_speed):
+	print("speed update")
+	if new_speed < 0:
+		$Screen2.visible = false
+	else:
+		if new_speed - 100 >= 0:
+			var outputSpeed = int(new_speed / 10)
 			$Viewport2/Node2D/Label.text = String(outputSpeed)
 		else: 
-			var outputSpeed = int(Signal.speed / 10)
+			var outputSpeed = int(new_speed / 10)
 			var string = " " + String(outputSpeed)
 			$Viewport2/Node2D/Label.text = string
 		$Screen2.visible = true
+
+
+func update_warn_speed(new_speed):
+	print("warn speed update")
+	if new_speed < 0:
+		$Screen1.visible = false
 	else:
-		$Screen2.visible = false
-		
-func update_screen1():
-	if Signal.warnSpeed != -1:
-		if Signal.warnSpeed - 100 >= 0:
-			var outputSpeed = int(Signal.warnSpeed / 10)
+		if new_speed - 100 >= 0:
+			var outputSpeed = int(new_speed / 10)
 			$Viewport/Node2D/Label.text = String(outputSpeed)
 		else: 
-			var outputSpeed = int(Signal.warnSpeed / 10)
+			var outputSpeed = int(new_speed / 10)
 			var string = " " + String(outputSpeed)
 			$Viewport/Node2D/Label.text = string
 		$Screen1.visible = true
-	else:
-		$Screen1.visible = false
 		

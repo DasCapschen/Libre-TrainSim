@@ -128,14 +128,12 @@ func update_nextTable(delta):
 	$IngameInformation/Next/GridContainer/DistanceToSignal.text = Math.distance2String(player.distanceToNextSignal)
 	if player.nextSignal != null:
 		match player.nextSignal.status:
-			0:
+			SignalState.Red:
 				$IngameInformation/Next/GridContainer/Signal.texture = redSignal
-			1:
-				if player.nextSignal.orange:
-					$IngameInformation/Next/GridContainer/Signal.texture = orangeSignal
-				else:
-					$IngameInformation/Next/GridContainer/Signal.texture = greenSignal
-			
+			SignalState.Green:
+				$IngameInformation/Next/GridContainer/Signal.texture = greenSignal
+			SignalState.Orange:
+				$IngameInformation/Next/GridContainer/Signal.texture = orangeSignal
 				
 	
 	## Update next Speedlimit

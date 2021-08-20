@@ -661,12 +661,12 @@ func handle_signal(signalname):
 			currentSpeedLimit = signal.speed
 		if signal.warnSpeed != -1: 
 			pass
-		if signal.status == 0:
+		if signal.status == SignalState.Red:
 			send_message(TranslationServer.translate("YOU_OVERRUN_RED_SIGNAL"))
 			overrunRedSignal = true
 		else:
 			freeLastSignalAfterDrivenTrainLength()
-		signal.status = 0
+		signal.set_state(SignalState.Red)
 		lastDrivenSignal = signal
 	elif signal.type == "Station": ## Station
 		if not stations["nodeName"].has(signal.name):
@@ -1226,7 +1226,7 @@ func autopilot(delta):
 	
 	## Red Signal:
 	sollSpeedArr[0] = speedLimit
-	if nextSignal != null and nextSignal.status == 0:
+	if nextSignal != null and nextSignal.status == SignalState.Red:
 		sollSpeedArr[0] = min(sqrt(15*distanceToNextSignal+20), (distanceToNextSignal+10)/4.0)
 		if sollSpeedArr[0] < 10:
 			sollSpeedArr[0] = 0
