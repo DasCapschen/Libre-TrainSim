@@ -37,13 +37,12 @@ func update_info(player):
 	
 	## Doors:
 	$ScrollContainer/VBoxContainer/Doors.visible = player.doors
-	if not (player.doorLeft or player.doorRight):
+	if player.doorStatus == DoorState.CLOSED:
 		$ScrollContainer/VBoxContainer/Doors/dot.texture = green
+	elif player.doorStatus == DoorState.CLOSING:
+		$ScrollContainer/VBoxContainer/Doors/dot.texture = orange
 	else:
-		if player.doorsClosing:
-			$ScrollContainer/VBoxContainer/Doors/dot.texture = orange
-		else:
-			$ScrollContainer/VBoxContainer/Doors/dot.texture = red
+		$ScrollContainer/VBoxContainer/Doors/dot.texture = red
 	
 	## Control Type:
 	if player.controlType == 0:

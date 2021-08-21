@@ -29,7 +29,7 @@ var leave_wagon_timer = 0
 func handleWalk(delta):
 	
 	# If Doors where closed to early, and the person is at the station..
-	if transitionToWagon == true and not (attachedWagon.lastDoorRight or attachedWagon.lastDoorLeft):
+	if transitionToWagon == true and (attachedWagon.lastDoorStatus == DoorState.CLOSED):
 		if attachedWagon.player.currentStationNode != attachedStation:
 			transitionToWagon = false
 			destinationPos.clear()
@@ -48,7 +48,7 @@ func handleWalk(delta):
 			transitionToWagon = false
 			attachedWagon.registerPerson(self, assignedDoor)
 			assignedDoor = null
-		if transitionToStation and (attachedWagon.lastDoorRight or attachedWagon.lastDoorLeft):
+		if transitionToStation and (attachedWagon.lastDoorStatus & DoorState.BOTH):
 			leave_wagon_timer += delta
 			if leave_wagon_timer > 1.8:
 				leave_wagon_timer = 0

@@ -141,23 +141,18 @@ func change_to_next_rail():
 	if not forward:
 		distanceOnRail += currentRail.length
 
-var lastDoorRight = false
-var lastDoorLeft = false
-var lastDoorsClosing = false
+var lastDoorStatus = DoorState.CLOSED
 func check_doors():
-	if player.doorRight and not lastDoorRight:
+	if (player.doorStatus & DoorState.RIGHT) and not (lastDoorStatus & DoorState.RIGHT):
 		$DoorRight.play("open")
-	if player.doorRight and not lastDoorsClosing and player.doorsClosing:
+	if (lastDoorStatus & DoorState.RIGHT) and player.doorStatus == DoorState.CLOSING:
 		$DoorRight.play_backwards("open")
-	if player.doorLeft and not lastDoorLeft:
+	if (player.doorStatus & DoorState.LEFT) and not (lastDoorStatus & DoorState.LEFT):
 		$DoorLeft.play("open")
-	if player.doorLeft and not lastDoorsClosing and player.doorsClosing:
+	if (lastDoorStatus & DoorState.LEFT) and player.doorStatus == DoorState.CLOSING:
 		$DoorLeft.play_backwards("open")
 		
-	
-	lastDoorRight = player.doorRight
-	lastDoorLeft = player.doorLeft
-	lastDoorsClosing = player.doorsClosing
+	lastDoorStatus = player.doorStatus
 
 var lastPantograph = false
 var lastPantographUp = false

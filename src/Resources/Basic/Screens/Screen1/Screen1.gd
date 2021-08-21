@@ -57,7 +57,7 @@ func _process(delta):
 
 	
 var lastAutoPilot = false
-func update_display(speed, command, doorLeft, doorRight, doorsClosing, enforcedBreaking, sifa, autopilot, speedLimit, engine):
+func update_display(speed, command, doorStatus, enforcedBreaking, sifa, autopilot, speedLimit, engine):
 	## Tachos:
 	$SpeedPointer.rotation_degrees = SpeedPointerZero+SpeedPerKmH*speed 
 	SollCommandPointer = CommandPointerZero+CommandPerPercent*command*100 
@@ -80,13 +80,13 @@ func update_display(speed, command, doorLeft, doorRight, doorsClosing, enforcedB
 	$Sifa.visible = sifa
 	
 	## Doors:
-	if doorsClosing:
+	if doorStatus == DoorState.CLOSING:
 		$Doors.visible = blinkStatus
 	else:
 		$Doors.visible = true
-	$Doors/Right.visible = doorRight
-	$Doors/Left.visible = doorLeft
-	$Doors/Door.visible = doorLeft or doorRight
+	$Doors/Right.visible = doorStatus & DoorState.RIGHT
+	$Doors/Left.visible = doorStatus & DoorState.LEFT
+	$Doors/Door.visible = doorStatus & DoorState.BOTH
 	
 #	if not lastAutoPilot and autopilot:
 #		$AnimationPlayerAutoPilot.play("autopilot")

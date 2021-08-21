@@ -550,12 +550,11 @@ func spawnTrain(trainName):
 		0:
 			pass
 		1: 
-			player.doorLeft = true
+			player.doorStatus = DoorState.LEFT
 		2:
-			player.doorRight = true
+			player.doorStatus = DoorState.RIGHT
 		3:
-			player.doorLeft = true
-			player.doorRight = true
+			player.doorStatus = DoorState.BOTH
 	
 	player.ready()
 	
