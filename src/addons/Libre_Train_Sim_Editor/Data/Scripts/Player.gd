@@ -238,12 +238,8 @@ func processLong(delta): ## All functions in it are called every (processLongDel
 		initialSwitchCheck = true
 
 
-
 var processLongTimer = 0
-
 func _process(delta):
-	
-			
 	if Input.is_action_just_pressed("debug")  and not ai:
 		debug = !debug
 		if debug:
@@ -292,9 +288,7 @@ func _process(delta):
 
 	if not ai:
 		handleCamera(delta)
-	
 
-	
 	if electric:
 		check_pantograph(delta)
 	
@@ -307,28 +301,20 @@ func _process(delta):
 	check_signals()
 	
 	check_station(delta)
-	
-	
-	
+
 	if sifaEnabled:
 		check_sifa(delta)
-	
-	
-	
+
 	handle_input()
 	
 	currentRailRadius = currentRail.radius
 	
 	if not ai:
 		updateTrainAudioBus()
-		
-	
+
 	handleEngine()
 	
 	check_overdriving_a_switch()
-	
-	
-	
 	
 
 func handleEngine():
@@ -413,6 +399,8 @@ func getCommand(delta):
 		blockedAcceleration = true
 	if (doorRight or doorLeft):
 		blockedAcceleration = true
+	if reverser == ReverserState.NEUTRAL:
+		blockedAcceleration = true
 		
 	technicalSoll = soll_command
 	
@@ -450,7 +438,9 @@ func getSpeed(delta):
 	## Slope:
 	var currentSlope = currentRail.get_heightRot(distanceOnRail)
 	if not forward:
-		currentSlope = - currentSlope
+		currentSlope = -currentSlope
+	if reverser == ReverserState.REVERSE:
+		currentSlope = -currentSlope
 	var slopeAcceleration = -currentSlope/10
 	speed += slopeAcceleration *delta
 	
@@ -481,21 +471,18 @@ func getSpeed(delta):
 		speed = 200*command
 
 func drive(delta):
-	var drivenDistance
-	if forward:
-		drivenDistance = speed * delta
-		distanceOnRail += drivenDistance
-		distance += drivenDistance
-		if distanceOnRail > currentRail.length:
-#			drivenDistance = distanceOnRail - currentRail.length
-			change_to_next_rail()
-	else:
-		drivenDistance = speed * delta
-		distanceOnRail -= drivenDistance
-		distance += drivenDistance
-		if distanceOnRail < 0:
-#			drivenDistance = 0 - distanceOnRail
-			change_to_next_rail()
+	var drivenDistance = speed * delta
+	distance += drivenDistance
+
+	if not forward:
+		drivenDistance = -drivenDistance
+	if reverser == ReverserState.REVERSE:
+		drivenDistance = -drivenDistance
+
+	distanceOnRail += drivenDistance
+
+	if distanceOnRail > currentRail.length or distanceOnRail < 0:
+		change_to_next_rail()
 	
 	if not rendering: return
 	if forward:
