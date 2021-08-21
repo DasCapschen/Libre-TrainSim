@@ -722,7 +722,7 @@ func check_station(delta):
 		if (speed == 0 and not isInStation and distance-distanceOnStationBeginning+GOODWILL_DISTANCE<length) and not wholeTrainNotInStation and not stationBeginning:
 			wholeTrainNotInStation = true
 			send_message(TranslationServer.translate("END_OF_YOUR_TRAIN_NOT_IN_STATION"))
-		if ((speed == 0 and not isInStation and distance-distanceOnStationBeginning>=length) and not (doorStatus & DoorState.BOTH)):
+		if ((speed == 0 and not isInStation and distance-distanceOnStationBeginning>=length) and doorStatus == DoorState.CLOSED):
 			doorOpenMessageSentTimer += delta
 			if doorOpenMessageSentTimer > 5 and not doorOpenMessageSent:
 				send_message(TranslationServer.translate("HINT_OPEN_DOORS"))
@@ -774,7 +774,7 @@ func check_station(delta):
 					elif not ai:
 						jAudioManager.play_game_sound(stations["departureAnnouncePath"][current_station_index])
 					leave_current_station()
-		elif (speed != 0 and isInStation) and not (doorStatus & DoorState.BOTH):
+		elif (speed != 0 and isInStation) and (doorStatus == DoorState.CLOSED):
 			send_message(TranslationServer.translate("YOU_DEPARTED_EARLIER"))
 			leave_current_station()
 		elif (stationLength+GOODWILL_DISTANCE<distance-distanceOnStationBeginning) and currentStationName != "" and not stationBeginning:
@@ -853,13 +853,13 @@ func send_message(string):
 var doorsClosingTimer = 0
 
 func open_left_doors():
-	if not (doorStatus & (DoorState.LEFT | DoorState.CLOSING)) and speed == 0:
+	if not (doorStatus & (DoorState.LEFT | DoorState.MOVING)) and speed == 0:
 		if not $Sound/DoorsOpen.playing: 
 			$Sound/DoorsOpen.play()
 		doorStatus = DoorState.LEFT
 		
 func open_right_doors():
-	if not (doorStatus & (DoorState.RIGHT | DoorState.CLOSING)) and speed == 0:
+	if not (doorStatus & (DoorState.RIGHT | DoorState.MOVING)) and speed == 0:
 		if not $Sound/DoorsOpen.playing: 
 			$Sound/DoorsOpen.play()
 		doorStatus = DoorState.RIGHT
