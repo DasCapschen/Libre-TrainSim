@@ -47,13 +47,11 @@ var stationLength = 0 # stores the stationlength
 var stationHaltTime = 0 # stores the minimal halt time from station 
 var arrivalTime = time # stores the arrival time. (from the timetable)
 var depatureTime = time # stores the departure time. (from the timetable)
-var platformSide = 0 # Stores where the plaform is. #0: No platform, 1: at left side, 2: at right side, 3: at both sides
+var platformSide = PlatformSide.NONE # Stores where the plaform is.
 
-export var doors = true 
+export var doors = true # If the train has doors, I presume?
 export var doorsClosingTime = 7
-var doorRight = false # If Door is Open, then its true
-var doorLeft = false
-var doorsClosing = false
+var doorStatus = DoorState.CLOSED
 
 export var brakingSpeed = 0.3
 export var brakeReleaseSpeed = 0.2
@@ -151,9 +149,7 @@ func ready(): ## Called by World!
 		sifaEnabled = false
 
 	if not doors:
-		doorLeft = false
-		doorRight = false
-		doorsClosing = false
+		doorStatus = DoorState.CLOSED
 	
 	if not electric:
 		pantograph = true
@@ -176,6 +172,7 @@ func ready(): ## Called by World!
 	else:
 		self.transform = currentRail.get_transform_at_rail_distance(distanceOnRail)
 		rotate_object_local(Vector3(0,1,0), deg2rad(180))
+	
 	if debug and not ai: 
 		command = 0
 		soll_command = 0
@@ -404,7 +401,7 @@ func getCommand(delta):
 		blockedAcceleration = false
 	if command < 0 and not Root.EasyMode and not ai:
 		blockedAcceleration = true
-	if (doorRight or doorLeft):
+	if doorStatus & DoorState.BOTH: # if left or right or both
 		blockedAcceleration = true
 		
 	technicalSoll = soll_command
@@ -725,12 +722,12 @@ func check_station(delta):
 		if (speed == 0 and not isInStation and distance-distanceOnStationBeginning+GOODWILL_DISTANCE<length) and not wholeTrainNotInStation and not stationBeginning:
 			wholeTrainNotInStation = true
 			send_message(TranslationServer.translate("END_OF_YOUR_TRAIN_NOT_IN_STATION"))
-		if ((speed == 0 and not isInStation and distance-distanceOnStationBeginning>=length) and not (doorLeft or doorRight)):
+		if ((speed == 0 and not isInStation and distance-distanceOnStationBeginning>=length) and not (doorStatus & DoorState.BOTH)):
 			doorOpenMessageSentTimer += delta
 			if doorOpenMessageSentTimer > 5 and not doorOpenMessageSent:
 				send_message(TranslationServer.translate("HINT_OPEN_DOORS"))
 				doorOpenMessageSent = true
-		if ((speed == 0 and not isInStation and distance-distanceOnStationBeginning>=length) and (doorLeft or doorRight or platformSide == 0)) or (stationBeginning and not isInStation):
+		if ((speed == 0 and not isInStation and distance-distanceOnStationBeginning>=length) and ((doorStatus & DoorState.BOTH) or platformSide == PlatformSide.NONE)) or (stationBeginning and not isInStation):
 			realArrivalTime = time
 			var lateMessage = ". "
 			if not stationBeginning:
@@ -777,7 +774,7 @@ func check_station(delta):
 					elif not ai:
 						jAudioManager.play_game_sound(stations["departureAnnouncePath"][current_station_index])
 					leave_current_station()
-		elif (speed != 0 and isInStation) and not (doorLeft or doorRight):
+		elif (speed != 0 and isInStation) and not (doorStatus & DoorState.BOTH):
 			send_message(TranslationServer.translate("YOU_DEPARTED_EARLIER"))
 			leave_current_station()
 		elif (stationLength+GOODWILL_DISTANCE<distance-distanceOnStationBeginning) and currentStationName != "" and not stationBeginning:
@@ -856,24 +853,25 @@ func send_message(string):
 var doorsClosingTimer = 0
 
 func open_left_doors():
-	if not doorLeft and speed == 0 and not doorsClosing:
+	if not (doorStatus & (DoorState.LEFT | DoorState.CLOSING)) and speed == 0:
 		if not $Sound/DoorsOpen.playing: 
 			$Sound/DoorsOpen.play()
-		doorLeft = true
+		doorStatus = DoorState.LEFT
 		
 func open_right_doors():
-	if not doorRight and speed == 0 and not doorsClosing:
+	if not (doorStatus & (DoorState.RIGHT | DoorState.CLOSING)) and speed == 0:
 		if not $Sound/DoorsOpen.playing: 
 			$Sound/DoorsOpen.play()
-		doorRight = true
+		doorStatus = DoorState.RIGHT
 
 func close_doors():
-	if not doorsClosing and (doorLeft or doorRight):
-		doorsClosing = true
+	# if left door, or right door, or both doors are open, and the doors are not moving
+	if not (doorStatus & DoorState.MOVING) and (doorStatus & DoorState.BOTH):
+		doorStatus = DoorState.CLOSING
 		$Sound/DoorsClose.play()
 		
 func force_close_doors():
-	doorsClosing = true
+	doorStatus = DoorState.CLOSING
 	doorsClosingTimer = doorsClosingTime - 0.1
 
 func check_doors(delta):
@@ -886,12 +884,10 @@ func check_doors(delta):
 	if Input.is_action_just_pressed("doorRight") and not ai:
 		jAudioManager.play_game_sound("res://Resources/Basic/Sounds/click.ogg")
 		open_right_doors()
-	if doorsClosing:
+	if doorStatus == DoorState.CLOSING:
 		doorsClosingTimer += delta
 	if doorsClosingTimer > doorsClosingTime:
-		doorsClosing = false
-		doorRight = false
-		doorLeft = false
+		doorStatus = DoorState.CLOSED
 		doorsClosingTimer = 0
 		
 		
@@ -1072,7 +1068,7 @@ func check_for_player_help(delta):
 		check_for_player_helpTimer = 0
 	
 	check_for_player_helpTimer2 += delta
-	if blockedAcceleration and accRoll > 0 and brakeRoll == 0 and not (doorRight or doorLeft) and not overrunRedSignal and check_for_player_helpTimer2 > 10 and not isInStation:
+	if blockedAcceleration and accRoll > 0 and brakeRoll == 0 and doorStatus == DoorState.CLOSED and not overrunRedSignal and check_for_player_helpTimer2 > 10 and not isInStation:
 		send_message(TranslationServer.translate("HINT_ADVANCED_DRIVING"))
 		check_for_player_helpTimer2 = 0
 		
@@ -1216,8 +1212,8 @@ func autopilot(delta):
 	if isInStation:
 		sollSpeed = 0
 		return
-	if (doorLeft or doorRight) and not doorsClosing:
-		doorsClosing = true
+	if (doorStatus & DoorState.BOTH) and not (doorStatus & DoorState.MOVING):
+		doorStatus = DoorState.CLOSING
 		$Sound/DoorsClose.play()
 		
 	
@@ -1252,15 +1248,14 @@ func autopilot(delta):
 			
 	## Open Doors:
 	if (currentStationName != "" and speed == 0 and not isInStation and distance-distanceOnStationBeginning>=length):
-		if nextStationNode.platformSide == 1:
-			doorLeft = true
+		if nextStationNode.platformSide == PlatformSide.LEFT:
+			doorStatus = DoorState.LEFT
 			$Sound/DoorsOpen.play()
-		elif nextStationNode.platformSide == 2:
-			doorRight = true
+		elif nextStationNode.platformSide == PlatformSide.RIGHT:
+			doorStatus = DoorState.RIGHT
 			$Sound/DoorsOpen.play()
-		elif nextStationNode.platformSide == 3:
-			doorLeft = true
-			doorRight = true
+		elif nextStationNode.platformSide == PlatformSide.BOTH:
+			doorStatus = DoorState.BOTH
 			$Sound/DoorsOpen.play()
 	
 	
@@ -1387,12 +1382,12 @@ func sendDoorPositionsToCurrentStation():
 			var backward_basis = forward_transform.basis.rotated(Vector3(0,1,0), deg2rad(180)) # Maybe this could break on ascending/descanding rails..
 			var backward_transform = Transform(backward_basis, forward_transform.origin)
 			wagonTransform = backward_transform
-		if (currentStationNode.platformSide == 1): # Left
+		if (currentStationNode.platformSide == PlatformSide.LEFT):
 			for door in wagon.leftDoors:
 				door.worldPos = (wagonTransform.translated(door.translation).origin)
 				doors.append(door)
 				doorsWagon.append(wagon)
-		if (currentStationNode.platformSide == 2): # Right
+		if (currentStationNode.platformSide == PlatformSide.RIGHT):
 			for door in wagon.rightDoors:
 				door.worldPos = (wagonTransform.translated(door.translation).origin)
 				doors.append(door)
