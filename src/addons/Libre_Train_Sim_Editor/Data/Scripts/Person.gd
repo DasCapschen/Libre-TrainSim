@@ -11,9 +11,8 @@ var destinationIsSeat = false
 var transitionToWagon = false
 var transitionToStation = false
 
-var status = 0
-#0 Walking To Position
-#1: Sitting
+# TODO: this variable is unused?
+var status = PersonState.WALKING
 
 var destinationPos = []
 

@@ -15,6 +15,11 @@ _global_script_classes=[ {
 "path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/Enums/DoorState.gd"
 }, {
 "base": "Reference",
+"class": "PersonState",
+"language": "GDScript",
+"path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/Enums/PersonState.gd"
+}, {
+"base": "Reference",
 "class": "PlatformSide",
 "language": "GDScript",
 "path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/Enums/PlatformSide.gd"
@@ -31,6 +36,7 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "DoorState": "",
+"PersonState": "",
 "PlatformSide": "",
 "SignalState": "",
 "TimeField": ""
