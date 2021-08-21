@@ -1240,24 +1240,29 @@ func toggle_automatic_driving():
 		soll_speed_enabled = false
 		print("Automatic Driving disabled")
 	else:
-		print("Automatic Driving enabled")
+		print("AutomaticDriving enabled")
 
 var autopilot_in_station = true
 
 var update_next_signal_timer = 0
-func update_next_signal(delta):
+func updateNextSignal(delta):
 	if next_signal == null:
-		if get_all_upcoming_signals_of_types([SignalType.SIGNAL]).size() == 0: return
-		next_signal = world.get_node("Signals").get_node(get_all_upcoming_signals_of_types([SignalType.SIGNAL])[0])
+		next_signal = get_next_signal()
+		if next_signal == null: return
 		update_next_signal_timer = 1 ## Force Update Signal
 	update_next_signal_timer += delta
 	if update_next_signal_timer > 0.2:
 		distance_to_next_signal = get_distance_to_signal(next_signal.name)
 		update_next_signal_timer = 0
 
+func get_next_signal():
+	var all = get_all_upcoming_signals_of_types([SignalType.SIGNAL])
+	if all.size() > 0:
+		return all[0]
+	return null
 
 var update_next_speed_limit_timer = 0
-func update_next_speed_limit(delta):
+func updateNextSpeedLimit(delta):
 	if next_speed_limit_node == null:
 		next_speed_limit_node = get_next_speed_limit()
 		if next_speed_limit_node == null:
@@ -1280,14 +1285,18 @@ var next_station_node = null
 var distance_to_next_station = 0
 var update_next_station_timer = 0
 func update_next_station(delta):  ## Used for Autopilot
-	distance_to_next_station -= speed*delta
 	if next_station_node == null:
-		if get_all_upcoming_signals_of_types([SignalType.STATION]).size() > 0:
-			next_station_node = world.get_node("Signals").get_node(get_all_upcoming_signals_of_types([SignalType.STATION])[0])
-			next_station_node.set_waiting_persons(stations["waiting_persons"][0]/100.0 * world.default_persons_at_station)
-			distance_to_next_station = get_distance_to_signal(next_station_node.name) + next_station_node.station_length
+		var upcoming = get_next_station()
+		if upcoming == null: return
+		next_station_node = world.get_node("Signals").get_node(upcoming)
+		next_station_node.set_waiting_persons(stations["waiting_persons"][0]/100.0 * world.default_persons_at_station)
+	distance_to_next_station = get_distance_to_signal(next_station_node.name) + next_station_node.stationLength
 
-
+func get_next_station():
+	var all = get_all_upcoming_signals_of_types([SignalType.STATION])
+	if all.size() > 0:
+		return all[0]
+	return null
 
 func autopilot(delta):
 	debug_lights(self)
