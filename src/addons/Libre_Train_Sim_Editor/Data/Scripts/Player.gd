@@ -315,7 +315,6 @@ func _process(delta):
 		handle_camera(delta)
 	
 
-	
 	if electric:
 		check_pantograph(delta)
 	
@@ -329,13 +328,9 @@ func _process(delta):
 	
 	check_station(delta)
 	
-	
-	
 	if is_sifa_enabled:
 		check_sifa(delta)
-	
-	
-	
+
 	handle_input()
 	
 	current_rail_radius = current_rail.radius
@@ -343,13 +338,9 @@ func _process(delta):
 	if not ai:
 		update_train_audio_bus()
 		
-	
 	handle_engine()
 	
 	check_overdriving_a_switch()
-	
-	
-	
 	
 
 func handle_engine():
@@ -439,6 +430,8 @@ func get_command(delta):
 		blocked_acceleration = true
 	if door_status & DoorState.BOTH: # if left or right or both
 		blocked_acceleration = true
+	if reverser == ReverserState.NEUTRAL:
+		blockedAcceleration = true
 		
 	technical_soll = soll_command
 	
@@ -476,7 +469,9 @@ func get_speed(delta):
 	## Slope:
 	var current_slope = current_rail.get_height_rot(distance_on_rail)
 	if not forward:
-		current_slope = - current_slope
+		current_slope = -current_slope
+	if reverser == ReverserState.REVERSE:
+		current_slope = -current_slope
 	var slope_acceleration = -current_slope/10
 	speed += slope_acceleration *delta
 	
@@ -507,21 +502,18 @@ func get_speed(delta):
 		speed = 200*command
 
 func drive(delta):
-	var driven_distance
-	if forward:
-		driven_distance = speed * delta
-		distance_on_rail += driven_distance
-		distance += driven_distance
-		if distance_on_rail > current_rail.length:
-#			driven_distance = distance_on_rail - current_rail.length
-			change_to_next_rail()
-	else:
-		driven_distance = speed * delta
-		distance_on_rail -= driven_distance
-		distance += driven_distance
-		if distance_on_rail < 0:
-#			driven_distance = 0 - distance_on_rail
-			change_to_next_rail()
+	var driven_distance = speed * delta
+	distance += driven_distance
+
+	if not forward:
+		driven_distance = -driven_distance
+	if reverser == ReverserState.REVERSE:
+		driven_distance = -driven_distance
+
+	distance_on_rail += driven_distance
+
+	if distance_on_rail > current_rail.length or distance_on_rail < 0:
+		change_to_next_rail()
 	
 	if not rendering: return
 	if forward:
