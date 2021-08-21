@@ -165,7 +165,7 @@ emission_operator = 1
 emission_on_uv2 = false
 
 [sub_resource type="QuadMesh" id=31]
-size = Vector2( 1.3, 0.9 )
+size = Vector2( 1, 0.75 )
 
 [sub_resource type="ArrayMesh" id=9]
 surfaces/0 = {
@@ -935,17 +935,17 @@ material/4 = null
 [node name="Reverser" type="MeshInstance" parent="Cabin"]
 transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 7.046, 2.5135, 0.0444686 )
 mesh = ExtResource( 7 )
-material/0 = null
+material/0 = ExtResource( 3 )
 
 [node name="ScreenReverser" type="MeshInstance" parent="Cabin"]
-transform = Transform( -5.24537e-09, 0.12, 4.37114e-08, 0, -5.24537e-09, 1, 0.12, 5.24537e-09, 1.91069e-15, 7.046, 2.51304, 0 )
+transform = Transform( -6.11959e-09, 0.14, 4.37114e-08, 0, -6.11959e-09, 1, 0.14, 6.11959e-09, 1.91069e-15, 7.046, 2.51304, 0 )
 material_override = SubResource( 30 )
 cast_shadow = 0
 mesh = SubResource( 31 )
 material/0 = null
 
 [node name="DisplayReverser" type="Viewport" parent="Cabin"]
-size = Vector2( 1300, 900 )
+size = Vector2( 1200, 800 )
 usage = 0
 render_target_v_flip = true
 
