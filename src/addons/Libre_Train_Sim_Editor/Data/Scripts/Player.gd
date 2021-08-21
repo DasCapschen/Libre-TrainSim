@@ -1247,8 +1247,9 @@ var autopilot_in_station = true
 var update_next_signal_timer = 0
 func updateNextSignal(delta):
 	if next_signal == null:
-		next_signal = get_next_signal()
-		if next_signal == null: return
+		var upcoming = get_next_signal()
+		if upcoming == null: return
+		next_signal = world.get_node("Signals/"+upcoming)
 		update_next_signal_timer = 1 ## Force Update Signal
 	update_next_signal_timer += delta
 	if update_next_signal_timer > 0.2:
