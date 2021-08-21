@@ -16,8 +16,6 @@ var status = PersonState.WALKING
 
 var destinationPos = []
 
-var stopping = false # Used, if for example doors where closed to early
-
 func _ready():
 	walkingSpeed = rand_range(walkingSpeed, walkingSpeed+0.3)
 
@@ -33,12 +31,11 @@ func handleWalk(delta):
 			transitionToWagon = false
 			destinationPos.clear()
 		else:
-			stopping = true
+			status = PersonState.STOPPING
 			if $VisualInstance/AnimationPlayer.current_animation != "Standing":
 				$VisualInstance/AnimationPlayer.play("Standing")
-	else:
-		stopping = false
-	
+	elif status == PersonState.STOPPING:
+		status = PersonState.WALKING
 	
 	if destinationPos.size() == 0:
 		if transitionToWagon: 
@@ -56,22 +53,24 @@ func handleWalk(delta):
 		if destinationIsSeat and translation.distance_to(attachedSeat.translation) < 0.1:
 			destinationIsSeat = false
 			rotation_degrees.y = attachedSeat.rotation_degrees.y + 90
-
+			status = PersonState.SITTING
 			## Animation Sitting
 			$VisualInstance/AnimationPlayer.play("Sitting")
 		elif !$VisualInstance/AnimationPlayer.is_playing() and attachedSeat == null:
+			status = PersonState.STANDING
 			$VisualInstance/AnimationPlayer.play("Standing")
 
 		return
 	
 	if !$VisualInstance/AnimationPlayer.is_playing():
+		status = PersonState.WALKING
 		$VisualInstance/AnimationPlayer.play("Walking")
 	
 	if translation.distance_to(destinationPos[0]) < 0.1:
 		destinationPos.pop_front()
 		return
 	else:
-		if not stopping:
+		if status != PersonState.STOPPING:
 			translation = translation.move_toward(destinationPos[0], delta*walkingSpeed)
 			var vector_delta = destinationPos[0] - translation
 #			rotation_degrees.y = rad2deg(translation.angle_to(destinationPos[0]))
