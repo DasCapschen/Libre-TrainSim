@@ -1468,6 +1468,9 @@ func overdriven_switch():
 	pass
 
 func change_reverser(change):
+	if speed != 0:
+		return
+
 	match reverser:
 		ReverserState.FORWARD:
 			if change < 0:
