@@ -1,8 +1,8 @@
 class_name SignalState
 
 enum {
-	Off = -1,
-	Red = 0,
-	Green = 1,
-	Orange = 2,
+	OFF = -1,
+	RED = 0,
+	GREEN = 1,
+	ORANGE = 2,
 }

@@ -5,7 +5,7 @@ onready var world = find_parent("World")
 
 # blinking if State == Green AND speed > 0
 # orange and red signals never blink!
-export var status = SignalState.Red
+export var status = SignalState.RED
 
 var signalAfter = "" # SignalName of the following signal. Set by the route manager from the players train. Just works for the players route. Should only be used for visuals!!
 var signalAfterNode # Reference to the signal after it. Set by the route manager from the players train. Just works for the players route. Should only be used for visuals!!
@@ -82,7 +82,7 @@ func connect_visual_instance():
 
 func update():
 	if Engine.is_editor_hint() and blockSignal:
-		set_state(SignalState.Green)
+		set_state(SignalState.GREEN)
 	
 	if world == null:
 		world = find_parent("World")
@@ -92,29 +92,29 @@ func update():
 	
 	if not Engine.is_editor_hint() and world.time != null:
 		if world.time[0] >= setPassAtH and world.time[1] >= setPassAtM and world.time[2] >= setPassAtS:
-			set_state(SignalState.Green)
+			set_state(SignalState.GREEN)
 	
 	# check next signal if this signal is not red.
 	# is next signal red? If yes, go Orange, else stay green
-	if status != SignalState.Red and signalAfterNode != null:
+	if status != SignalState.RED and signalAfterNode != null:
 		match signalAfterNode.status:
-			SignalState.Red:
-				set_state(SignalState.Orange)
+			SignalState.RED:
+				set_state(SignalState.ORANGE)
 			_: # else...
-				set_state(SignalState.Green)
+				set_state(SignalState.GREEN)
 	
 
 
 func set_state(new_state):
 	status = new_state
 	match new_state:
-		SignalState.Red:
+		SignalState.RED:
 			emit_signal("red")
-		SignalState.Orange:
+		SignalState.ORANGE:
 			emit_signal("orange")
-		SignalState.Green:
+		SignalState.GREEN:
 			emit_signal("green")
-		SignalState.Off:
+		SignalState.OFF:
 			emit_signal("off")
 	print("Emitted signal!")
 
@@ -145,7 +145,7 @@ func _ready():
 		update()
 		
 	if blockSignal:
-		set_state(SignalState.Green)
+		set_state(SignalState.GREEN)
 	
 	setToRail(true)
 	update()
@@ -167,7 +167,7 @@ func setToRail(newvar):
 
 func giveSignalFree():
 	if blockSignal:
-		set_state(SignalState.Green)
+		set_state(SignalState.GREEN)
 
 func get_scenario_data():
 	var d = {}
@@ -189,7 +189,7 @@ func set_scenario_data(d):
 
 
 func reset():
-	set_state(SignalState.Red)
+	set_state(SignalState.RED)
 	setPassAtH = 25
 	setPassAtM = 0
 	setPassAtS = 0
