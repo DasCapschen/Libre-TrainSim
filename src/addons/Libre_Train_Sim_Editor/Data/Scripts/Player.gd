@@ -231,9 +231,7 @@ func processLong(delta): ## All functions in it are called every (processLongDel
 
 var processLongTimer = 0
 
-func _process(delta):
-	
-			
+func _process(delta):	
 	if Input.is_action_just_pressed("debug")  and not ai:
 		debug = !debug
 		if debug:
@@ -856,13 +854,17 @@ func open_left_doors():
 	if not (doorStatus & (DoorState.LEFT | DoorState.MOVING)) and speed == 0:
 		if not $Sound/DoorsOpen.playing: 
 			$Sound/DoorsOpen.play()
-		doorStatus = DoorState.LEFT
+		doorStatus = (doorStatus | DoorState.LEFT) & ~DoorState.CLOSED
 		
 func open_right_doors():
 	if not (doorStatus & (DoorState.RIGHT | DoorState.MOVING)) and speed == 0:
 		if not $Sound/DoorsOpen.playing: 
 			$Sound/DoorsOpen.play()
-		doorStatus = DoorState.RIGHT
+		# ADD right to door state, REMOVE closed from door state
+		# is equal to: 
+		#     if doors are closed, set door state = right
+		#     if doors are left, set door state = both
+		doorStatus = (doorStatus | DoorState.RIGHT) & ~DoorState.CLOSED
 
 func close_doors():
 	# if left door, or right door, or both doors are open, and the doors are not moving
