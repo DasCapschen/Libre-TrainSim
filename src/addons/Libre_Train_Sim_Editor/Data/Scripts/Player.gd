@@ -1194,8 +1194,9 @@ var autoPilotInStation = true
 var updateNextSignalTimer = 0
 func updateNextSignal(delta):
 	if nextSignal == null:
-		nextSignal = get_next_Signal()
-		if nextSignal == null: return
+		var upcoming = get_next_Signal()
+		if upcoming == null: return
+		nextSignal = world.get_node("Signals/"+upcoming)
 		updateNextSignalTimer = 1 ## Force Update Signal
 	updateNextSignalTimer += delta
 	if updateNextSignalTimer > 0.2:
