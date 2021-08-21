@@ -5,7 +5,7 @@ onready var world = find_parent("World")
 
 # blinking if State == Green AND speed > 0
 # orange and red signals never blink!
-export var status = SignalState.RED
+export(int, "Off", "Red", "Green", "Orange") var status = SignalState.RED
 
 var signalAfter = "" # SignalName of the following signal. Set by the route manager from the players train. Just works for the players route. Should only be used for visuals!!
 var signalAfterNode # Reference to the signal after it. Set by the route manager from the players train. Just works for the players route. Should only be used for visuals!!
@@ -71,13 +71,31 @@ func create_visual_instance():
 	connect_visual_instance()
 	
 func connect_visual_instance():
+	# get visual instance
 	var visualInstance = get_node_or_null("VisualInstance")
+	if visualInstance == null:
+		return
+
+	# connect signals to visual instance
 	self.connect("red", visualInstance, "red")
 	self.connect("orange", visualInstance, "orange")
 	self.connect("green", visualInstance, "green")
 	self.connect("off", visualInstance, "off")
 	self.connect("speed_changed", visualInstance, "update_speed")
 	self.connect("warn_speed_changed", visualInstance, "update_warn_speed")
+
+	# signal current state to visual instance
+	match status:
+		SignalState.RED:
+			emit_signal("red")
+		SignalState.ORANGE:
+			emit_signal("orange")
+		SignalState.GREEN:
+			emit_signal("green")
+		SignalState.OFF:
+			emit_signal("off")
+	emit_signal("speed_changed", speed)
+	emit_signal("warn_speed_changed", warnSpeed)
 
 
 func update():
@@ -106,6 +124,8 @@ func update():
 
 
 func set_state(new_state):
+	if new_state == status:
+		return
 	status = new_state
 	match new_state:
 		SignalState.RED:
@@ -116,7 +136,6 @@ func set_state(new_state):
 			emit_signal("green")
 		SignalState.OFF:
 			emit_signal("off")
-	print("Emitted signal!")
 
 func set_speed(new_speed):
 	speed = new_speed

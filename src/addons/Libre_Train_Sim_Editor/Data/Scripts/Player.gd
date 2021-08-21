@@ -1110,7 +1110,7 @@ func set_signalWarnLimits(): # Called in the beginning of the route
 			if signalN.speed < limit and i > 0:
 				var signalNBefore = world.get_node("Signals").get_node(sortedSignals[i-1])
 				if signalNBefore.type == "Signal":
-					signalNBefore.warnSpeed = signalN.speed
+					signalNBefore.set_warn_speed(signalN.speed)
 			limit = signalN.speed
 
 func set_signalAfters():

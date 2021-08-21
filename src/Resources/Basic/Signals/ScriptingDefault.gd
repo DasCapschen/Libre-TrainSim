@@ -4,7 +4,7 @@ extends Node
 onready var Signal = get_parent()
 onready var world = find_parent("World")
 
-var blinking = false
+
 var timer
 
 func _ready():
@@ -25,14 +25,9 @@ func _ready():
 
 
 func blink():
-	if blinking:
-		green()
-	else:
-		off()
-	blinking = !blinking
+	$Green.visible = ! $Green.visible
 
 func green():
-	print("green")
 	$Red.visible = false
 	$Orange.visible = false
 	$Green.visible = true
@@ -40,7 +35,6 @@ func green():
 		timer.start()
 
 func red():
-	print("Red")
 	$Red.visible = true
 	$Orange.visible = false
 	$Green.visible = false
@@ -49,14 +43,12 @@ func red():
 	timer.stop()
 
 func orange():
-	print("orange")
 	$Red.visible = false
 	$Orange.visible = true
 	$Green.visible = false
 	timer.stop()
 	
 func off():
-	print("off")
 	$Red.visible = false
 	$Orange.visible = false
 	$Green.visible = false
@@ -64,7 +56,6 @@ func off():
 
 
 func update_speed(new_speed):
-	print("speed update")
 	if new_speed < 0:
 		$Screen2.visible = false
 	else:
@@ -79,7 +70,6 @@ func update_speed(new_speed):
 
 
 func update_warn_speed(new_speed):
-	print("warn speed update")
 	if new_speed < 0:
 		$Screen1.visible = false
 	else:
@@ -91,4 +81,7 @@ func update_warn_speed(new_speed):
 			var string = " " + String(outputSpeed)
 			$Viewport/Node2D/Label.text = string
 		$Screen1.visible = true
-		
+		# start the timer in case we updated the speed after the state!
+		if Signal.status == SignalState.GREEN:
+			timer.start()
+	
