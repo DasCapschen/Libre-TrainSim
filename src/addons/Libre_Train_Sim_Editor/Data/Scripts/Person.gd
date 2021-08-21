@@ -25,8 +25,8 @@ func _process(delta):
 var leave_wagon_timer = 0
 func handleWalk(delta):
 	
-	# If Doors where closed to early, and the person is at the station..
-	if transitionToWagon == true and (attachedWagon.lastDoorStatus == DoorState.CLOSED):
+	# If Doors where closed (or closing) to early, and the person is at the station..
+	if transitionToWagon == true and (attachedWagon.lastDoorStatus & DoorState.CLOSED):
 		if attachedWagon.player.currentStationNode != attachedStation:
 			transitionToWagon = false
 			destinationPos.clear()
