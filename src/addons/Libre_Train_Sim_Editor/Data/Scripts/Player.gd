@@ -501,7 +501,7 @@ func get_speed(delta):
 	if delta != 0:
 		current_real_acceleration = (speed - last_speed) * 1/delta
 	if debug:
-		speed = 200*command
+		speed = max(0, 200*command)
 
 func drive(delta):
 	var driven_distance = speed * delta
