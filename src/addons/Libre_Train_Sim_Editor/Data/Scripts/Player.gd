@@ -1194,14 +1194,19 @@ var autoPilotInStation = true
 var updateNextSignalTimer = 0
 func updateNextSignal(delta):
 	if nextSignal == null:
-		if get_all_upcoming_signals_of_types(["Signal"]).size() == 0: return
-		nextSignal = world.get_node("Signals").get_node(get_all_upcoming_signals_of_types(["Signal"])[0])
+		nextSignal = get_next_Signal()
+		if nextSignal == null: return
 		updateNextSignalTimer = 1 ## Force Update Signal
 	updateNextSignalTimer += delta
 	if updateNextSignalTimer > 0.2:
 		distanceToNextSignal = get_distance_to_signal(nextSignal.name)
 		updateNextSignalTimer = 0
 
+func get_next_Signal():
+	var all = get_all_upcoming_signals_of_types(["Signal"])
+	if all.size() > 0:
+		return all[0]
+	return null
 
 var updateNextSpeedLimitTimer = 0
 func updateNextSpeedLimit(delta):
@@ -1227,14 +1232,18 @@ var nextStationNode = null
 var distanceToNextStation = 0
 var updateNextStationTimer = 0
 func updateNextStation(delta):  ## Used for Autopilot
-	distanceToNextStation -= speed*delta
 	if nextStationNode == null:
-		if get_all_upcoming_signals_of_types(["Station"]).size() > 0:
-			nextStationNode = world.get_node("Signals").get_node(get_all_upcoming_signals_of_types(["Station"])[0])
-			nextStationNode.set_waiting_persons(stations["waitingPersons"][0]/100.0 * world.default_persons_at_station)
-			distanceToNextStation = get_distance_to_signal(nextStationNode.name) + nextStationNode.stationLength
+		var upcoming = get_next_Station()
+		if upcoming == null: return
+		nextStationNode = world.get_node("Signals").get_node(upcoming)
+		nextStationNode.set_waiting_persons(stations["waitingPersons"][0]/100.0 * world.default_persons_at_station)
+	distanceToNextStation = get_distance_to_signal(nextStationNode.name) + nextStationNode.stationLength
 
-
+func get_next_Station():
+	var all = get_all_upcoming_signals_of_types(["Station"])
+	if all.size() > 0:
+		return all[0]
+	return null
 
 func autopilot(delta):
 	debugLights(self)
