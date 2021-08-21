@@ -51,7 +51,7 @@ func _process(delta):
 		
 	update_nextTable(delta)
 	
-	$IngameInformation/TrainInfo/Screen1.update_display(Math.speed_to_kmh(player.speed), player.technical_soll, player.door_status, player.enforced_braking, player.sifa, player.automatic_driving, player.current_speed_limit, player.engine)
+	$IngameInformation/TrainInfo/Screen1.update_display(Math.speed_to_kmh(player.speed), player.technical_soll, player.door_status, player.enforced_braking, player.sifa, player.automatic_driving, player.current_speed_limit, player.engine, player.reverser)
 		
 
 
