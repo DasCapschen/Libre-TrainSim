@@ -1,9 +1,9 @@
 tool
 extends Node
 
-var currentScenario
-var currentTrain
-var EasyMode = true
+var current_scenario
+var current_train
+var easy_mode = true
 var mobile_version = false
 
 
@@ -18,9 +18,9 @@ var world ## Reference to world
 func _ready():
 	pass # Replace with function body.
 
-func checkAndLoadTranslationsForTrack(trackName): # Searches for translation files with trackName in res://Translations/
-	print(trackName.get_file().get_basename())
-	var trackTranslations = []
+func check_and_load_translations_for_track(track_name): # Searches for translation files with track_name in res://Translations/
+	print(track_name.get_file().get_basename())
+	var track_translations = []
 	var dir = Directory.new()
 	dir.open("res://Translations")
 	dir.list_dir_begin()
@@ -29,58 +29,58 @@ func checkAndLoadTranslationsForTrack(trackName): # Searches for translation fil
 		if file == "":
 				break
 		if file.get_extension() == "translation":
-			if file.get_file().begins_with(trackName):
-				trackTranslations.append("res://Translations/" + file.get_file())
+			if file.get_file().begins_with(track_name):
+				track_translations.append("res://Translations/" + file.get_file())
 				print("Track Translation Found " + "res://Translations/" + file.get_file())
-	for trackTranslationPath in trackTranslations:
-		var trackTranslation = load(trackTranslationPath)
-		print(trackTranslation.locale)
-		TranslationServer.add_translation(trackTranslation)
+	for track_translation_path in track_translations:
+		var track_translation = load(track_translation_path)
+		print(track_translation.locale)
+		TranslationServer.add_translation(track_translation)
 
-func checkAndLoadTranslationsForTrain(trainDirPath): # Searches for translation files wich are located in the same folder as the train.tscn. Gets the full path to train.tscn as input
-	print(trainDirPath)
-	var trainTranslations = []
+func check_and_load_translations_for_train(train_dir_path): # Searches for translation files wich are located in the same folder as the train.tscn. Gets the full path to train.tscn as input
+	print(train_dir_path)
+	var train_translations = []
 	var dir = Directory.new()
-	dir.open(trainDirPath)
+	dir.open(train_dir_path)
 	dir.list_dir_begin()
 	while(true):
 		var file = dir.get_next()
 		if file == "":
 				break
 		if file.get_extension() == "translation":
-			trainTranslations.append(trainDirPath+"/"+file)
+			train_translations.append(train_dir_path+"/"+file)
 			print("Track Translation Found " + "res://Translations/" + file.get_file())
-	for trainTranslationPath in trainTranslations:
-		var tainTranslation = load(trainTranslationPath)
-		print(tainTranslation.locale)
-		TranslationServer.add_translation(tainTranslation)
+	for train_translation_path in train_translations:
+		var train_translation = load(train_translation_path)
+		print(train_translation.locale)
+		TranslationServer.add_translation(train_translation)
 
-## foundFiles has to be an dict: {"Array" : []}
-func crawlDirectory(directoryPath,foundFiles,fileExtension): 
+## found_files has to be an dict: {"Array" : []}
+func crawl_directory(directory_path,found_files,file_extension): 
 	var dir = Directory.new()
-	if dir.open(directoryPath) != OK: return
+	if dir.open(directory_path) != OK: return
 	dir.list_dir_begin()
 	while(true):
 		var file = dir.get_next()
 		if file == "": break
 		if file.begins_with("."): continue
 		if dir.current_is_dir():
-			if directoryPath.ends_with("/"):
-				crawlDirectory(directoryPath+file, foundFiles, fileExtension)
+			if directory_path.ends_with("/"):
+				crawl_directory(directory_path+file, found_files, file_extension)
 			else:
-				crawlDirectory(directoryPath+"/"+file, foundFiles, fileExtension)
+				crawl_directory(directory_path+"/"+file, found_files, file_extension)
 		else:
-			if file.get_extension() == fileExtension:
-				var exportString 
-				if directoryPath.ends_with("/"):
-					exportString = directoryPath +file
+			if file.get_extension() == file_extension:
+				var export_string 
+				if directory_path.ends_with("/"):
+					export_string = directory_path +file
 				else:
-					exportString = directoryPath +"/"+file
-				foundFiles["Array"].append(exportString)
+					export_string = directory_path +"/"+file
+				found_files["Array"].append(export_string)
 	dir.list_dir_end()
 	
 # approaches 'ist' value to 'soll' value in one second  (=smooth transitions from current 'ist' value to 'soll' value)
-func clampViaTime(soll : float, ist : float, delta : float):
+func clamp_via_time(soll : float, ist : float, delta : float):
 	ist += (soll-ist)*delta
 	return ist
 

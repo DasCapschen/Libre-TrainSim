@@ -6,14 +6,14 @@ extends Node
 # var b = "text"
 onready var player = get_parent()
 
-var ready = false
+var is_ready = false
 # Called when the node enters the scene tree for the first time.
 func ready():
 	if player.ai: return
 	get_node("../Cabin/DisplayMiddle").set_clear_mode(Viewport.CLEAR_MODE_ONLY_NEXT_FRAME)
 	var texture = get_node("../Cabin/DisplayMiddle").get_texture()
 	get_node("../Cabin/ScreenMiddle").material_override.emission_texture = texture
-	get_node("../Cabin/DisplayMiddle/Display").blinkingTimer = player.get_node("HUD").get_node("IngameInformation/TrainInfo/Screen1").blinkingTimer
+	get_node("../Cabin/DisplayMiddle/Display").blinking_timer = player.get_node("HUD").get_node("IngameInformation/TrainInfo/Screen1").blinking_timer
 	
 	get_node("../Cabin/DisplayLeft").set_clear_mode(Viewport.CLEAR_MODE_ONLY_NEXT_FRAME)
 	texture = get_node("../Cabin/DisplayLeft").get_texture()
@@ -29,24 +29,24 @@ func ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if player.ai: return
-	if not ready: 
-		ready = true
+	if not is_ready: 
+		is_ready = true
 		ready()
-	get_node("../Cabin/DisplayMiddle/Display").update_display(Math.speedToKmH(player.speed), player.technicalSoll, player.doorStatus, player.enforcedBreaking, player.sifa, player.automaticDriving, player.currentSpeedLimit, player.engine)
+	get_node("../Cabin/DisplayMiddle/Display").update_display(Math.speed_to_kmh(player.speed), player.technical_soll, player.door_status, player.enforced_braking, player.sifa, player.automatic_driving, player.current_speed_limit, player.engine)
 
 	get_node("../Cabin/DisplayLeft/ScreenLeft2").update_time(player.time)
 	get_node("../Cabin/DisplayLeft/ScreenLeft2").update_voltage(player.voltage)
 	get_node("../Cabin/DisplayLeft/ScreenLeft2").update_command(player.command)
 	
 	var stations = player.stations
-	get_node("../Cabin/DisplayRight/ScreenRight").update_display(stations["arrivalTime"], stations["departureTime"], stations["stationName"], stations["stopType"], stations["passed"], player.isInStation)
+	get_node("../Cabin/DisplayRight/ScreenRight").update_display(stations["arrival_time"], stations["departure_time"], stations["station_name"], stations["stop_type"], stations["passed"], player.is_in_station)
 	
-	if player.controlType == 0:
+	if player.control_type == ControlType.COMBINED:
 		update_Brake_Roll(player.soll_command, get_node("../Cabin/BrakeRoll"))
 		update_Acc_Roll(player.soll_command, get_node("../Cabin/AccRoll"))
 	else:
-		update_Brake_Roll(player.brakeRoll, get_node("../Cabin/BrakeRoll"))
-		update_Acc_Roll(player.accRoll, get_node("../Cabin/AccRoll"))
+		update_Brake_Roll(player.brake_roll, get_node("../Cabin/BrakeRoll"))
+		update_Acc_Roll(player.acc_roll, get_node("../Cabin/AccRoll"))
 		
 
 

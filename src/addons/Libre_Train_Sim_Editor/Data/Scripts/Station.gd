@@ -1,25 +1,25 @@
 tool
 extends Spatial
 
-var type = "Station"
+const type = SignalType.STATION
 onready var world = find_parent("World")
-var personsNode
+var persons_node
 
-export (int) var stationLength
+export (int) var station_length
 
-export (int, "None", "Left", "Right", "Both") var platformSide
-export (bool) var personSystem = true
-export (float) var platformHeight = 1.2
-export (float) var platformStart = 2.5
-export (float) var platformEnd = 4.5
+export (int, "None", "Left", "Right", "Both") var platform_side
+export (bool) var person_system = true
+export (float) var platform_height = 1.2
+export (float) var platform_start = 2.5
+export (float) var platform_end = 4.5
 
-export (String) var attachedRail
-export (int) var onRailPosition
-export (bool) var update setget setToRail
+export (String) var attached_rail
+export (int) var on_rail_position
+export (bool) var update setget set_to_rail
 export var forward = true
 
-var waitingPersonCount = 5
-var attachedPersons = []
+var waiting_person_count = 5
+var attached_persons = []
 
 var rail
 func _ready():
@@ -27,35 +27,35 @@ func _ready():
 		if get_parent().name == "Signals":
 			return
 		if get_parent().is_in_group("Rail"):
-			attachedRail = get_parent().name
+			attached_rail = get_parent().name
 		var signals = find_parent("World").get_node("Signals")
 		get_parent().remove_child(self)
 		signals.add_child(self)
-		setToRail(true)
+		set_to_rail(true)
 	if not Engine.is_editor_hint():
 		$MeshInstance.queue_free()
-		setToRail(true)
-		personSystem = personSystem and jSettings.get_persons() and not Root.mobile_version
+		set_to_rail(true)
+		person_system = person_system and jSettings.get_persons() and not Root.mobile_version
 		
 		
 func _process(delta):
 	if rail == null:
-		setToRail(true)
+		set_to_rail(true)
 	
 	if not Engine.editor_hint:
-		if personSystem:
-			handlePersons()
+		if person_system:
+			handle_persons()
 
 
 
 # warning-ignore:unused_argument
-func setToRail(newvar):
+func set_to_rail(newvar):
 	if find_parent("World") == null:
 		return
-	if find_parent("World").has_node("Rails/"+attachedRail) and attachedRail != "":
-		rail = get_parent().get_parent().get_node("Rails/"+attachedRail)
-		rail.register_signal(self.name, onRailPosition)
-		self.translation = rail.get_pos_at_RailDistance(onRailPosition)
+	if find_parent("World").has_node("Rails/"+attached_rail) and attached_rail != "":
+		rail = get_parent().get_parent().get_node("Rails/"+attached_rail)
+		rail.register_signal(self.name, on_rail_position)
+		self.translation = rail.get_pos_at_rail_distance(on_rail_position)
 		
 		
 func get_scenario_data():
@@ -63,81 +63,81 @@ func get_scenario_data():
 func set_scenario_data(d):
 	return
 
-func spawnPersonsAtBeginning():
-	if not personSystem:
+func spawn_persons_at_beginning():
+	if not person_system:
 		return
-	if platformSide == PlatformSide.NONE:
+	if platform_side == PlatformSide.NONE:
 		return
-	while(rail.visible and attachedPersons.size() < waitingPersonCount):
-		spawnRandomPerson()
+	while(rail.visible and attached_persons.size() < waiting_person_count):
+		spawn_random_person()
 
 func set_waiting_persons(count : int):
-	waitingPersonCount = count
-	spawnPersonsAtBeginning() 
+	waiting_person_count = count
+	spawn_persons_at_beginning() 
 	
 
-func handlePersons():
-	if platformSide == PlatformSide.NONE:
+func handle_persons():
+	if platform_side == PlatformSide.NONE:
 		return
 	if rail == null:
 		return
 	
-	if rail.visible and attachedPersons.size() < waitingPersonCount:
-		spawnRandomPerson()
+	if rail.visible and attached_persons.size() < waiting_person_count:
+		spawn_random_person()
 		
 		
-func spawnRandomPerson():
+func spawn_random_person():
 	randomize()
 	var person = preload("res://addons/Libre_Train_Sim_Editor/Data/Modules/Person.tscn")
-	var personVI = world.personVisualInstances[int(rand_range(0, world.personVisualInstances.size()))]
-	var personI = person.instance()
-	personI.add_child(personVI.instance())
-	personI.attachedStation = self
-	personI.transform = getRandomTransformAtPlatform()
-	personI.owner = world
-	personsNode.add_child(personI)
+	var person_vi = world.person_visual_instances[int(rand_range(0, world.person_visual_instances.size()))]
+	var person_i = person.instance()
+	person_i.add_child(person_vi.instance())
+	person_i.attached_station = self
+	person_i.transform = get_random_transform_at_platform()
+	person_i.owner = world
+	persons_node.add_child(person_i)
 	
-	attachedPersons.append(personI)
+	attached_persons.append(person_i)
 	
 	
-func getRandomTransformAtPlatform():
+func get_random_transform_at_platform():
 	if forward:
-		var randRailDistance = int(rand_range(onRailPosition, onRailPosition+stationLength))
-		if platformSide == PlatformSide.LEFT:
-			return Transform(Basis(Vector3(0,deg2rad(rail.get_deg_at_RailDistance(randRailDistance)), 0)),  rail.get_shifted_pos_at_RailDistance(randRailDistance, rand_range(-platformStart, -platformEnd)) + Vector3(0, platformHeight, 0))
-		if platformSide == PlatformSide.RIGHT:
-			return Transform(Basis(Vector3(0,deg2rad(rail.get_deg_at_RailDistance(randRailDistance)+180.0), 0)) , rail.get_shifted_pos_at_RailDistance(randRailDistance, rand_range(platformStart, platformEnd)) + Vector3(0, platformHeight, 0))
+		var rand_rail_distance = int(rand_range(on_rail_position, on_rail_position+station_length))
+		if platform_side == PlatformSide.LEFT:
+			return Transform(Basis(Vector3(0,deg2rad(rail.get_deg_at_rail_distance(rand_rail_distance)), 0)),  rail.get_shifted_pos_at_rail_distance(rand_rail_distance, rand_range(-platform_start, -platform_end)) + Vector3(0, platform_height, 0))
+		if platform_side == PlatformSide.RIGHT:
+			return Transform(Basis(Vector3(0,deg2rad(rail.get_deg_at_rail_distance(rand_rail_distance)+180.0), 0)) , rail.get_shifted_pos_at_rail_distance(rand_rail_distance, rand_range(platform_start, platform_end)) + Vector3(0, platform_height, 0))
 	else:
-		var randRailDistance = int(rand_range(onRailPosition, onRailPosition-stationLength))
-		if platformSide == PlatformSide.LEFT:
-			return Transform(Basis(Vector3(0,deg2rad(rail.get_deg_at_RailDistance(randRailDistance)+180.0), 0)), rail.get_shifted_pos_at_RailDistance(randRailDistance, rand_range(platformStart, platformEnd)) + Vector3(0, platformHeight, 0))
-		if platformSide == PlatformSide.RIGHT:
-			return Transform(Basis(Vector3(0,deg2rad(rail.get_deg_at_RailDistance(randRailDistance)), 0)) , rail.get_shifted_pos_at_RailDistance(randRailDistance, rand_range(-platformStart, -platformEnd)) + Vector3(0, platformHeight, 0))
+		var rand_rail_distance = int(rand_range(on_rail_position, on_rail_position-station_length))
+		if platform_side == PlatformSide.LEFT:
+			return Transform(Basis(Vector3(0,deg2rad(rail.get_deg_at_rail_distance(rand_rail_distance)+180.0), 0)), rail.get_shifted_pos_at_rail_distance(rand_rail_distance, rand_range(platform_start, platform_end)) + Vector3(0, platform_height, 0))
+		if platform_side == PlatformSide.RIGHT:
+			return Transform(Basis(Vector3(0,deg2rad(rail.get_deg_at_rail_distance(rand_rail_distance)), 0)) , rail.get_shifted_pos_at_rail_distance(rand_rail_distance, rand_range(-platform_start, -platform_end)) + Vector3(0, platform_height, 0))
 		
-func setDoorPositions(doors, doorsWagon): ## Called by the train
+func set_door_positions(doors, doors_wagon): ## Called by the train
 	if doors.size() == 0:
 		return
-	for person in attachedPersons:
+	for person in attached_persons:
 		person.clear_destinations()
-		var nearestDoorIndex = 0
+		var nearest_door_index = 0
 		for i in range(doors.size()):
-			if doors[i].worldPos.distance_to(person.translation) <  doors[nearestDoorIndex].worldPos.distance_to(person.translation):
-				nearestDoorIndex = i
-		person.destinationPos.append(doors[nearestDoorIndex].worldPos)
-		person.transitionToWagon = true
-		person.assignedDoor = doors[nearestDoorIndex]
-		person.attachedWagon = doorsWagon[nearestDoorIndex]
+			if doors[i].world_pos.distance_to(person.translation) <  doors[nearest_door_index].world_pos.distance_to(person.translation):
+				nearest_door_index = i
+		person.destination_pos.append(doors[nearest_door_index].world_pos)
+		person.transition_to_wagon = true
+		person.assigned_door = doors[nearest_door_index]
+		person.attached_wagon = doors_wagon[nearest_door_index]
 		
 		
-func deregisterPerson(personToDelete):
-	if attachedPersons.has(personToDelete):
-		attachedPersons.erase(personToDelete)
-		waitingPersonCount -= 1
+func deregister_person(personToDelete):
+	if attached_persons.has(personToDelete):
+		attached_persons.erase(personToDelete)
+		waiting_person_count -= 1
 
 			
-func registerPerson(personNode):
-	attachedPersons.append(personNode)
-	personNode.get_parent().remove_child(personNode)
-	personNode.owner = world
-	personsNode.add_child(personNode)
-	personNode.destinationPos.append(getRandomTransformAtPlatform().origin)
+func register_person(person_node):
+	attached_persons.append(person_node)
+	person_node.get_parent().remove_child(person_node)
+	person_node.owner = world
+	persons_node.add_child(person_node)
+	person_node.destination_pos.append(get_random_transform_at_platform().origin)

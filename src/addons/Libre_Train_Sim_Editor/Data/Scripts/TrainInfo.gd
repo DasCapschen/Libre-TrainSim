@@ -30,22 +30,22 @@ func update_info(player):
 	if player.pantograph:
 		$ScrollContainer/VBoxContainer/Pantograpgh/dot.texture = green
 	else:
-		if player.pantographUp:
+		if player.pantograph_up:
 			$ScrollContainer/VBoxContainer/Pantograpgh/dot.texture = orange
 		else:
 			$ScrollContainer/VBoxContainer/Pantograpgh/dot.texture = red
 	
 	## Doors:
 	$ScrollContainer/VBoxContainer/Doors.visible = player.doors
-	if player.doorStatus == DoorState.CLOSED:
+	if player.door_status == DoorState.CLOSED:
 		$ScrollContainer/VBoxContainer/Doors/dot.texture = green
-	elif player.doorStatus == DoorState.CLOSING:
+	elif player.door_status == DoorState.CLOSING:
 		$ScrollContainer/VBoxContainer/Doors/dot.texture = orange
 	else:
 		$ScrollContainer/VBoxContainer/Doors/dot.texture = red
 	
 	## Control Type:
-	if player.controlType == 0:
+	if player.control_type == ControlType.COMBINED:
 		$"ScrollContainer/VBoxContainer/Brakes-1".hide()
 		$"ScrollContainer/VBoxContainer/Acceleration-1".hide()
 	else:
@@ -54,7 +54,7 @@ func update_info(player):
 		
 		
 	## Brakes:
-	if player.technicalSoll < 0:
+	if player.technical_soll < 0:
 		$"ScrollContainer/VBoxContainer/Brakes-0/dot".texture = red
 		$"ScrollContainer/VBoxContainer/Brakes-1/dot".texture = red
 	else:
@@ -66,7 +66,7 @@ func update_info(player):
 			$"ScrollContainer/VBoxContainer/Brakes-1/dot".texture = green
 	
 	## Acceleration:
-	if player.blockedAcceleration:
+	if player.blocked_acceleration:
 		$"ScrollContainer/VBoxContainer/Acceleration-0/dot".texture = red
 		$"ScrollContainer/VBoxContainer/Acceleration-1/dot".texture = red
 	else:
@@ -74,32 +74,32 @@ func update_info(player):
 		$"ScrollContainer/VBoxContainer/Acceleration-1/dot".texture = green
 	
 	## EnforcedBreake
-	if player.enforcedBreaking:
+	if player.enforced_braking:
 		$ScrollContainer/VBoxContainer/EnforcedBreaking/dot.texture = red
 	else:
 		$ScrollContainer/VBoxContainer/EnforcedBreaking/dot.texture = green
 	
 	## SiFa
-	$ScrollContainer/VBoxContainer/SiFa.visible = player.sifaEnabled
-	if player.sifaTimer > 35:
+	$ScrollContainer/VBoxContainer/SiFa.visible = player.is_sifa_enabled
+	if player.sifa_timer > 35:
 		$ScrollContainer/VBoxContainer/SiFa/dot.texture = red
-	elif player.sifaTimer > 25:
+	elif player.sifa_timer > 25:
 		$ScrollContainer/VBoxContainer/SiFa/dot.texture = orange
 	else:
 		$ScrollContainer/VBoxContainer/SiFa/dot.texture = green
 	
-	$ScrollContainer/VBoxContainer/Autopilot.visible = Root.EasyMode
-	if player.automaticDriving:
+	$ScrollContainer/VBoxContainer/Autopilot.visible = Root.easy_mode
+	if player.automatic_driving:
 		$ScrollContainer/VBoxContainer/Autopilot/dot.texture = green
 	else:
 		$ScrollContainer/VBoxContainer/Autopilot/dot.texture = red
 	
-	if player.frontLight:
+	if player.front_light:
 		$ScrollContainer/VBoxContainer/FrontLight/dot.texture = green
 	else:
 		$ScrollContainer/VBoxContainer/FrontLight/dot.texture = red
 	
-	if player.insideLight:
+	if player.inside_light:
 		$ScrollContainer/VBoxContainer/InsideLight/dot.texture = green
 	else:
 		$ScrollContainer/VBoxContainer/InsideLight/dot.texture = red

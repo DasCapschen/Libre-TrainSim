@@ -125,12 +125,12 @@ __meta__ = {
 
 [node name="Rail" parent="Rails" instance=ExtResource( 5 )]
 length = 160.0
-visibleSegments = 178.778
-endpos = Vector3( 160, 0, 0 )
-otherRadius = 1995.5
-otherLength = 997.75
-Outlength = 94.8772
-automaticTendency = false
+visible_segments = 178.778
+end_pos = Vector3( 160, 0, 0 )
+others_radius = 1995.5
+others_length = 997.75
+out_length = 94.8772
+automatic_tendency = false
 
 [node name="Buildings" type="Spatial" parent="."]
 script = ExtResource( 9 )
@@ -142,35 +142,35 @@ script = ExtResource( 9 )
 [node name="Rail Tree" parent="TrackObjects" instance=ExtResource( 6 )]
 multimesh = SubResource( 2 )
 description = "Tree"
-attachedRail = "Rail"
+attached_rail = "Rail"
 length = 160.0
-objectPath = "res://Resources/Basic/EasyTree_big.obj"
-materialPaths = [ "res://Resources/Basic/Materials/EasyTree.tres" ]
+object_path = "res://Resources/Basic/EasyTree_big.obj"
+material_paths = [ "res://Resources/Basic/Materials/EasyTree.tres" ]
 sides = 1
 rows = 5.0
-distanceLength = 13.0
-distanceRows = 13.0
+distance_length = 13.0
+distance_rows = 13.0
 shift = 20.0
 height = 3.0
-randomLocation = true
-randomRotation = true
-randomScale = true
-randomScaleFactor = 0.3
-wholeRail = true
+random_location = true
+random_rotation = true
+random_scale = true
+random_scale_factor = 0.3
+whole_rail = true
 
 [node name="Rail Poles" parent="TrackObjects" instance=ExtResource( 6 )]
 multimesh = SubResource( 4 )
 description = "Poles"
-attachedRail = "Rail"
+attached_rail = "Rail"
 length = 160.0
-objectPath = "res://Resources/Basic/Pole1.obj"
-materialPaths = [ "res://Resources/Basic/Materials/Beton.tres", "res://Resources/Basic/Materials/Metal_Green.tres", "res://Resources/Basic/Materials/Metal.tres", "res://Resources/Basic/Materials/Metal_Brown.tres" ]
+object_path = "res://Resources/Basic/Pole1.obj"
+material_paths = [ "res://Resources/Basic/Materials/Beton.tres", "res://Resources/Basic/Materials/Metal_Green.tres", "res://Resources/Basic/Materials/Metal.tres", "res://Resources/Basic/Materials/Metal_Brown.tres" ]
 sides = 2
 rows = 1.0
-distanceLength = 80.0
-rotationObjects = 90.0
-placeLast = true
-wholeRail = true
+distance_length = 80.0
+rotation_objects = 90.0
+place_last = true
+whole_rail = true
 
 [node name="jSaveModule" parent="." instance=ExtResource( 10 )]
 save_path = "res://Worlds/Name Me!/Name Me!.save"

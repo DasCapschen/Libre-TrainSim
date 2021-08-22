@@ -13,29 +13,29 @@ func _ready():
 	$Table/Station/Label.text = " " + TranslationServer.translate("STATION:") + " "	
 	pass # Replace with function body.
 
-func update_display(arrivals, departures, stationNames, stopTypes, passed, isInStation):
-	$CurrentStation.visible = isInStation
-	var arrString = ""
-	var depString = ""
-	var staString = ""
-	for i in range (0, stationNames.size()):
+func update_display(arrivals, departures, station_names, stop_types, passed, is_in_station):
+	$CurrentStation.visible = is_in_station
+	var arr_string = ""
+	var dep_string = ""
+	var sta_string = ""
+	for i in range (0, station_names.size()):
 		if passed[i]: continue
 		
-		if stopTypes[i] == 0 or stopTypes[i] == 2:
-			arrString += "\n"
+		if stop_types[i] == StopType.PASS or stop_types[i] == StopType.BEGIN:
+			arr_string += "\n"
 		else:
-			arrString += Math.time2String(arrivals[i]) + "\n"
+			arr_string += Math.time_to_string(arrivals[i]) + "\n"
 		
-		if stopTypes[i] == 3:
-			depString += "\n"
+		if stop_types[i] == StopType.END:
+			dep_string += "\n"
 		else:
-			depString += Math.time2String(departures[i]) + "\n"
+			dep_string += Math.time_to_string(departures[i]) + "\n"
 			
-		staString += stationNames[i] + "\n"
+		sta_string += station_names[i] + "\n"
 	
-	$Table/Arrival/Label2.text = arrString
-	$Table/Departure/Label2.text = depString
-	$Table/Station/Label2.text = staString
+	$Table/Arrival/Label2.text = arr_string
+	$Table/Departure/Label2.text = dep_string
+	$Table/Station/Label2.text = sta_string
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

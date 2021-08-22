@@ -20,10 +20,10 @@ onready var player = get_parent()
 #	pass
 
 #func _process(delta):
-#	var speed = Math.speedToKmH((get_parent().speed))
+#	var speed = Math.speed_to_kmh((get_parent().speed))
 #	var command = get_parent().command
 #
-#	if player.cameraState == 0:
+#	if player.camera_state == 0:
 #		inSideReduction = -15
 #	else:
 #		inSideReduction = 0
@@ -44,7 +44,7 @@ onready var player = get_parent()
 #	$Drive.pitch_scale = 0.5 + speed/100.0
 #	$Drive.unit_db = inSideReduction
 #
-#var lastspeed = 0
+#var last_speed = 0
 #var timerstatus = ""
 #
 #func handleAcceleration(command, speed, delta):
@@ -57,18 +57,18 @@ onready var player = get_parent()
 #			sollAccelerationVolume2 = -50
 #
 #
-#	if lastspeed <= AccelerationTransitionSpeed and speed > AccelerationTransitionSpeed:
+#	if last_speed <= AccelerationTransitionSpeed and speed > AccelerationTransitionSpeed:
 #		$AccelerationTransition.play()
 #		$Timer.wait_time = AccelerationTransitionTime
 #		$Timer.start()
 #		sollAccelerationVolume1 = -50
 #		sollAccelerationVolume2 = -50
-#	if lastspeed > AccelerationTransitionSpeed and speed <= AccelerationTransitionSpeed:
+#	if last_speed > AccelerationTransitionSpeed and speed <= AccelerationTransitionSpeed:
 #		$Acceleration2.stop()
 #		$Acceleration1.play()
 #
 #	$AccelerationTransition.unit_db = -50+(command*50)
-#	lastspeed = speed
+#	last_speed = speed
 #
 #
 #

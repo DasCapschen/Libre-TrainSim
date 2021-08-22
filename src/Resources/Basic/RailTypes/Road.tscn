@@ -8,9 +8,9 @@
 
 [node name="RailType" type="Spatial"]
 script = ExtResource( 1 )
-buildDistance = 1.9
-overheadLineHeight1 = -1.0
-overheadLineHeight2 = -0.5
+build_distance = 1.9
+overhead_line_height1 = -1.0
+overhead_line_height2 = -0.5
 
 [node name="Road" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.118449, 0 )

@@ -13,11 +13,11 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-var updateTimer = 0
+var update_timer = 0
 func _process(delta):
-	updateTimer += delta
-	if updateTimer > 0.5:
-		updateTimer = 0
+	update_timer += delta
+	if update_timer > 0.5:
+		update_timer = 0
 		var world = get_parent()
 		for child in get_children():
 			if child.get_children().size() != 0 and child.is_class("MeshInstance"):

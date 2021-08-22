@@ -20,9 +20,9 @@ font_data = ExtResource( 9 )
 
 [node name="Screen1" type="Node2D"]
 script = ExtResource( 1 )
-SpeedPointerRotationAt100 = 40.0
-SollSpeedPointerRotationAt100 = -50.0
-CommandPointerRotationAt100 = 190.0
+speed_pointer_rotation_at_100 = 40.0
+soll_speed_pointer_rotation_at_100 = -50.0
+command_pointer_rotation_at_100 = 190.0
 
 [node name="Background" type="Sprite" parent="."]
 position = Vector2( 650, 450 )

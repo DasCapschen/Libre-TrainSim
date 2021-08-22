@@ -1,6 +1,6 @@
 extends Node
 
-var scenario = Root.currentScenario
+var scenario = Root.current_scenario
 var world = find_parent("World")
 var step = 0
 var player
@@ -8,9 +8,9 @@ var message_sent = false
 
 func _ready():
 	if scenario == "The Basics" or scenario == "The Basics - Mobile Version":
-		Root.EasyMode = true
+		Root.easy_mode = true
 	if scenario == "Advanced Train Driving":
-		Root.EasyMode = false
+		Root.easy_mode = false
 
 
 func _process(delta):
@@ -47,51 +47,51 @@ func basics():
 		2:
 #			message = "Great! To close the Doors, press 'o'.\n\nWhith 'i' you can open the left one,\nwith 'p' you open the right door."
 			message = TranslationServer.translate("TUTORIAL_0_1")
-			if  player.doorStatus == DoorState.CLOSED:
+			if  player.door_status == DoorState.CLOSED:
 				next_step()
 		3:
 #			message = "Now we are able to drive.\nOur departure is at 12:00. Let's wait for the depart message in the bottom left corner."
 			message = TranslationServer.translate("TUTORIAL_0_2")
-			if player.currentStationName == "":
+			if player.current_station_name == "":
 				next_step()
 		4:
 #			message = "Let’s abort! Use the arrow keys to drive. \n\n\tPress the up arrow key to accelerate / release the brakes.\n\tPress the down arrow key to release acceleration / apply the brakes. \n\nHint: You can see your current command at the right tachometer."
 			message = TranslationServer.translate("TUTORIAL_0_3")
-			if Math.speedToKmH(player.speed) > 20:
+			if Math.speed_to_kmh(player.speed) > 20:
 				next_step()
 
 		5:
 #			message = "Ahead you see an orange signal. That means that the next signal is going to be red. So make sure, you apply the brakes that you will stand before the red signal.\n\nWith the left arrow key you can easily set acceleration and brakes to zero. Try it, if you have brakes or accleration applied!"
 			message = TranslationServer.translate("TUTORIAL_0_4")
-			if Math.speedToKmH(player.speed) == 0 and not player.overrunRedSignal:
+			if Math.speed_to_kmh(player.speed) == 0 and not player.overrun_red_signal:
 				world.get_node("Signals/Signal2").set_state(SignalState.GREEN)
 				next_step()
 		6:
 #			message = "Great... \nWait... the signal is now green! Now we need to accelerate very fast.\nTo do this, simply press the right arrow key. It instantly sets the train to max power."
 			message = TranslationServer.translate("TUTORIAL_0_5")
-			if player.distanceOnRail > 700 and player.currentRail.name == "Rail":
+			if player.distance_on_rail > 700 and player.current_rail.name == "Rail":
 				next_step()
 		7:
 #			message = "The signal in front of you is blinking.. what does this mean?\nIf a signal is blinking, then its announcing a new speed limit, which is lower than your current one.\nNo fear, the blinking signal just announce it, the speed limit will become effective at the signal behind it.\n\nIf e.g. the signal displays a 8, then the speed limit is 80 km/h.\nOrange signs/digits are always announcing limits,\nWhite signs/digits will set the speed limit effective."
 			message = TranslationServer.translate("TUTORIAL_0_6")
-			if player.currentRail.name == "Rail2":
+			if player.current_rail.name == "Rail2":
 				next_step()
 		8:
 #			message = "In 600 meters there will be the next train station. Every station is announced in the left bottom corner, if its 1000m away. Certainly you already saw it.\n\nIt is recommended to brake down to about 70 or 60 km/h, and then brake softly if you are shortly before the train station.\nLets arrive!"
 			message = TranslationServer.translate("TUTORIAL_0_7")
-			if player.distanceOnRail > 250 and player.currentRail.name == "Rail2":
+			if player.distance_on_rail > 250 and player.current_rail.name == "Rail2":
 				next_step()
 
 		9: 
 			# message: Hint: If you don't know further on at any time or you just want to enjoy the ride, press 'ctr' + 'a' to activate the autopilot. 
 			message = TranslationServer.translate("TUTORIAL_0_11")
-			if player.speed == 0 and player.currentStationName == "Tutorialbach" and not player.wholeTrainNotInStation:
+			if player.speed == 0 and player.current_station_name == "Tutorialbach" and not player.whole_train_not_in_station:
 				next_step()
 			
 		10:
 #			message = "Great, you arrived securly!\nNow you have to open the doors.\nWith 'i' you can open the left one, with 'p' the right one.\nIn our case we have to open the left one with 'i'."
 			message = TranslationServer.translate("TUTORIAL_0_8")
-			if player.isInStation:
+			if player.is_in_station:
 				next_step()
 		11:
 #			message = "Thank you for playing! You can now exit the game with 'Esc'"
@@ -100,13 +100,13 @@ func basics():
 func advanced():
 	match step:
 		0:
-			Root.EasyMode = false
+			Root.easy_mode = false
 			message = TranslationServer.translate("TUTORIAL_1_0")
 			if player.engine:
 				next_step()
 		1:
 			message = TranslationServer.translate("TUTORIAL_1_6")
-			if player.currentStationName == "" and player.doorStatus == DoorState.CLOSED:
+			if player.current_station_name == "" and player.door_status == DoorState.CLOSED:
 				next_step()
 		2:
 			message = TranslationServer.translate("TUTORIAL_1_1")
@@ -114,16 +114,16 @@ func advanced():
 				next_step()
 		3:
 			message = TranslationServer.translate("TUTORIAL_1_2")
-			if player.distanceOnRail > 800:
+			if player.distance_on_rail > 800:
 				next_step()
 		4: 
 			message = TranslationServer.translate("TUTORIAL_1_5")
-			if player.currentRail.name == "Rail2":
+			if player.current_rail.name == "Rail2":
 				next_step()
 			
 		5:
 			message = TranslationServer.translate("TUTORIAL_1_3")
-			if player.isInStation:
+			if player.is_in_station:
 				next_step()
 		6:
 			message = TranslationServer.translate("TUTORIAL_1_4")
@@ -148,7 +148,7 @@ func basics_mobile_version():
 			message = TranslationServer.translate("TUTORIAL_4_2")
 			player.get_node("HUD/MobileHUD/Engine").modulate = Color(1, 1, 1, 1)
 			player.get_node("HUD/MobileHUD/Camera").modulate = Color(1, 0.5, 0, 1)
-			if player.currentStationName == "":
+			if player.current_station_name == "":
 				next_step()
 		3:
 #			message = "Great! To close the Doors, press 'o'.\n\nWhith 'i' you can open the left one,\nwith 'p' you open the right door."
@@ -163,7 +163,7 @@ func basics_mobile_version():
 			player.get_node("HUD/MobileHUD/DoorClose").modulate = Color(1, 1, 1, 1)
 			player.get_node("HUD/MobileHUD/Up").modulate = Color(1, 0.5, 0, 1)
 			player.get_node("HUD/MobileHUD/Down").modulate = Color(1, 0.5, 0, 1)
-			if Math.speedToKmH(player.speed) > 20:
+			if Math.speed_to_kmh(player.speed) > 20:
 				next_step()
 
 		5:
@@ -171,7 +171,7 @@ func basics_mobile_version():
 			message = TranslationServer.translate("TUTORIAL_4_5")
 			player.get_node("HUD/MobileHUD/Up").modulate = Color(1, 1, 1, 1)
 			player.get_node("HUD/MobileHUD/Down").modulate = Color(1, 0.5, 0, 1)
-			if Math.speedToKmH(player.speed) == 0 and not player.overrunRedSignal:
+			if Math.speed_to_kmh(player.speed) == 0 and not player.overrun_red_signal:
 				world.get_node("Signals/Signal2").set_state(SignalState.GREEN)
 				next_step()
 		6:
@@ -179,25 +179,25 @@ func basics_mobile_version():
 			message = TranslationServer.translate("TUTORIAL_4_6")
 			player.get_node("HUD/MobileHUD/Down").modulate = Color(1, 1, 1, 1)
 			player.get_node("HUD/MobileHUD/Up").modulate = Color(1, 0.5, 0, 1)
-			if player.distanceOnRail > 700 and player.currentRail.name == "Rail":
+			if player.distance_on_rail > 700 and player.current_rail.name == "Rail":
 				next_step()
 		7:
 			player.get_node("HUD/MobileHUD/Up").modulate = Color(1, 1, 1, 1)
 #			message = "The signal in front of you is blinking.. what does this mean?\nIf a signal is blinking, then its announcing a new speed limit, which is lower than your current one.\nNo fear, the blinking signal just announce it, the speed limit will become effective at the signal behind it.\n\nIf e.g. the signal displays a 8, then the speed limit is 80 km/h.\nOrange signs/digits are always announcing limits,\nWhite signs/digits will set the speed limit effective."
 			message = TranslationServer.translate("TUTORIAL_4_7")
-			if player.currentRail.name == "Rail2":
+			if player.current_rail.name == "Rail2":
 				next_step()
 		8:
 #			message = "In 600 meters there will be the next train station. Every station is announced in the left bottom corner, if its 1000m away. Certainly you already saw it.\n\nIt is recommended to brake down to about 70 or 60 km/h, and then brake softly if you are shortly before the train station.\nLets arrive!"
 			message = TranslationServer.translate("TUTORIAL_4_8")
-			if player.distanceOnRail > 250 and player.currentRail.name == "Rail2":
+			if player.distance_on_rail > 250 and player.current_rail.name == "Rail2":
 				next_step()
 
 		9: 
 			# message: Hint: If you don't know further on at any time or you just want to enjoy the ride, press 'ctr' + 'a' to activate the autopilot. 
 			message = TranslationServer.translate("TUTORIAL_4_9")
 			player.get_node("HUD/MobileHUD/Autopilot").modulate = Color(1, 0.5, 0, 1)
-			if player.speed == 0 and player.currentStationName == "Tutorialbach" and not player.wholeTrainNotInStation:
+			if player.speed == 0 and player.current_station_name == "Tutorialbach" and not player.whole_train_not_in_station:
 				next_step()
 			
 		10:
@@ -205,7 +205,7 @@ func basics_mobile_version():
 			message = TranslationServer.translate("TUTORIAL_4_10")
 			player.get_node("HUD/MobileHUD/Autopilot").modulate = Color(1, 1, 1, 1)
 			player.get_node("HUD/MobileHUD/DoorLeft").modulate = Color(1, 0.5, 0, 1)
-			if player.isInStation:
+			if player.is_in_station:
 				next_step()
 		11:
 #			message = "Thank you for playing! You can now exit the game with 'Esc'"

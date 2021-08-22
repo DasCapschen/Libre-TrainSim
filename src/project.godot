@@ -10,6 +10,11 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Reference",
+"class": "ControlType",
+"language": "GDScript",
+"path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/Enums/ControlType.gd"
+}, {
+"base": "Reference",
 "class": "DoorState",
 "language": "GDScript",
 "path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/Enums/DoorState.gd"
@@ -29,16 +34,29 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/Enums/SignalState.gd"
 }, {
+"base": "Reference",
+"class": "SignalType",
+"language": "GDScript",
+"path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/Enums/SignalType.gd"
+}, {
+"base": "Reference",
+"class": "StopType",
+"language": "GDScript",
+"path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/Enums/StopType.gd"
+}, {
 "base": "Control",
 "class": "TimeField",
 "language": "GDScript",
 "path": "res://addons/Libre_Train_Sim_Editor/Docks/Configuration/time_field.gd"
 } ]
 _global_script_class_icons={
+"ControlType": "",
 "DoorState": "",
 "PersonState": "",
 "PlatformSide": "",
 "SignalState": "",
+"SignalType": "",
+"StopType": "",
 "TimeField": ""
 }
 

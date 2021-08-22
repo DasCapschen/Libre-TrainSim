@@ -5,7 +5,7 @@ extends Node
 # 1: Music
 # 2: Other
 func play(soundPath : String, loop : bool = false, pausable : bool = true, volume_db : float = 0.0 , bus : String = "Game"):
-	var audioStreamPlayer = AudioStreamPlayer.new()
+	var audio_stream_player = AudioStreamPlayer.new()
 	
 	if not resourceTable.has(soundPath) or resourceTable[soundPath] == null:
 		resourceTable[soundPath] = load(soundPath)
@@ -13,22 +13,22 @@ func play(soundPath : String, loop : bool = false, pausable : bool = true, volum
 			print_debug("jAudioManager: " + soundPath + " not found. Please give in a appropriate path beginning with res://")
 			return
 	
-	audioStreamPlayer.volume_db = volume_db
-	audioStreamPlayer.stream = resourceTable[soundPath].duplicate()
-	audioStreamPlayer.stream.loop = loop
+	audio_stream_player.volume_db = volume_db
+	audio_stream_player.stream = resourceTable[soundPath].duplicate()
+	audio_stream_player.stream.loop = loop
 	
 	if jAudioManagerBus:
-		audioStreamPlayer.bus = bus
+		audio_stream_player.bus = bus
 		
 	if pausable:
-		audioStreamPlayer.pause_mode  = 1
+		audio_stream_player.pause_mode  = 1
 	else:
-		audioStreamPlayer.pause_mode  = 2
-	add_child(audioStreamPlayer)
-	audioStreamPlayer.owner = self
-	audioStreamPlayer.play()
+		audio_stream_player.pause_mode  = 2
+	add_child(audio_stream_player)
+	audio_stream_player.owner = self
+	audio_stream_player.play()
 	
-	audioStreamPlayer.connect("finished", self, "queue_me_free", [audioStreamPlayer])
+	audio_stream_player.connect("finished", self, "queue_me_free", [audio_stream_player])
 
 func clear_all_sounds():
 	for child in get_children():

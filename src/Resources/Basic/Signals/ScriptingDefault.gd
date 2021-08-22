@@ -31,7 +31,7 @@ func green():
 	$Red.visible = false
 	$Orange.visible = false
 	$Green.visible = true
-	if Signal.warnSpeed != -1:
+	if Signal.warn_speed != -1:
 		timer.start()
 
 func red():
@@ -60,11 +60,11 @@ func update_speed(new_speed):
 		$Screen2.visible = false
 	else:
 		if new_speed - 100 >= 0:
-			var outputSpeed = int(new_speed / 10)
-			$Viewport2/Node2D/Label.text = String(outputSpeed)
+			var output_speed = int(new_speed / 10)
+			$Viewport2/Node2D/Label.text = String(output_speed)
 		else: 
-			var outputSpeed = int(new_speed / 10)
-			var string = " " + String(outputSpeed)
+			var output_speed = int(new_speed / 10)
+			var string = " " + String(output_speed)
 			$Viewport2/Node2D/Label.text = string
 		$Screen2.visible = true
 
@@ -74,11 +74,11 @@ func update_warn_speed(new_speed):
 		$Screen1.visible = false
 	else:
 		if new_speed - 100 >= 0:
-			var outputSpeed = int(new_speed / 10)
-			$Viewport/Node2D/Label.text = String(outputSpeed)
+			var output_speed = int(new_speed / 10)
+			$Viewport/Node2D/Label.text = String(output_speed)
 		else: 
-			var outputSpeed = int(new_speed / 10)
-			var string = " " + String(outputSpeed)
+			var output_speed = int(new_speed / 10)
+			var string = " " + String(output_speed)
 			$Viewport/Node2D/Label.text = string
 		$Screen1.visible = true
 		# start the timer in case we updated the speed after the state!

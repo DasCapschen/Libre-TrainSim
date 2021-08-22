@@ -44,14 +44,14 @@ surfaces/0 = {
 "Rail",
 ]]
 script = ExtResource( 1 )
-railTypePath = "Rail"
+rail_type_path = "Rail"
 length = 100.0
-buildDistance = 0.9
-endpos = Vector3( 100, 0, 0 )
-otherLength = 100.0
-Outlength = 100.0
-overheadLine = true
-isSwitchPart = [ "Rail2", "" ]
+build_distance = 0.9
+end_pos = Vector3( 100, 0, 0 )
+others_length = 100.0
+out_length = 100.0
+overhead_line = true
+is_switch_part = [ "Rail2", "" ]
 
 [node name="Beginning" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0 )

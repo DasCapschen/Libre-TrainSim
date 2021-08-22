@@ -1,6 +1,6 @@
 extends Node
 
-var scenario = Root.currentScenario
+var scenario = Root.current_scenario
 onready var world = find_parent("World")
 var step = 0
 var message = ""
@@ -21,7 +21,7 @@ func scenario1():
 				next_step() # move on to next step
 		1:
 			message = "Great! To close the Doors, press 'o'.\n\nWhith 'i' you can open the left one,\nwith 'p' you open the right door."
-			if player.doorStatus == DoorState.CLOSED:
+			if player.door_status == DoorState.CLOSED:
 				next_step()
 		2:
 			message = "Last message of custom scenario. Thanks for playing!"

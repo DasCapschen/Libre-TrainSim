@@ -1,35 +1,35 @@
 extends Spatial
 
-export (float) var walkingSpeed = 1.5
+export (float) var walking_speed = 1.5
 
-var attachedStation = null
-var attachedWagon = null
-var attachedSeat = null
-var assignedDoor = null
-var destinationIsSeat = false
+var attached_station = null
+var attached_wagon = null
+var attached_seat = null
+var assigned_door = null
+var is_destination_seat = false
 
-var transitionToWagon = false
-var transitionToStation = false
+var transition_to_wagon = false
+var transition_to_station = false
 
 # TODO: this variable is unused?
 var status = PersonState.WALKING
 
-var destinationPos = []
+var destination_pos = []
 
 func _ready():
-	walkingSpeed = rand_range(walkingSpeed, walkingSpeed+0.3)
+	walking_speed = rand_range(walking_speed, walking_speed+0.3)
 
 func _process(delta):
-	handleWalk(delta)
+	handle_walk(delta)
 
 var leave_wagon_timer = 0
-func handleWalk(delta):
+func handle_walk(delta):
 	
 	# If Doors where closed (or closing) to early, and the person is at the station..
-	if transitionToWagon == true and (attachedWagon.lastDoorStatus & DoorState.CLOSED):
-		if attachedWagon.player.currentStationNode != attachedStation:
-			transitionToWagon = false
-			destinationPos.clear()
+	if transition_to_wagon == true and (attached_wagon.last_door_status & DoorState.CLOSED):
+		if attached_wagon.player.current_station_node != attached_station:
+			transition_to_wagon = false
+			destination_pos.clear()
 		else:
 			status = PersonState.STOPPING
 			if $VisualInstance/AnimationPlayer.current_animation != "Standing":
@@ -37,26 +37,26 @@ func handleWalk(delta):
 	elif status == PersonState.STOPPING:
 		status = PersonState.WALKING
 	
-	if destinationPos.size() == 0:
-		if transitionToWagon: 
-			attachedStation.deregisterPerson(self)
-			attachedStation = null
-			transitionToWagon = false
-			attachedWagon.registerPerson(self, assignedDoor)
-			assignedDoor = null
-		if transitionToStation and (attachedWagon.lastDoorStatus & DoorState.BOTH):
+	if destination_pos.size() == 0:
+		if transition_to_wagon: 
+			attached_station.deregister_person(self)
+			attached_station = null
+			transition_to_wagon = false
+			attached_wagon.register_person(self, assigned_door)
+			assigned_door = null
+		if transition_to_station and (attached_wagon.last_door_status & DoorState.BOTH):
 			leave_wagon_timer += delta
 			if leave_wagon_timer > 1.8:
 				leave_wagon_timer = 0
-				transitionToStation = false
+				transition_to_station = false
 				leave_current_wagon()
-		if destinationIsSeat and translation.distance_to(attachedSeat.translation) < 0.1:
-			destinationIsSeat = false
-			rotation_degrees.y = attachedSeat.rotation_degrees.y + 90
+		if is_destination_seat and translation.distance_to(attached_seat.translation) < 0.1:
+			is_destination_seat = false
+			rotation_degrees.y = attached_seat.rotation_degrees.y + 90
 			status = PersonState.SITTING
 			## Animation Sitting
 			$VisualInstance/AnimationPlayer.play("Sitting")
-		elif !$VisualInstance/AnimationPlayer.is_playing() and attachedSeat == null:
+		elif !$VisualInstance/AnimationPlayer.is_playing() and attached_seat == null:
 			status = PersonState.STANDING
 			$VisualInstance/AnimationPlayer.play("Standing")
 
@@ -66,14 +66,14 @@ func handleWalk(delta):
 		status = PersonState.WALKING
 		$VisualInstance/AnimationPlayer.play("Walking")
 	
-	if translation.distance_to(destinationPos[0]) < 0.1:
-		destinationPos.pop_front()
+	if translation.distance_to(destination_pos[0]) < 0.1:
+		destination_pos.pop_front()
 		return
 	else:
 		if status != PersonState.STOPPING:
-			translation = translation.move_toward(destinationPos[0], delta*walkingSpeed)
-			var vector_delta = destinationPos[0] - translation
-#			rotation_degrees.y = rad2deg(translation.angle_to(destinationPos[0]))
+			translation = translation.move_toward(destination_pos[0], delta*walking_speed)
+			var vector_delta = destination_pos[0] - translation
+#			rotation_degrees.y = rad2deg(translation.angle_to(destination_pos[0]))
 			if vector_delta.z != 0:
 				if vector_delta.z > 0:
 					rotation_degrees.y = rad2deg(atan(vector_delta.x/vector_delta.z))
@@ -81,21 +81,21 @@ func handleWalk(delta):
 					rotation_degrees.y = rad2deg(atan(vector_delta.x/vector_delta.z))+180
 
 func leave_current_wagon():
-	destinationPos.append(assignedDoor.to_global(Vector3(0,0,0)))
+	destination_pos.append(assigned_door.to_global(Vector3(0,0,0)))
 	translation = to_global(Vector3(0,0,0))
-	attachedWagon.deregisterPerson(self)
-	attachedStation.registerPerson(self)
-	transitionToStation = false
-	attachedWagon = null
-	assignedDoor = null
+	attached_wagon.deregister_person(self)
+	attached_station.register_person(self)
+	transition_to_station = false
+	attached_wagon = null
+	assigned_door = null
 
-func deSpawn():
-	if attachedStation:
-		attachedStation.deregisterPerson(self)
-	if attachedWagon:
-		attachedWagon.deregisterPerson(self)
+func despawn():
+	if attached_station:
+		attached_station.deregister_person(self)
+	if attached_wagon:
+		attached_wagon.deregister_person(self)
 		
 	queue_free()
 
 func clear_destinations():
-	destinationPos.clear()
+	destination_pos.clear()

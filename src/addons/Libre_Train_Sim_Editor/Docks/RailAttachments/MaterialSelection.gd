@@ -20,6 +20,6 @@ func _ready():
 
 func _on_Pick_pressed():
 	print("HUHU")
-	find_parent("Rail Attachments").currentMaterial = int(name[-1])
+	find_parent("Rail Attachments").current_material = int(name[-1])
 	find_parent("Rail Attachments")._on_PickMaterial_pressed()
 	

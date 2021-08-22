@@ -6,7 +6,7 @@ extends Control
 # var a = 2
 # var b = "text"
 var world
-var currentRail
+var current_rail
 var eds # Editor Selection
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -20,15 +20,15 @@ func _process(delta):
 
 func update_selected_rail(node):
 	if node.is_in_group("Rail"):
-		currentRail = node
+		current_rail = node
 		$CurrentRail/Name.text = node.name
-		$ManualMoving.pressed = currentRail.manualMoving
-		currentRail._update(true)
+		$ManualMoving.pressed = current_rail.manual_moving
+		current_rail._update(true)
 		$S.visible = true
 		$RotationHeight.visible = true
 		update_RotationHeightData()
 		update_generalInformation()
-		if currentRail.parallelRail != "":
+		if current_rail.parallel_rail != "":
 			$S/Settings.hide()
 			$S/General/ParallelRail.show()
 			return
@@ -36,12 +36,12 @@ func update_selected_rail(node):
 		$S/General/ParallelRail.hide()
 		$S/Settings/Length/LineEdit.text = String(node.length)
 		$S/Settings/Radius/LineEdit.text = String(node.radius)
-		$S/Settings/Angle/LineEdit.text =  String(currentRail.endrot - currentRail.startrot)
+		$S/Settings/Angle/LineEdit.text =  String(current_rail.end_rot - current_rail.start_rot)
 		
 		
-		self.set_tendSlopeData(currentRail.get_tendSlopeData())
+		self.set_tendSlopeData(current_rail.get_tendSlopeData())
 	else:
-		currentRail = null
+		current_rail = null
 		$CurrentRail/Name.text = ""
 		$RotationHeight.visible = false
 		$S.visible = false
@@ -63,13 +63,13 @@ func _on_OptionButton_item_selected(id):
 		$S/Settings/Angle.visible = true
 
 func _on_Update_pressed():
-	if $CurrentRail/Name.text != currentRail.name: 
-		currentRail = null
+	if $CurrentRail/Name.text != current_rail.name: 
+		current_rail = null
 		update_selected_rail(self)
-	if currentRail == null: return
+	if current_rail == null: return
 	
-	currentRail.railTypePath = $S/General/RailType/LineEdit.text
-	currentRail.distanceToParallelRail = float($S/General/ParallelRail/ParallelDistance.text)
+	current_rail.rail_type_path = $S/General/RailType/LineEdit.text
+	current_rail.distance_to_parllel_rail = float($S/General/ParallelRail/ParallelDistance.text)
 	if $S/Settings.visible:
 		var radius
 		var length
@@ -94,79 +94,79 @@ func _on_Update_pressed():
 			print("MaxRailLength of 1000 exceedet! Canceling..")
 			return
 		if length != 0:
-			currentRail.length = length
-			currentRail.radius = radius
-		currentRail.set_tendSlopeData(self.get_tendSlopeData())
+			current_rail.length = length
+			current_rail.radius = radius
+		current_rail.set_tendSlopeData(self.get_tendSlopeData())
 	
-	currentRail._update(true)
-	update_selected_rail(currentRail)
+	current_rail._update(true)
+	update_selected_rail(current_rail)
 	print("Rail updated.")
 	pass # Replace with function body.
 
 
 func _on_AddRail_pressed():
-	if currentRail == null: return
-	if $CurrentRail/Name.text != currentRail.name: 
-		currentRail = null
+	if current_rail == null: return
+	if $CurrentRail/Name.text != current_rail.name: 
+		current_rail = null
 		update_selected_rail(self)
-	if $AddRail/Mode.selected == 0: ## After Rail
-		var RailParent = world.get_node("Rails")
-		var RailNode = preload("res://addons/Libre_Train_Sim_Editor/Data/Modules/Rail.tscn")
-		var newRail = RailNode.instance()
-		newRail.name = currentRail.name
-		newRail.translation = currentRail.endpos
-		newRail.rotation_degrees.y = currentRail.endrot
-		newRail.length = float($S/Settings/Length/LineEdit.text)
-		newRail.radius = float($S/Settings/Radius/LineEdit.text)
-		newRail.railTypePath = $S/General/RailType/LineEdit.text
-		newRail.startTend = currentRail.endTend
-		newRail.endTend = currentRail.endTend
-		newRail.startSlope = currentRail.endSlope
-		newRail.endSlope =  currentRail.endSlope
-		RailParent.add_child(newRail)
-		newRail.set_owner(currentRail.find_parent("World"))
-		update_selected_rail(newRail)
+	if $AddRail/Mode.selected == 0: ## After rail
+		var rail_parent = world.get_node("Rails")
+		var rail_node = preload("res://addons/Libre_Train_Sim_Editor/Data/Modules/Rail.tscn")
+		var new_rail = rail_node.instance()
+		new_rail.name = current_rail.name
+		new_rail.translation = current_rail.end_pos
+		new_rail.rotation_degrees.y = current_rail.end_rot
+		new_rail.length = float($S/Settings/Length/LineEdit.text)
+		new_rail.radius = float($S/Settings/Radius/LineEdit.text)
+		new_rail.rail_type_path = $S/General/RailType/LineEdit.text
+		new_rail.start_tend = current_rail.end_tend
+		new_rail.end_tend = current_rail.end_tend
+		new_rail.start_slope = current_rail.end_slope
+		new_rail.end_slope =  current_rail.end_slope
+		rail_parent.add_child(new_rail)
+		new_rail.set_owner(current_rail.find_parent("World"))
+		update_selected_rail(new_rail)
 		eds.clear()
-		eds.add_node(newRail)
-	if $AddRail/Mode.selected == 1: ## Parallel Rail
-		var RailParent = currentRail.get_parent()
-		var RailNode = preload("res://addons/Libre_Train_Sim_Editor/Data/Modules/Rail.tscn")
-		var newRail = RailNode.instance()
-		newRail.name = currentRail.name + "P"
-		newRail.parallelRail = currentRail.name
-		newRail.distanceToParallelRail = float($AddRail/ParallelDistance/LineEdit.text)
-#		currentRail.othersDistance = float($AddRail/ParallelDistance/LineEdit.text)
-#		currentRail.calcParallelRail(true)
-#		newRail.translation = currentRail.translation + (Vector3(1, 0, 0).rotated(Vector3(0,1,0), deg2rad(currentRail.rotation_degrees.y-90))*float($AddRail/ParallelDistance/LineEdit.text))
-#		newRail.rotation_degrees.y = currentRail.rotation_degrees.y
-#		newRail.length = currentRail.otherLength
-#		newRail.radius = currentRail.otherRadius
-#		newRail.railType = $S/General/RailType/LineEdit.text
-#		newRail.set_tendSlopeData(currentRail.get_tendSlopeData())
-		RailParent.add_child(newRail)
-		newRail.set_owner(currentRail.find_parent("World"))
-		update_selected_rail(newRail)
+		eds.add_node(new_rail)
+	if $AddRail/Mode.selected == 1: ## Parallel rail
+		var rail_parent = current_rail.get_parent()
+		var rail_node = preload("res://addons/Libre_Train_Sim_Editor/Data/Modules/Rail.tscn")
+		var new_rail = rail_node.instance()
+		new_rail.name = current_rail.name + "P"
+		new_rail.parallel_rail = current_rail.name
+		new_rail.distance_to_parllel_rail = float($AddRail/ParallelDistance/LineEdit.text)
+#		current_rail.others_distance = float($AddRail/ParallelDistance/LineEdit.text)
+#		current_rail.calc_parallel_rail(true)
+#		new_rail.translation = current_rail.translation + (Vector3(1, 0, 0).rotated(Vector3(0,1,0), deg2rad(current_rail.rotation_degrees.y-90))*float($AddRail/ParallelDistance/LineEdit.text))
+#		new_rail.rotation_degrees.y = current_rail.rotation_degrees.y
+#		new_rail.length = current_rail.others_length
+#		new_rail.radius = current_rail.others_radius
+#		new_rail.railType = $S/General/RailType/LineEdit.text
+#		new_rail.set_tendSlopeData(current_rail.get_tendSlopeData())
+		rail_parent.add_child(new_rail)
+		new_rail.set_owner(current_rail.find_parent("World"))
+		update_selected_rail(new_rail)
 		eds.clear()
-		eds.add_node(newRail)
-	if $AddRail/Mode.selected == 2: ## Before Rail
-		var RailParent = currentRail.get_parent()
-		var RailNode = preload("res://addons/Libre_Train_Sim_Editor/Data/Modules/Rail.tscn")
-		var newRail = RailNode.instance()
-		newRail.name = currentRail.name
-		newRail.translation = currentRail.translation
-		newRail.rotation_degrees.y = currentRail.rotation_degrees.y + 180
-		newRail.length = float($S/Settings/Length/LineEdit.text)
-		newRail.radius = float($S/Settings/Radius/LineEdit.text)
-		newRail.railTypePath = $S/General/RailType/LineEdit.text
-		newRail.startTend = -currentRail.startTend
-		newRail.endTend = -currentRail.startTend
-		newRail.startSlope = -currentRail.startSlope
-		newRail.endSlope = -currentRail.startSlope
-		RailParent.add_child(newRail)
-		newRail.set_owner(currentRail.find_parent("World"))
-		update_selected_rail(newRail)
+		eds.add_node(new_rail)
+	if $AddRail/Mode.selected == 2: ## Before rail
+		var rail_parent = current_rail.get_parent()
+		var rail_node = preload("res://addons/Libre_Train_Sim_Editor/Data/Modules/Rail.tscn")
+		var new_rail = rail_node.instance()
+		new_rail.name = current_rail.name
+		new_rail.translation = current_rail.translation
+		new_rail.rotation_degrees.y = current_rail.rotation_degrees.y + 180
+		new_rail.length = float($S/Settings/Length/LineEdit.text)
+		new_rail.radius = float($S/Settings/Radius/LineEdit.text)
+		new_rail.rail_type_path = $S/General/RailType/LineEdit.text
+		new_rail.start_tend = -current_rail.start_tend
+		new_rail.end_tend = -current_rail.start_tend
+		new_rail.start_slope = -current_rail.start_slope
+		new_rail.end_slope = -current_rail.start_slope
+		rail_parent.add_child(new_rail)
+		new_rail.set_owner(current_rail.find_parent("World"))
+		update_selected_rail(new_rail)
 		eds.clear()
-		eds.add_node(newRail)
+		eds.add_node(new_rail)
 		
 		
 		
@@ -175,17 +175,17 @@ func _on_AddRail_pressed():
 
 
 func _on_Rename_pressed():
-	if currentRail == null: return
+	if current_rail == null: return
 	$CurrentRail/Name.text = $CurrentRail/Name.text.replace(" ", "_")
-	currentRail.name = $CurrentRail/Name.text
-	update_selected_rail(currentRail)
+	current_rail.name = $CurrentRail/Name.text
+	update_selected_rail(current_rail)
 	print("Rail renamed.")
 	pass # Replace with function body.
 
 
 func _on_Delete_pressed():
-	currentRail.free()
-	currentRail = null
+	current_rail.free()
+	current_rail = null
 	update_selected_rail(self)
 	print("Rail deleted.")
 	pass # Replace with function body.
@@ -196,42 +196,42 @@ func _on_Mode_item_selected(id):
 
 
 func _on_ShiftButton_pressed():
-	if currentRail == null: return
-	if $CurrentRail/Name.text != currentRail.name: 
-		currentRail = null
+	if current_rail == null: return
+	if $CurrentRail/Name.text != current_rail.name: 
+		current_rail = null
 		update_selected_rail(self)
 	
-	currentRail.radius = float($S/Settings/Shift/Radius/LineEdit.text)
-	currentRail.InShift = float($S/Settings/Shift/Shift/LineEdit.text)
-	if currentRail.radius < 0 and currentRail.InShift > 0:
-		currentRail.InShift = currentRail.InShift*-1
-	currentRail.calcShift(true)
-	if currentRail.Outlength > 1000:
+	current_rail.radius = float($S/Settings/Shift/Radius/LineEdit.text)
+	current_rail.in_shift = float($S/Settings/Shift/Shift/LineEdit.text)
+	if current_rail.radius < 0 and current_rail.in_shift > 0:
+		current_rail.in_shift = current_rail.in_shift*-1
+	current_rail.calc_shift(true)
+	if current_rail.out_length > 1000:
 		print("MaxRailLength of 1000 exceedet! Canceling..")
 		return
-	currentRail.length = currentRail.Outlength
-	currentRail._update(true)
-	update_selected_rail(currentRail)
+	current_rail.length = current_rail.out_length
+	current_rail._update(true)
+	update_selected_rail(current_rail)
 	pass # Replace with function body.
 
 
 func _on_Shift2Button_pressed():
-	if currentRail == null: return
-	if $CurrentRail/Name.text != currentRail.name: 
-		currentRail = null
+	if current_rail == null: return
+	if $CurrentRail/Name.text != current_rail.name: 
+		current_rail = null
 		update_selected_rail(self)
 		
 	var data = calc_shift(float($S/Settings/Shift2/LengthForward/LineEdit.text), float($S/Settings/Shift2/Shift/LineEdit.text))
 	if data[1] > 1000:
 		print("MaxRailLength of 1000 exceedet! Canceling..")
 		return
-	currentRail.length = data[1]
-	currentRail.radius = data[0]
-	currentRail._update(true)
+	current_rail.length = data[1]
+	current_rail.radius = data[0]
+	current_rail._update(true)
 	
 	pass # Replace with function body.
 
-## Calculate the shift of an Rail, given with relational length and shift
+## Calculate the shift of an rail, given with relational length and shift
 func calc_shift(x, y): ## This is 2 dimensional
 	if y == 0:
 		return [0, x]
@@ -248,84 +248,84 @@ func calc_shift(x, y): ## This is 2 dimensional
 	return [a, length]
 
 
-## Connect two Rails:
+## Connect two rails:
 func _on_Connect_pressed():
-	var RailParent = world.get_node("Rails")
-	var firstRail = RailParent.get_node($RailConnector/FirstRail/LineEdit.text)
-	var secondRail = RailParent.get_node($RailConnector/SecondRail/LineEdit.text)
-	if not (firstRail.is_in_group("Rail") and secondRail.is_in_group("Rail")) :
-		print("Some Rail not found. Check your spelling!")
+	var rail_parent = world.get_node("Rails")
+	var first_rail = rail_parent.get_node($RailConnector/FirstRail/LineEdit.text)
+	var second_rail = rail_parent.get_node($RailConnector/SecondRail/LineEdit.text)
+	if not (first_rail.is_in_group("Rail") and second_rail.is_in_group("Rail")) :
+		print("Some rail not found. Check your spelling!")
 		return
 	print("Rails connected.")
 	
-	firstRail._update(true)
-	secondRail._update(true)
+	first_rail._update(true)
+	second_rail._update(true)
 	var pos1
 	var rot1
 	if $RailConnector/FirstRail/OptionButton.selected == 0:
-		pos1 = firstRail.translation
-		rot1 = firstRail.rotation_degrees.y + 180
+		pos1 = first_rail.translation
+		rot1 = first_rail.rotation_degrees.y + 180
 	else:
-		pos1 = firstRail.endpos
-		rot1 = firstRail.endrot
+		pos1 = first_rail.end_pos
+		rot1 = first_rail.end_rot
 		
 	var pos2
 	var rot2
 	if $RailConnector/SecondRail/OptionButton.selected == 0:
-		pos2 = secondRail.translation
-		rot2 = secondRail.rotation_degrees.y +180
+		pos2 = second_rail.translation
+		rot2 = second_rail.rotation_degrees.y +180
 	else:
-		pos2 = secondRail.endpos
-		rot2 = secondRail.endrot
+		pos2 = second_rail.end_pos
+		rot2 = second_rail.end_rot
 	
 	var vector = (pos2 - pos1)/2
 	print(vector)
 	vector = vector.rotated(Vector3(0,1,0), -deg2rad(rot1))
 	
-	var RailNode = preload("res://addons/Libre_Train_Sim_Editor/Data/Modules/Rail.tscn")
+	var rail_node = preload("res://addons/Libre_Train_Sim_Editor/Data/Modules/Rail.tscn")
 	
-	## Rail 1:
-	var newRail = RailNode.instance()
-	newRail.name = firstRail.name + "Connector"
-	newRail.translation = pos1
-	newRail.rotation_degrees.y = rot1
+	## rail 1:
+	var new_rail = rail_node.instance()
+	new_rail.name = first_rail.name + "Connector"
+	new_rail.translation = pos1
+	new_rail.rotation_degrees.y = rot1
 	var data = calc_shift(vector.x, -vector.z)
-	newRail.length = data[1]
-	newRail.radius = data[0]
-	RailParent.add_child(newRail)
-	newRail.set_owner(currentRail.find_parent("World"))
-	pos2 = newRail.endpos
-	rot2 = newRail.endrot
+	new_rail.length = data[1]
+	new_rail.radius = data[0]
+	rail_parent.add_child(new_rail)
+	new_rail.set_owner(current_rail.find_parent("World"))
+	pos2 = new_rail.end_pos
+	rot2 = new_rail.end_rot
 	
-	## Rail 2:
-	newRail = RailNode.instance()
-	newRail.name = secondRail.name + "Connector"
-	newRail.translation = pos2
-	newRail.rotation_degrees.y = rot2
+	## rail 2:
+	new_rail = rail_node.instance()
+	new_rail.name = second_rail.name + "Connector"
+	new_rail.translation = pos2
+	new_rail.rotation_degrees.y = rot2
 	data = calc_shift(vector.x, -vector.z)
-	newRail.length = data[1]
-	newRail.radius = -data[0]
-	RailParent.add_child(newRail)
-	newRail.set_owner(currentRail.find_parent("World"))
+	new_rail.length = data[1]
+	new_rail.radius = -data[0]
+	rail_parent.add_child(new_rail)
+	new_rail.set_owner(current_rail.find_parent("World"))
 
 	pass # Replace with function body.
 
 
 
 func _on_Select_FirstRail_pressed():
-	if $CurrentRail/Name.text != currentRail.name: 
-		currentRail = null
+	if $CurrentRail/Name.text != current_rail.name: 
+		current_rail = null
 		update_selected_rail(self)
-	if currentRail == null: return
-	$RailConnector/FirstRail/LineEdit.text = currentRail.name
+	if current_rail == null: return
+	$RailConnector/FirstRail/LineEdit.text = current_rail.name
 
 
 func _on_Select_SecondRail_pressed():
-	if $CurrentRail/Name.text != currentRail.name: 
-		currentRail = null
+	if $CurrentRail/Name.text != current_rail.name: 
+		current_rail = null
 		update_selected_rail(self)
-	if currentRail == null: return
-	$RailConnector/SecondRail/LineEdit.text = currentRail.name
+	if current_rail == null: return
+	$RailConnector/SecondRail/LineEdit.text = current_rail.name
 
 
 
@@ -355,59 +355,59 @@ func _on_ShowHideSlope_pressed():
 
 func get_tendSlopeData():
 	var d = {}
-	d.startSlope = $S/Settings/Slope/SlopeGrid/StartSlope.value
-	d.endSlope = $S/Settings/Slope/SlopeGrid/EndSlope.value
-	d.startTend = $S/Settings/Tendency/S/StartTend.value
-	d.endTend = $S/Settings/Tendency/S/EndTend.value
-	d.tend1Pos = $S/Settings/Tendency/S2/Tend1Pos.value
+	d.start_slope = $S/Settings/Slope/SlopeGrid/StartSlope.value
+	d.end_slope = $S/Settings/Slope/SlopeGrid/EndSlope.value
+	d.start_tend = $S/Settings/Tendency/S/StartTend.value
+	d.end_tend = $S/Settings/Tendency/S/EndTend.value
+	d.tend1_pos = $S/Settings/Tendency/S2/Tend1Pos.value
 	d.tend1 = $S/Settings/Tendency/S2/Tend1.value
-	d.tend2Pos = $S/Settings/Tendency/S2/Tend2Pos.value
+	d.tend2_pos = $S/Settings/Tendency/S2/Tend2Pos.value
 	d.tend2 = $S/Settings/Tendency/S2/Tend2.value
-	d.automaticTendency = $S/Settings/Tendency/automaticTendency.pressed
+	d.automatic_tendency = $S/Settings/Tendency/automaticTendency.pressed
 	return d
 
 func set_tendSlopeData(data):
 	var s = data
-	$S/Settings/Slope/SlopeGrid/StartSlope.value = s.startSlope
-	$S/Settings/Slope/SlopeGrid/EndSlope.value = s.endSlope
-	$S/Settings/Tendency/S/StartTend.value = s.startTend
-	$S/Settings/Tendency/S/EndTend.value = s.endTend
-	$S/Settings/Tendency/S2/Tend1Pos.value = s.tend1Pos
+	$S/Settings/Slope/SlopeGrid/StartSlope.value = s.start_slope
+	$S/Settings/Slope/SlopeGrid/EndSlope.value = s.end_slope
+	$S/Settings/Tendency/S/StartTend.value = s.start_tend
+	$S/Settings/Tendency/S/EndTend.value = s.end_tend
+	$S/Settings/Tendency/S2/Tend1Pos.value = s.tend1_pos
 	$S/Settings/Tendency/S2/Tend1.value = s.tend1
-	$S/Settings/Tendency/S2/Tend2Pos.value = s.tend2Pos
+	$S/Settings/Tendency/S2/Tend2Pos.value = s.tend2_pos
 	$S/Settings/Tendency/S2/Tend2.value = s.tend2
-	$S/Settings/Tendency/automaticTendency.pressed = s.automaticTendency
-	$S/Settings/Tendency/S2/Tend1Pos.editable = !s.automaticTendency
-	$S/Settings/Tendency/S2/Tend1.editable = !s.automaticTendency
-	$S/Settings/Tendency/S2/Tend2Pos.editable = !s.automaticTendency
-	$S/Settings/Tendency/S2/Tend2.editable = !s.automaticTendency
+	$S/Settings/Tendency/automaticTendency.pressed = s.automatic_tendency
+	$S/Settings/Tendency/S2/Tend1Pos.editable = !s.automatic_tendency
+	$S/Settings/Tendency/S2/Tend1.editable = !s.automatic_tendency
+	$S/Settings/Tendency/S2/Tend2Pos.editable = !s.automatic_tendency
+	$S/Settings/Tendency/S2/Tend2.editable = !s.automatic_tendency
 	
 	
 
 func update_RotationHeightData():
-	$RotationHeight/StartRotation.text = String(currentRail.startrot)
-	$RotationHeight/EndRotation.text =String( currentRail.endrot)
-	$RotationHeight/StartHeight.text = String(currentRail.startpos.y)
-	$RotationHeight/EndHeight.text = String(currentRail.endpos.y)
+	$RotationHeight/StartRotation.text = String(current_rail.start_rot)
+	$RotationHeight/EndRotation.text =String( current_rail.end_rot)
+	$RotationHeight/StartHeight.text = String(current_rail.start_pos.y)
+	$RotationHeight/EndHeight.text = String(current_rail.end_pos.y)
 
 func update_generalInformation():
-	$S/General/RailType/LineEdit.text = currentRail.railTypePath
-	$S/General/OverheadLine.pressed = currentRail.overheadLine
-	$S/General/ParallelRail/ParallelRail.text = currentRail.parallelRail
-	$S/General/ParallelRail/ParallelDistance.text = String(currentRail.distanceToParallelRail)
+	$S/General/RailType/LineEdit.text = current_rail.rail_type_path
+	$S/General/OverheadLine.pressed = current_rail.overhead_line
+	$S/General/ParallelRail/ParallelRail.text = current_rail.parallel_rail
+	$S/General/ParallelRail/ParallelDistance.text = String(current_rail.distance_to_parllel_rail)
 	
 
 
 func _on_ManualMoving_pressed():
-	currentRail.manualMoving = $ManualMoving.pressed
+	current_rail.manual_moving = $ManualMoving.pressed
 	
 
 
 func _on_automaticTendency_pressed():
-	currentRail.automaticTendency = $S/Settings/Tendency/automaticTendency.pressed
-	currentRail.updateAutomaticTendency()
-	set_tendSlopeData(currentRail.get_tendSlopeData())
-	currentRail._update(true)
+	current_rail.automatic_tendency = $S/Settings/Tendency/automaticTendency.pressed
+	current_rail.update_automatic_tendency()
+	set_tendSlopeData(current_rail.get_tendSlopeData())
+	current_rail._update(true)
 	
 	
 
@@ -415,5 +415,5 @@ func _on_automaticTendency_pressed():
 
 
 func _on_OverheadLine_pressed():
-	currentRail.overheadLine = $S/General/OverheadLine.pressed
-	currentRail.updateOverheadLine()
+	current_rail.overhead_line = $S/General/OverheadLine.pressed
+	current_rail.update_overhead_line()

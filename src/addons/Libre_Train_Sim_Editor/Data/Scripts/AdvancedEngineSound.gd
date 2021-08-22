@@ -38,23 +38,23 @@ func _process(delta):
 	
 	## Idle Engine:
 	if player.engine:
-		$Idle.unit_db = Root.clampViaTime(0, $Idle.unit_db, delta*2)
+		$Idle.unit_db = Root.clamp_via_time(0, $Idle.unit_db, delta*2)
 	else:
-		$Idle.unit_db = Root.clampViaTime(-50, $Idle.unit_db, delta*2)
+		$Idle.unit_db = Root.clamp_via_time(-50, $Idle.unit_db, delta*2)
 		
 	## Accleration
 	### Main Volume of accleration
-	var sollAcceleration = -50
+	var soll_acceleration = -50
 	if player.engine and player.speed != 0:
-		if  Math.speedToKmH(player.speed) < 60:
-			sollAcceleration = -30 + abs(player.command*30)
+		if  Math.speed_to_kmh(player.speed) < 60:
+			soll_acceleration = -30 + abs(player.command*30)
 		else:
-			sollAcceleration = -30 + abs(player.command*30) - (Math.speedToKmH(player.speed)-60)/10.0
+			soll_acceleration = -30 + abs(player.command*30) - (Math.speed_to_kmh(player.speed)-60)/10.0
 #		if player.command < 0:
-#			sollAcceleration = sollAcceleration - 10.0
+#			soll_acceleration = soll_acceleration - 10.0
 	
 	### Control acceleration_sound_index
-	var speed = Math.speedToKmH(player.speed)
+	var speed = Math.speed_to_kmh(player.speed)
 	if speed > 10 and acceleration_sound_index == 1:
 		acceleration_sound_index = 0
 		acceleration_timer = 0.0
@@ -63,29 +63,29 @@ func _process(delta):
 	
 	### Acceleration Mixing:
 	if acceleration_sound_index == 1:
-		$Acceleration1.unit_db = Root.clampViaTime(0, $Acceleration1.unit_db, delta*2)
-		$Acceleration2.unit_db = Root.clampViaTime(-50, $Acceleration2.unit_db, delta*2)
+		$Acceleration1.unit_db = Root.clamp_via_time(0, $Acceleration1.unit_db, delta*2)
+		$Acceleration2.unit_db = Root.clamp_via_time(-50, $Acceleration2.unit_db, delta*2)
 	if acceleration_sound_index == 2:
-		$Acceleration1.unit_db = Root.clampViaTime(-50, $Acceleration1.unit_db, delta*2)
-		$Acceleration2.unit_db = Root.clampViaTime(0, $Acceleration2.unit_db, delta*2)
+		$Acceleration1.unit_db = Root.clamp_via_time(-50, $Acceleration1.unit_db, delta*2)
+		$Acceleration2.unit_db = Root.clamp_via_time(0, $Acceleration2.unit_db, delta*2)
 	if acceleration_sound_index == 0: # Transistion from 1 to 2:
 		if acceleration_timer == 0.0:
 			$AccelerationTransition.play(0)
 		if acceleration_timer > acceleration_transition_1_delta_length_in_ms/1000.0: # Set acceleration 1 down
-			$Acceleration1.unit_db = Root.clampViaTime(-50, $Acceleration1.unit_db, delta*4)
-			$Acceleration2.unit_db = Root.clampViaTime(-50, $Acceleration2.unit_db, delta*4) # just to be safe, that this is off. (normally that should be the case)
+			$Acceleration1.unit_db = Root.clamp_via_time(-50, $Acceleration1.unit_db, delta*4)
+			$Acceleration2.unit_db = Root.clamp_via_time(-50, $Acceleration2.unit_db, delta*4) # just to be safe, that this is off. (normally that should be the case)
 		if acceleration_timer > acceleration_transition_length_in_ms/1000.0 - acceleration_transition_2_delta_length_in_ms/1000.0: # Set acceleration 2 uo
-			$Acceleration2.unit_db = Root.clampViaTime(0, $Acceleration2.unit_db, delta*4)
+			$Acceleration2.unit_db = Root.clamp_via_time(0, $Acceleration2.unit_db, delta*4)
 		if acceleration_timer > acceleration_transition_length_in_ms/1000.0 + acceleration_transition_2_delta_length_in_ms/1000.0:
 			acceleration_sound_index = 2
 		acceleration_timer += delta
 	
-	$Acceleration1.unit_db = min(Root.clampViaTime(sollAcceleration, $Acceleration1.unit_db, delta*4), $Acceleration1.unit_db)
-	$Acceleration2.unit_db = min(sollAcceleration, $Acceleration2.unit_db)
-	$AccelerationTransition.unit_db = sollAcceleration
+	$Acceleration1.unit_db = min(Root.clamp_via_time(soll_acceleration, $Acceleration1.unit_db, delta*4), $Acceleration1.unit_db)
+	$Acceleration2.unit_db = min(soll_acceleration, $Acceleration2.unit_db)
+	$AccelerationTransition.unit_db = soll_acceleration
 	
 	### Pitching:
-	$Acceleration2.pitch_scale = 1.0 + (Math.speedToKmH(player.speed)-10.0)/300.0
+	$Acceleration2.pitch_scale = 1.0 + (Math.speed_to_kmh(player.speed)-10.0)/300.0
 
 		
 		
@@ -96,28 +96,28 @@ func _process(delta):
 
 #
 #
-### sollCurveSound:
-#	if wagon.currentRail.radius == 0 or Math.speedToKmH(player.speed) < 35:
-#		sollCurveSound = -50
+### soll_curve_sound:
+#	if wagon.current_rail.radius == 0 or Math.speed_to_kmh(player.speed) < 35:
+#		soll_curve_sound = -50
 #	else:
-#		sollCurveSound = -25.0 + (Math.speedToKmH(player.speed)/80.0 * abs(300.0/wagon.currentRail.radius))*5
+#		soll_curve_sound = -25.0 + (Math.speed_to_kmh(player.speed)/80.0 * abs(300.0/wagon.current_rail.radius))*5
 #
-##	print(sollCurveSound)
-#	$CurveSound.unit_db = Root.clampViaTime(sollCurveSound, $CurveSound.unit_db, delta)
+##	print(soll_curve_sound)
+#	$CurveSound.unit_db = Root.clamp_via_time(soll_curve_sound, $CurveSound.unit_db, delta)
 ##	$CurveSound.unit_db = 10
 #
 #	## Drive Sound:
-#	$DriveSound.pitch_scale = 0.5 + Math.speedToKmH(player.speed)/200.0
-#	var driveSoundDb = -20.0 + Math.speedToKmH(player.speed)/2.0
-#	if driveSoundDb > 10:
-#		driveSoundDb = 10
+#	$DriveSound.pitch_scale = 0.5 + Math.speed_to_kmh(player.speed)/200.0
+#	var drive_sound_db = -20.0 + Math.speed_to_kmh(player.speed)/2.0
+#	if drive_sound_db > 10:
+#		drive_sound_db = 10
 #	if player.speed == 0:
-#		driveSoundDb = -50.0
-#	$DriveSound.unit_db = Root.clampViaTime(driveSoundDb, $DriveSound.unit_db, delta) 
+#		drive_sound_db = -50.0
+#	$DriveSound.unit_db = Root.clamp_via_time(drive_sound_db, $DriveSound.unit_db, delta) 
 #
-#	var sollBreakSound = -50.0
+#	var soll_brake_sound = -50.0
 #	if not (player.speed >= 5 or player.command >= 0 or player.speed == 0):
-#		sollBreakSound = -20.0 -player.command * 5.0/player.speed
-#		if sollBreakSound > 10:
-#			sollBreakSound = 10
-#	$BrakeSound.unit_db = Root.clampViaTime(sollBreakSound, $BrakeSound.unit_db, delta)
+#		soll_brake_sound = -20.0 -player.command * 5.0/player.speed
+#		if soll_brake_sound > 10:
+#			soll_brake_sound = 10
+#	$BrakeSound.unit_db = Root.clamp_via_time(soll_brake_sound, $BrakeSound.unit_db, delta)

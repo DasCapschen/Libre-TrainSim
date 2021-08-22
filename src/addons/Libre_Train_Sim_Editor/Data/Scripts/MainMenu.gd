@@ -15,11 +15,11 @@ func _ready():
 		return
 	update_config()
 	$Version.text = "Version: " + String(version)
-	var openTimes = jSaveManager.get_value("open_times", 0)
-	openTimes += 1
-	jSaveManager.save_value("open_times", openTimes)
-	var feedbackPressed = jSaveManager.get_value("feedback_pressed", false)
-	if openTimes > 3 and not feedbackPressed and not mobile_version:
+	var open_times = jSaveManager.get_value("open_times", 0)
+	open_times += 1
+	jSaveManager.save_value("open_times", open_times)
+	var feedback_pressed = jSaveManager.get_value("feedback_pressed", false)
+	if open_times > 3 and not feedback_pressed and not mobile_version:
 		$FeedBack/VBoxContainer/RichTextLabel.text = TranslationServer.translate("MENU_FEEDBACK_QUESTION")
 		$FeedBack.popup()
 	$MusicPlayer.play(0)
@@ -50,22 +50,22 @@ func _process(delta):
 	if Engine.is_editor_hint():
 		return
 	load_scene(delta)
-	updateBottmLabels()
+	update_bottom_labels()
 
 
-var foundTracks = []
-var foundContentPacks = []
-var foundTrains = []
+var found_tracks = []
+var found_content_packs = []
+var found_trains = []
 
-var currentTrack = ""
-var currentTrain = ""
-var currentScenario = ""
+var current_track = ""
+var current_train = ""
+var current_scenario = ""
 
 func _on_Quit_pressed():
 	get_tree().quit()
 
 
-func updateBottmLabels():
+func update_bottom_labels():
 	$Label_Music.visible = jSaveManager.get_setting("musicVolume", 0.0) != 0.0
 	$Version.visible = $Front.visible
 
@@ -99,7 +99,7 @@ func _on_SettingsFront_pressed():
 
 func update_config():
 	## Get All .pck files:
-	foundContentPacks = []
+	found_content_packs = []
 	var dir = Directory.new()
 	dir.open(OS.get_executable_path().get_base_dir())
 	dir.list_dir_begin()
@@ -108,82 +108,82 @@ func update_config():
 		if file == "":
 			break
 		if file.get_extension() == "pck":
-			foundContentPacks.append(file)
+			found_content_packs.append(file)
 	dir.list_dir_end()
-	print("Found Content Packs: " + String(foundContentPacks))
+	print("Found Content Packs: " + String(found_content_packs))
 
-	for contentPack in foundContentPacks:
-		if ProjectSettings.load_resource_pack(contentPack, false):
-			print("Loading Content Pack "+ contentPack+" successfully finished")
+	for content_pack in found_content_packs:
+		if ProjectSettings.load_resource_pack(content_pack, false):
+			print("Loading Content Pack "+ content_pack+" successfully finished")
 
 	## Get all Tracks:
-	var foundFiles = {"Array": []}
-	Root.crawlDirectory("res://Worlds",foundFiles,"tscn")
-	print(foundFiles)
-	foundTracks = foundFiles["Array"].duplicate(true)
+	var found_files = {"Array": []}
+	Root.crawl_directory("res://Worlds",found_files,"tscn")
+	print(found_files)
+	found_tracks = found_files["Array"].duplicate(true)
 
 	## Get all Trains
-	foundFiles = {"Array": []}
-	Root.crawlDirectory("res://Trains",foundFiles,"tscn")
-	foundTrains = foundFiles["Array"].duplicate(true)
+	found_files = {"Array": []}
+	Root.crawl_directory("res://Trains",found_files,"tscn")
+	found_trains = found_files["Array"].duplicate(true)
 
 
 func update_track_list():
 	$Play/Selection/Tracks/ItemList.clear()
-	for track in foundTracks:
+	for track in found_tracks:
 		$Play/Selection/Tracks/ItemList.add_item(track.get_file().get_basename())
 
 func update_train_list():
 	$Play/Selection/Trains/ItemList.clear()
-	for train in foundTrains:
+	for train in found_trains:
 		$Play/Selection/Trains/ItemList.add_item(train.get_file().get_basename())
 
 
 # Play Page:
 func _on_PlayPlay_pressed():
-	if currentScenario == "" or currentTrack == "" or currentTrain == "": return
+	if current_scenario == "" or current_track == "" or current_train == "": return
 	var index = $Play/Selection/Tracks/ItemList.get_selected_items()[0]
-	Root.currentScenario = currentScenario
-	Root.currentTrain = currentTrain
-	Root.EasyMode = $Play/Info/Info/EasyMode.pressed
+	Root.current_scenario = current_scenario
+	Root.current_train = current_train
+	Root.easy_mode = $Play/Info/Info/EasyMode.pressed
 	$MenuBackground.hide()
 	$Play.hide()
 	$Loading.show()
 	## Load Texture
-	var save_path = foundTracks[index].get_basename() + "-scenarios.cfg"
+	var save_path = found_tracks[index].get_basename() + "-scenarios.cfg"
 	var config = ConfigFile.new()
 	var load_response = config.load(save_path)
-	var wData = config.get_value("WorldConfig", "Data", null)
-	$Background.texture = load(wData["ThumbnailPath"])
-	loadScenePath = foundTracks[index]
+	var w_data = config.get_value("WorldConfig", "Data", null)
+	$Background.texture = load(w_data["ThumbnailPath"])
+	load_scene_path = found_tracks[index]
 
-var loadScenePath = ""
+var load_scene_path = ""
 var load_scene_timer = 0
 func load_scene(delta):
-	if loadScenePath != "":
+	if load_scene_path != "":
 		load_scene_timer += delta
 		if load_scene_timer > 0.2:
-			get_tree().change_scene(loadScenePath)
+			get_tree().change_scene(load_scene_path)
 
 func _on_ItemList_itemTracks_selected(index):
-	currentTrack = foundTracks[index]
-	Root.checkAndLoadTranslationsForTrack(currentTrack.get_file().get_basename())
-	currentScenario = ""
-	var save_path = foundTracks[index].get_basename() + "-scenarios.cfg"
+	current_track = found_tracks[index]
+	Root.check_and_load_translations_for_track(current_track.get_file().get_basename())
+	current_scenario = ""
+	var save_path = found_tracks[index].get_basename() + "-scenarios.cfg"
 	var config = ConfigFile.new()
 	var load_response = config.load(save_path)
 
-	var wData = config.get_value("WorldConfig", "Data", null)
-	if wData == null:
+	var w_data = config.get_value("WorldConfig", "Data", null)
+	if w_data == null:
 		print(save_path)
 		$Play/Info/Description.text = TranslationServer.translate("MENU_NO_SCENARIO_FOUND")
 		$Play/Info/Description.text = TranslationServer.translate(save_path)
 		$Play/Selection/Scenarios.hide()
 		return
-	$Play/Info/Description.text = TranslationServer.translate(wData["TrackDesciption"])
-	$Play/Info/Info/Author.text = " "+ TranslationServer.translate("MENU_AUTHOR") + ": " + wData["Author"] + " "
-	$Play/Info/Info/ReleaseDate.text = " "+ TranslationServer.translate("MENU_RELEASE") + ": " + String(wData["ReleaseDate"][1]) + " " + String(wData["ReleaseDate"][2]) + " "
-	$Play/Info/Screenshot.texture = load(wData["ThumbnailPath"])
+	$Play/Info/Description.text = TranslationServer.translate(w_data["TrackDesciption"])
+	$Play/Info/Info/Author.text = " "+ TranslationServer.translate("MENU_AUTHOR") + ": " + w_data["Author"] + " "
+	$Play/Info/Info/ReleaseDate.text = " "+ TranslationServer.translate("MENU_RELEASE") + ": " + String(w_data["ReleaseDate"][1]) + " " + String(w_data["ReleaseDate"][2]) + " "
+	$Play/Info/Screenshot.texture = load(w_data["ThumbnailPath"])
 
 	$Play/Selection/Scenarios.show()
 	$Play/Selection/Scenarios/ItemList.clear()
@@ -201,8 +201,8 @@ func _on_ItemList_itemTracks_selected(index):
 func update_content():
 	$Content/Label.text = TranslationServer.translate("MENU_TO_ADD_CONTENT") + " " + OS.get_executable_path().get_base_dir()
 	$Content/ItemList.clear()
-	for contentPack in foundContentPacks:
-		$Content/ItemList.add_item(contentPack)
+	for content_pack in found_content_packs:
+		$Content/ItemList.add_item(content_pack)
 
 
 
@@ -217,23 +217,23 @@ func _on_ReloadContent_pressed():
 
 
 func _on_ItemList_scenario_selected(index):
-	currentScenario = $Play/Selection/Scenarios/ItemList.get_item_text(index)
-	var save_path = foundTracks[$Play/Selection/Tracks/ItemList.get_selected_items()[0]].get_basename() + "-scenarios.cfg"
+	current_scenario = $Play/Selection/Scenarios/ItemList.get_item_text(index)
+	var save_path = found_tracks[$Play/Selection/Tracks/ItemList.get_selected_items()[0]].get_basename() + "-scenarios.cfg"
 	var config = ConfigFile.new()
 	var load_response = config.load(save_path)
-	var sData = config.get_value("Scenarios", "sData", {})
-	$Play/Info/Description.text = TranslationServer.translate(sData[currentScenario]["Description"])
-	$Play/Info/Info/Duration.text = TranslationServer.translate("MENU_DURATION")+": " + String(sData[currentScenario]["Duration"]) + " min"
+	var scenario_data = config.get_value("Scenarios", "scenario_data", {})
+	$Play/Info/Description.text = TranslationServer.translate(scenario_data[current_scenario]["Description"])
+	$Play/Info/Info/Duration.text = TranslationServer.translate("MENU_DURATION")+": " + String(scenario_data[current_scenario]["Duration"]) + " min"
 	$Play/Selection/Trains.show()
 	$Play/Info/Info/EasyMode.hide()
 	update_train_list()
 
 	# Search and preselect train from scenario:
 	$Play/Selection/Trains/ItemList.unselect_all()
-	var preferredTrain = sData[currentScenario]["Trains"].get("Player", {}).get("PreferredTrain", "")
-	if preferredTrain != "":
-		for i in range(foundTrains.size()):
-			if foundTrains[i].find(preferredTrain) != -1:
+	var preferred_train = scenario_data[current_scenario]["Trains"].get("Player", {}).get("PreferredTrain", "")
+	if preferred_train != "":
+		for i in range(found_trains.size()):
+			if found_trains[i].find(preferred_train) != -1:
 				$Play/Selection/Trains/ItemList.select(i)
 				_on_ItemList_Train_selected(i)
 
@@ -243,15 +243,15 @@ func _on_ItemList_scenario_selected(index):
 
 
 func _on_ItemList_Train_selected(index):
-	currentTrain = foundTrains[index]
-	Root.checkAndLoadTranslationsForTrain(currentTrain.get_base_dir())
-	var train = load(currentTrain).instance()
-	currentTrain = foundTrains[index]
-	print("Current Train: "+currentTrain)
+	current_train = found_trains[index]
+	Root.check_and_load_translations_for_train(current_train.get_base_dir())
+	var train = load(current_train).instance()
+	current_train = found_trains[index]
+	print("Current Train: "+current_train)
 	$Play/Info/Description.text = TranslationServer.translate(train.description)
-	$Play/Info/Info/ReleaseDate.text = TranslationServer.translate("MENU_RELEASE")+": "+ train.releaseDate
+	$Play/Info/Info/ReleaseDate.text = TranslationServer.translate("MENU_RELEASE")+": "+ train.release_date
 	$Play/Info/Info/Author.text = TranslationServer.translate("MENU_AUTHOR")+": "+ train.author
-	$Play/Info/Screenshot.texture = load(train.screenshotPath)#
+	$Play/Info/Screenshot.texture = load(train.screenshot_path)#
 	var electric = TranslationServer.translate("YES")
 	if not train.electric:
 		electric = TranslationServer.translate("NO")

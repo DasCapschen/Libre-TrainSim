@@ -65,10 +65,10 @@ func _find_files_recursively_helper(directory_path,found_files,file_extension):
 				_find_files_recursively_helper(directory_path+"/"+file, found_files, file_extension)
 		else:
 			if file.get_extension() == file_extension:
-				var exportString
+				var export_string
 				if directory_path.ends_with("/"):
-					exportString = directory_path +file
+					export_string = directory_path +file
 				else:
-					exportString = directory_path +"/"+file
-				found_files["Array"].append(exportString)
+					export_string = directory_path +"/"+file
+				found_files["Array"].append(export_string)
 	dir.list_dir_end()

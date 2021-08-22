@@ -18,14 +18,14 @@ func _process(delta):
 	# var window_size_y = OS.window_size.y ## If we will change the resolution, than this line could be better
 	
 	var progress_bar_soll_position = ((soll_command-1)*(-0.5)) * window_size_y
-	$ProgressBar.rect_position.y = Root.clampViaTime(progress_bar_soll_position, $ProgressBar.rect_position.y, delta*5.0)
+	$ProgressBar.rect_position.y = Root.clamp_via_time(progress_bar_soll_position, $ProgressBar.rect_position.y, delta*5.0)
 	
-	if player.automaticDriving:
+	if player.automatic_driving:
 		soll_command = 0
-	$ColorRect.visible = not player.automaticDriving
-	$ProgressBar.visible = not player.automaticDriving
+	$ColorRect.visible = not player.automatic_driving
+	$ProgressBar.visible = not player.automatic_driving
 	
-	if player.pantographUp and not player.pantograph:
+	if player.pantograph_up and not player.pantograph:
 		$Pantograph.modulate = Color(1,1,1,0.5)
 		
 
@@ -38,7 +38,7 @@ func _process(delta):
 	
 	
 	var player_speed_zero = player.speed == 0
-	var other_buttons_visible = not player.automaticDriving
+	var other_buttons_visible = not player.automatic_driving
 	
 	$Up.visible = other_buttons_visible
 	$Down.visible = other_buttons_visible
@@ -67,14 +67,14 @@ func _on_Down_pressed():
 	
 
 func _on_Pantograph_pressed():
-	if not player.pantographUp:
+	if not player.pantograph_up:
 		jAudioManager.play_game_sound("res://Resources/Basic/Sounds/click.ogg")
 		player.rise_pantograph()
 
 
 func _on_Engine_pressed():
 	jAudioManager.play_game_sound("res://Resources/Basic/Sounds/click.ogg")
-	player.startEngine()
+	player.start_engine()
 
 
 func _on_DoorLeft_pressed():
@@ -93,7 +93,7 @@ func _on_DoorRight_pressed():
 
 
 func _on_Camera_pressed():
-	if player.cameraState == 1:
+	if player.camera_state == 1:
 		player.switch_to_outer_view()
 	else:
 		player.switch_to_cabin_view()

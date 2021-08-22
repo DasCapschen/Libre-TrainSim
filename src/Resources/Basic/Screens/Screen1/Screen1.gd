@@ -5,74 +5,74 @@ extends Node2D
 # var a = 2
 # var b = "text"
 
-export (float) var SpeedPointerRotationAt100 
-export (float) var SollSpeedPointerRotationAt100 
-var SpeedPointerZero
-var SpeedPerKmH
-var SollSpeedPointerZero
-var SollSpeedPerKmH
+export (float) var speed_pointer_rotation_at_100 
+export (float) var soll_speed_pointer_rotation_at_100 
+var speed_pointer_zero
+var speed_per_kmh
+var soll_speed_pointer_zero
+var soll_speed_per_kmh
 
 onready var world = find_parent("World")
 
 
-export (float) var CommandPointerRotationAt100 
-export (float) var blinkingTime = 0.8
-var CommandPointerZero
-var CommandPerPercent
+export (float) var command_pointer_rotation_at_100 
+export (float) var blinking_time = 0.8
+var command_pointer_zero
+var command_per_percent
 
-var syncronizingScreen = false
+var syncronizing_screen = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if not  world.globalDict.has("Screen1.BlinkingStatus"):
-		syncronizingScreen = true
-		world.globalDict["Screen1.BlinkingStatus"] = false
+	if not  world.global_dict.has("Screen1.BlinkingStatus"):
+		syncronizing_screen = true
+		world.global_dict["Screen1.BlinkingStatus"] = false
 		
-	SpeedPointerZero = $SpeedPointer.rotation_degrees
-	SpeedPerKmH = (SpeedPointerRotationAt100-SpeedPointerZero)/100.0
+	speed_pointer_zero = $SpeedPointer.rotation_degrees
+	speed_per_kmh = (speed_pointer_rotation_at_100-speed_pointer_zero)/100.0
 	
-	SollSpeedPointerZero = $SpeedLimitPointer.rotation_degrees
-	SollSpeedPerKmH = (SollSpeedPointerRotationAt100 - SollSpeedPointerZero)/100.0
+	soll_speed_pointer_zero = $SpeedLimitPointer.rotation_degrees
+	soll_speed_per_kmh = (soll_speed_pointer_rotation_at_100 - soll_speed_pointer_zero)/100.0
 	
-	CommandPointerZero = $CommandPointer.rotation_degrees
-	CommandPerPercent = (CommandPointerRotationAt100-CommandPointerZero)/100.0
-	#print("DISPLAY: " + String(SpeedPerKmH) + " " + String(SpeedPointerZero) + " " + String(SpeedPointerRotationAt100))
+	command_pointer_zero = $CommandPointer.rotation_degrees
+	command_per_percent = (command_pointer_rotation_at_100-command_pointer_zero)/100.0
+	#print("DISPLAY: " + String(speed_per_kmh) + " " + String(speed_pointer_zero) + " " + String(speed_pointer_rotation_at_100))
 	pass # Replace with function body.
 
-var SollCommandPointer = 0
-var SollSpeedLimitPointer = 0
-var blinkingTimer = 0
-var blinkStatus = false
+var soll_command_pointer = 0
+var soll_speed_limit_pointer = 0
+var blinking_timer = 0
+var blink_status = false
 func _process(delta):
-	$CommandPointer.rotation_degrees = (SollCommandPointer - $CommandPointer.rotation_degrees)*delta*4.0 + $CommandPointer.rotation_degrees
-	$SpeedLimitPointer.rotation_degrees = (SollSpeedLimitPointer - $SpeedLimitPointer.rotation_degrees)*delta*4.0 + $SpeedLimitPointer.rotation_degrees
-	if syncronizingScreen:
-		blinkingTimer += delta
-		if blinkingTimer > blinkingTime:
-			blinkStatus = !blinkStatus
-			world.globalDict["Screen1.BlinkingStatus"] = blinkStatus
-			blinkingTimer = 0
+	$CommandPointer.rotation_degrees = (soll_command_pointer - $CommandPointer.rotation_degrees)*delta*4.0 + $CommandPointer.rotation_degrees
+	$SpeedLimitPointer.rotation_degrees = (soll_speed_limit_pointer - $SpeedLimitPointer.rotation_degrees)*delta*4.0 + $SpeedLimitPointer.rotation_degrees
+	if syncronizing_screen:
+		blinking_timer += delta
+		if blinking_timer > blinking_time:
+			blink_status = !blink_status
+			world.global_dict["Screen1.BlinkingStatus"] = blink_status
+			blinking_timer = 0
 	
-	blinkStatus = world.globalDict["Screen1.BlinkingStatus"]
+	blink_status = world.global_dict["Screen1.BlinkingStatus"]
 		
 
 	
-var lastAutoPilot = false
-func update_display(speed, command, doorStatus, enforcedBreaking, sifa, autopilot, speedLimit, engine):
+var last_auto_pilot = false
+func update_display(speed, command, door_status, enforced_braking, sifa, autopilot, speed_limit, engine):
 	## Tachos:
-	$SpeedPointer.rotation_degrees = SpeedPointerZero+SpeedPerKmH*speed 
-	SollCommandPointer = CommandPointerZero+CommandPerPercent*command*100 
-	SollSpeedLimitPointer = SollSpeedPointerZero+SollSpeedPerKmH*speedLimit 
+	$SpeedPointer.rotation_degrees = speed_pointer_zero+speed_per_kmh*speed 
+	soll_command_pointer = command_pointer_zero+command_per_percent*command*100 
+	soll_speed_limit_pointer = soll_speed_pointer_zero+soll_speed_per_kmh*speed_limit 
 	
 	
 	$Speed.text = String(int(speed))
-	$Time.text = Math.time2String(world.time)
+	$Time.text = Math.time_to_string(world.time)
 	
 	## Engine:
 	$Engine.visible = !engine
 	
 	## Enforced Breaking
-	if enforcedBreaking:
-		$EnforcedBraking.visible = blinkStatus
+	if enforced_braking:
+		$EnforcedBraking.visible = blink_status
 	else:
 		$EnforcedBraking.visible = false
 	
@@ -80,18 +80,18 @@ func update_display(speed, command, doorStatus, enforcedBreaking, sifa, autopilo
 	$Sifa.visible = sifa
 	
 	## Doors:
-	if doorStatus == DoorState.CLOSING:
-		$Doors.visible = blinkStatus
+	if door_status == DoorState.CLOSING:
+		$Doors.visible = blink_status
 	else:
 		$Doors.visible = true
-	$Doors/Right.visible = doorStatus & DoorState.RIGHT
-	$Doors/Left.visible = doorStatus & DoorState.LEFT
-	$Doors/Door.visible = doorStatus & DoorState.BOTH
+	$Doors/Right.visible = door_status & DoorState.RIGHT
+	$Doors/Left.visible = door_status & DoorState.LEFT
+	$Doors/Door.visible = door_status & DoorState.BOTH
 	
-#	if not lastAutoPilot and autopilot:
+#	if not last_auto_pilot and autopilot:
 #		$AnimationPlayerAutoPilot.play("autopilot")
-	$Autopilot.visible = autopilot and blinkStatus
-#	lastAutoPilot = autopilot
+	$Autopilot.visible = autopilot and blink_status
+#	last_auto_pilot = autopilot
 	
 		
 		

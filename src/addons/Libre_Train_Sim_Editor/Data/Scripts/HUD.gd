@@ -22,11 +22,11 @@ func _process(delta):
 	
 	check_escape(delta)
 	
-	check_trainInfoAbove(delta)
+	check_train_info_above(delta)
 	
-	check_nextTable(delta)
+	check_next_table(delta)
 	
-	check_trainInfo(delta)
+	check_train_info(delta)
 	
 	if sending:
 		messaget += delta
@@ -35,10 +35,10 @@ func _process(delta):
 			sending = false
 	$FPS.text = String(Engine.get_frames_per_second())
 	
-#	$IngameInformation/Speed/Speed.text = "Speed: " + String(int(Math.speedToKmH((get_parent().speed)))) + " km/h"
-#	$IngameInformation/Speed/CurrentLimit.text = "Speed Limit: " + String(get_parent().currentSpeedLimit) + " km/h"
+#	$IngameInformation/Speed/Speed.text = "Speed: " + String(int(Math.speed_to_kmh((get_parent().speed)))) + " km/h"
+#	$IngameInformation/Speed/CurrentLimit.text = "Speed Limit: " + String(get_parent().current_speed_limit) + " km/h"
 	
-#	var alpha = (Math.speedToKmH(get_parent().speed)/get_parent().currentSpeedLimit)*2 -1
+#	var alpha = (Math.speed_to_kmh(get_parent().speed)/get_parent().current_speed_limit)*2 -1
 #	if alpha < 0:
 #		alpha = 0
 #	$IngameInformation/Speed/CurrentLimit.modulate.a = alpha
@@ -51,7 +51,7 @@ func _process(delta):
 		
 	update_nextTable(delta)
 	
-	$IngameInformation/TrainInfo/Screen1.update_display(Math.speedToKmH(player.speed), player.technicalSoll, player.doorStatus, player.enforcedBreaking, player.sifa, player.automaticDriving, player.currentSpeedLimit, player.engine)
+	$IngameInformation/TrainInfo/Screen1.update_display(Math.speed_to_kmh(player.speed), player.technical_soll, player.door_status, player.enforced_braking, player.sifa, player.automatic_driving, player.current_speed_limit, player.engine)
 		
 
 
@@ -94,14 +94,14 @@ func _on_OkTextBox_pressed():
 		$Black/AnimationPlayer.play("FadeOut")
 	
 var modulation = 0
-func check_trainInfo(delta):
+func check_train_info(delta):
 	if Input.is_action_just_pressed("trainInfo"):
 		modulation += 0.5
 		if modulation > 1: 
 			modulation = 0
 		$IngameInformation/TrainInfo.modulate = Color( 1, 1, 1, modulation)
 
-func check_nextTable(delta):
+func check_next_table(delta):
 	if Input.is_action_just_pressed("nextTable"):
 		$IngameInformation/Next.visible = !$IngameInformation/Next.visible
 
@@ -114,55 +114,55 @@ func _on_QuitMenu_pressed():
 	get_tree().change_scene("res://addons/Libre_Train_Sim_Editor/Data/Modules/MainMenu.tscn")
 	pass # Replace with function body.
 
-func check_trainInfoAbove(delta):
+func check_train_info_above(delta):
 	if Input.is_action_just_pressed("trainInfoAbove"):
 		$IngameInformation/TrainInfoAbove.visible = not $IngameInformation/TrainInfoAbove.visible
 	if $IngameInformation/TrainInfoAbove.visible:
 		$IngameInformation/TrainInfoAbove.update_info(get_parent())
 
-var redSignal = preload("res://addons/Libre_Train_Sim_Editor/Data/Misc/RedSignal.png")
-var greenSignal = preload("res://addons/Libre_Train_Sim_Editor/Data/Misc/GreenSignal.png")
-var orangeSignal = preload("res://addons/Libre_Train_Sim_Editor/Data/Misc/OrangeSignal.png")
+var red_signal = preload("res://addons/Libre_Train_Sim_Editor/Data/Misc/RedSignal.png")
+var green_signal = preload("res://addons/Libre_Train_Sim_Editor/Data/Misc/GreenSignal.png")
+var orange_signal = preload("res://addons/Libre_Train_Sim_Editor/Data/Misc/OrangeSignal.png")
 func update_nextTable(delta):
 	## Update Next Signal:
-	$IngameInformation/Next/GridContainer/DistanceToSignal.text = Math.distance2String(player.distanceToNextSignal)
-	if player.nextSignal != null:
-		match player.nextSignal.status:
+	$IngameInformation/Next/GridContainer/DistanceToSignal.text = Math.distance_to_string(player.distance_to_next_signal)
+	if player.next_signal != null:
+		match player.next_signal.status:
 			SignalState.RED:
-				$IngameInformation/Next/GridContainer/Signal.texture = redSignal
+				$IngameInformation/Next/GridContainer/Signal.texture = red_signal
 			SignalState.GREEN:
-				$IngameInformation/Next/GridContainer/Signal.texture = greenSignal
+				$IngameInformation/Next/GridContainer/Signal.texture = green_signal
 			SignalState.ORANGE:
-				$IngameInformation/Next/GridContainer/Signal.texture = orangeSignal
+				$IngameInformation/Next/GridContainer/Signal.texture = orange_signal
 				
 	
 	## Update next Speedlimit
 	
-	if player.nextSpeedLimitNode != null:
-		$IngameInformation/Next/GridContainer/DistanceToSpeedLimit.text = Math.distance2String(player.distanceToNextSpeedLimit)
-		$IngameInformation/Next/GridContainer/SpeedLimit.text = String(player.nextSpeedLimitNode.speed) + " km/h"
+	if player.next_speed_limit_node != null:
+		$IngameInformation/Next/GridContainer/DistanceToSpeedLimit.text = Math.distance_to_string(player.distance_to_next_speed_limit)
+		$IngameInformation/Next/GridContainer/SpeedLimit.text = String(player.next_speed_limit_node.speed) + " km/h"
 	else:
 		$IngameInformation/Next/GridContainer/DistanceToSpeedLimit.text = "-"
 	
 	## Update Next Station 
 	var stations = player.stations
-	if stations.passed.size() == 0 or (player.endStation and player.isInStation):
+	if stations.passed.size() == 0 or (player.end_station and player.is_in_station):
 		$IngameInformation/Next/GridContainer/Arrival.text = "-"
 		$IngameInformation/Next/GridContainer/DistanceToStation.text = "-"
 	else:
-		if player.isInStation:
+		if player.is_in_station:
 			for i in range (0, stations.passed.size()):
 				if stations.passed[i]: continue
-				$IngameInformation/Next/GridContainer/Arrival.text = Math.time2String(player.stations["departureTime"][i])
+				$IngameInformation/Next/GridContainer/Arrival.text = Math.time_to_string(player.stations["departure_time"][i])
 				$IngameInformation/Next/GridContainer/DistanceToStation.text = "-"
 				
 				break
 		else:
 			for i in range (0, stations.passed.size()):
 				
-				if stations.passed[i] or stations.nodeName[i] != player.nextStation: continue
-				$IngameInformation/Next/GridContainer/Arrival.text = Math.time2String(player.stations["arrivalTime"][i])
-				$IngameInformation/Next/GridContainer/DistanceToStation.text = Math.distance2String(player.distanceToNextStation)
+				if stations.passed[i] or stations.node_name[i] != player.next_station: continue
+				$IngameInformation/Next/GridContainer/Arrival.text = Math.time_to_string(player.stations["arrival_time"][i])
+				$IngameInformation/Next/GridContainer/DistanceToStation.text = Math.distance_to_string(player.distance_to_next_station)
 				
 				break
 				

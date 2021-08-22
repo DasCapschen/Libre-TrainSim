@@ -3,13 +3,13 @@ extends Spatial
 var player
 onready var wagon = get_parent()
 
-var sollCurveSound = -50
-var sollDriveSound = -50
+var soll_curve_sound = -50
+var soll_drive_sound = -50
 
-export (String) var driveSoundPath = "res://Resources/Basic/Sounds/Drive.ogg"
-export (String) var curveSoundPath = "res://Resources/Basic/Sounds/Curve.ogg"
-export (String) var switchSoundPath = "res://Resources/Basic/Sounds/DriveOverSwitch.ogg"
-export (String) var brakeSoundPath = "res://Resources/Basic/Sounds/Brakes.ogg"
+export (String) var drive_sound_path = "res://Resources/Basic/Sounds/Drive.ogg"
+export (String) var curve_sound_path = "res://Resources/Basic/Sounds/Curve.ogg"
+export (String) var switch_sound_path = "res://Resources/Basic/Sounds/DriveOverSwitch.ogg"
+export (String) var brake_sound_path = "res://Resources/Basic/Sounds/Brakes.ogg"
 
 
 
@@ -20,31 +20,31 @@ func _process(delta):
 	
 
 	
-	## sollCurveSound:
-	if wagon.currentRail.radius == 0 or Math.speedToKmH(player.speed) < 35 or abs(wagon.currentRail.radius) > 600:
-		sollCurveSound = -50
+	## soll_curve_sound:
+	if wagon.current_rail.radius == 0 or Math.speed_to_kmh(player.speed) < 35 or abs(wagon.current_rail.radius) > 600:
+		soll_curve_sound = -50
 	else:
-		sollCurveSound = -25.0 + (Math.speedToKmH(player.speed)/80.0 * abs(300.0/wagon.currentRail.radius))*5
+		soll_curve_sound = -25.0 + (Math.speed_to_kmh(player.speed)/80.0 * abs(300.0/wagon.current_rail.radius))*5
 	
-#	print(sollCurveSound)
-	$CurveSound.unit_db = Root.clampViaTime(sollCurveSound, $CurveSound.unit_db, delta)
+#	print(soll_curve_sound)
+	$CurveSound.unit_db = Root.clamp_via_time(soll_curve_sound, $CurveSound.unit_db, delta)
 #	$CurveSound.unit_db = 10
 	
 	## Drive Sound:
-	$DriveSound.pitch_scale = 0.5 + Math.speedToKmH(player.speed)/200.0
-	var driveSoundDb = -20.0 + Math.speedToKmH(player.speed)/2.0
-	if driveSoundDb > 10:
-		driveSoundDb = 10
+	$DriveSound.pitch_scale = 0.5 + Math.speed_to_kmh(player.speed)/200.0
+	var drive_sound_db = -20.0 + Math.speed_to_kmh(player.speed)/2.0
+	if drive_sound_db > 10:
+		drive_sound_db = 10
 	if player.speed == 0:
-		driveSoundDb = -50.0
-	$DriveSound.unit_db = Root.clampViaTime(driveSoundDb, $DriveSound.unit_db, delta) 
+		drive_sound_db = -50.0
+	$DriveSound.unit_db = Root.clamp_via_time(drive_sound_db, $DriveSound.unit_db, delta) 
 	
-	var sollBreakSound = -50.0
+	var soll_brake_sound = -50.0
 	if not (player.speed >= 5 or player.command >= 0 or player.speed == 0):
-		sollBreakSound = -20.0 -player.command * 5.0/player.speed
-		if sollBreakSound > 10:
-			sollBreakSound = 10
-	$BrakeSound.unit_db = Root.clampViaTime(sollBreakSound, $BrakeSound.unit_db, delta)
+		soll_brake_sound = -20.0 -player.command * 5.0/player.speed
+		if soll_brake_sound > 10:
+			soll_brake_sound = 10
+	$BrakeSound.unit_db = Root.clamp_via_time(soll_brake_sound, $BrakeSound.unit_db, delta)
 	
 	$DriveSound.stream_paused = not wagon.visible
 	$CurveSound.stream_paused = not wagon.visible
@@ -53,43 +53,43 @@ func _process(delta):
 	$BrakeSound.stream_paused = not wagon.visible
 	
 
-	checkAndPlaySwitchSound()
+	check_and_play_switch_sound()
 	
 
 func _ready():
-	$DriveSound.stream = load(driveSoundPath)
-	$CurveSound.stream = load(curveSoundPath)
-	$SwitchSound.stream = load(switchSoundPath)
+	$DriveSound.stream = load(drive_sound_path)
+	$CurveSound.stream = load(curve_sound_path)
+	$SwitchSound.stream = load(switch_sound_path)
 	$SwitchSound.stream.loop = false
-	$SwitchSound2.stream = load(switchSoundPath)
+	$SwitchSound2.stream = load(switch_sound_path)
 	$SwitchSound2.stream.loop = false
-	$BrakeSound.stream = load(brakeSoundPath)
+	$BrakeSound.stream = load(brake_sound_path)
 	
 	$DriveSound.unit_db = -50
 	$CurveSound.unit_db = -50
 	$BrakeSound.unit_db = -50
 
-var lastSwitchSoundRail = null
-var secondSwitchSoundDistance = -1 # If this distance is set, and its bigger than the complete distance of the wagon, the second switch sound will be played 
-func checkAndPlaySwitchSound():
+var last_switch_sound_rail = null
+var second_switch_sound_distance = -1 # If this distance is set, and its bigger than the complete distance of the wagon, the second switch sound will be played 
+func check_and_play_switch_sound():
 	
-	if secondSwitchSoundDistance != -1 and secondSwitchSoundDistance < wagon.distance:
+	if second_switch_sound_distance != -1 and second_switch_sound_distance < wagon.distance:
 		$SwitchSound2.play()
-		secondSwitchSoundDistance = -1
+		second_switch_sound_distance = -1
 		
 	if not wagon.switch_on_next_change:
 		return
 	
 	if wagon.forward:
-		if wagon.currentRail.length - (wagon.distanceOnRail + wagon.length/2.0) < 1 and not wagon.currentRail == lastSwitchSoundRail:
+		if wagon.current_rail.length - (wagon.distance_on_rail + wagon.length/2.0) < 1 and not wagon.current_rail == last_switch_sound_rail:
 			$SwitchSound.play()
-			lastSwitchSoundRail = wagon.currentRail
-			secondSwitchSoundDistance = wagon.distance + wagon.length -1
+			last_switch_sound_rail = wagon.current_rail
+			second_switch_sound_distance = wagon.distance + wagon.length -1
 	else:
-		if wagon.distanceOnRail - wagon.length/2.0 < 1 and not wagon.currentRail == lastSwitchSoundRail:
+		if wagon.distance_on_rail - wagon.length/2.0 < 1 and not wagon.current_rail == last_switch_sound_rail:
 			$SwitchSound.play()
-			lastSwitchSoundRail = wagon.currentRail
-			secondSwitchSoundDistance = wagon.distance + wagon.length -1
+			last_switch_sound_rail = wagon.current_rail
+			second_switch_sound_distance = wagon.distance + wagon.length -1
 			
 	
 	

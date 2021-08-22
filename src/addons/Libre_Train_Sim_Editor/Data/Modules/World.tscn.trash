@@ -45,163 +45,163 @@ script = ExtResource( 1 )
 
 [node name="Player" parent="Players" instance=ExtResource( 2 )]
 route = [ "Rail2", "Rail7", "Rail8", "Rail9", "Player2", "Player3", "Player4", "Player5" ]
-startPosition = 10.0
+start_position = 10.0
 
 [node name="Rails" type="Spatial" parent="."]
 
 [node name="Player5" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1010.09, 0, -385.59 )
 length = 500.0
-startpos = Vector3( 1010.09, 0, -385.59 )
-endpos = Vector3( 1510.09, 0, -385.59 )
-othersDistance = 0.0
-otherLength = 500.0
-InShift = -2.25
-InRadius = 15.0
+start_pos = Vector3( 1010.09, 0, -385.59 )
+end_pos = Vector3( 1510.09, 0, -385.59 )
+others_distance = 0.0
+others_length = 500.0
+in_shift = -2.25
+in_radius = 15.0
 
 [node name="Rail6" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1010.09, 0, -390.09 )
 length = 500.0
-startpos = Vector3( 1010.09, 0, -390.09 )
-endpos = Vector3( 1510.09, 0, -390.09 )
-otherLength = 500.0
-InShift = -2.25
-InRadius = 15.0
+start_pos = Vector3( 1010.09, 0, -390.09 )
+end_pos = Vector3( 1510.09, 0, -390.09 )
+others_length = 500.0
+in_shift = -2.25
+in_radius = 15.0
 
 [node name="Player2" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 0, 0 )
 script = ExtResource( 4 )
 length = 200.0
 radius = 400.0
-endrot = 28.6479
-startpos = Vector3( 100, 0, 0 )
-endpos = Vector3( 291.77, 0, -48.967 )
-otherLength = 100.0
+end_rot = 28.6479
+start_pos = Vector3( 100, 0, 0 )
+end_pos = Vector3( 291.77, 0, -48.967 )
+others_length = 100.0
 
 [node name="Player3" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 0.877582, 0, 0.479427, 0, 1, 0, -0.479427, 0, 0.877582, 291.77, 0, -48.967 )
 script = ExtResource( 4 )
 length = 600.0
-buildDistance = 0.9
-startrot = 28.648
-endrot = 28.648
-startpos = Vector3( 291.77, 0, -48.967 )
-endpos = Vector3( 818.319, 0, -336.623 )
-otherLength = 100.0
+build_distance = 0.9
+start_rot = 28.648
+end_rot = 28.648
+start_pos = Vector3( 291.77, 0, -48.967 )
+end_pos = Vector3( 818.319, 0, -336.623 )
+others_length = 100.0
 
 [node name="Player4" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 0.877582, 0, 0.479427, 0, 1, 0, -0.479427, 0, 0.877582, 818.319, 0, -336.623 )
 script = ExtResource( 4 )
 length = 200.0
 radius = -400.0
-buildDistance = 0.9
-startrot = 28.648
-endrot = 8.99798e-05
-startpos = Vector3( 818.319, 0, -336.623 )
-endpos = Vector3( 1010.09, 0, -385.59 )
-otherLength = 100.0
+build_distance = 0.9
+start_rot = 28.648
+end_rot = 8.99798e-05
+start_pos = Vector3( 818.319, 0, -336.623 )
+end_pos = Vector3( 1010.09, 0, -385.59 )
+others_length = 100.0
 
 [node name="Rail" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 0, 0 )
 script = ExtResource( 4 )
 length = 1000.0
-buildDistance = 0.9
-startpos = Vector3( 100, 0, 0 )
-endpos = Vector3( 1100, 0, 0 )
-otherLength = 100.0
+build_distance = 0.9
+start_pos = Vector3( 100, 0, 0 )
+end_pos = Vector3( 1100, 0, 0 )
+others_length = 100.0
 
 [node name="Rail10" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -300, 0, 0 )
 script = ExtResource( 4 )
 length = 384.732
-buildDistance = 0.9
-startpos = Vector3( -300, 0, 0 )
-endpos = Vector3( 84.732, 0, 0 )
-otherLength = 100.0
+build_distance = 0.9
+start_pos = Vector3( -300, 0, 0 )
+end_pos = Vector3( 84.732, 0, 0 )
+others_length = 100.0
 
 [node name="Rail11" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4.5 )
 script = ExtResource( 4 )
 length = 100.0
-buildDistance = 0.9
-startpos = Vector3( 0, 0, -4.5 )
-endpos = Vector3( 100, 0, -4.5 )
-otherLength = 100.0
+build_distance = 0.9
+start_pos = Vector3( 0, 0, -4.5 )
+end_pos = Vector3( 100, 0, -4.5 )
+others_length = 100.0
 
 [node name="Rail2" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -300, 0, -4.5 )
 script = ExtResource( 4 )
 length = 300.0
-buildDistance = 0.9
-startpos = Vector3( -300, 0, -4.5 )
-endpos = Vector3( 0, 0, -4.5 )
-otherLength = 100.0
+build_distance = 0.9
+start_pos = Vector3( -300, 0, -4.5 )
+end_pos = Vector3( 0, 0, -4.5 )
+others_length = 100.0
 
 [node name="Rail3" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 0, -4.5 )
 script = ExtResource( 4 )
 length = 197.75
 radius = 395.5
-buildDistance = 0.9
-endrot = 28.6479
-startpos = Vector3( 100, 0, -4.5 )
-endpos = Vector3( 289.613, 0, -52.9161 )
-otherLength = 100.0
+build_distance = 0.9
+end_rot = 28.6479
+start_pos = Vector3( 100, 0, -4.5 )
+end_pos = Vector3( 289.613, 0, -52.9161 )
+others_length = 100.0
 
 [node name="Rail4" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 0.877582, 0, 0.479427, 0, 1, 0, -0.479427, 0, 0.877582, 289.613, 0, -52.916 )
 script = ExtResource( 4 )
 length = 600.0
-buildDistance = 0.9
-startrot = 28.648
-endrot = 28.648
-startpos = Vector3( 289.613, 0, -52.916 )
-endpos = Vector3( 816.162, 0, -340.572 )
-otherLength = 100.0
+build_distance = 0.9
+start_rot = 28.648
+end_rot = 28.648
+start_pos = Vector3( 289.613, 0, -52.916 )
+end_pos = Vector3( 816.162, 0, -340.572 )
+others_length = 100.0
 
 [node name="Rail5" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 0.877582, 0, 0.479427, 0, 1, 0, -0.479427, 0, 0.877582, 816.162, 0, -340.572 )
 script = ExtResource( 4 )
 length = 202.25
 radius = -404.5
-buildDistance = 0.9
-startrot = 28.648
-endrot = 8.99798e-05
-startpos = Vector3( 816.162, 0, -340.572 )
-endpos = Vector3( 1010.09, 0, -390.09 )
-otherLength = 100.0
+build_distance = 0.9
+start_rot = 28.648
+end_rot = 8.99798e-05
+start_pos = Vector3( 816.162, 0, -340.572 )
+end_pos = Vector3( 1010.09, 0, -390.09 )
+others_length = 100.0
 
 [node name="Rail7" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4.5 )
 script = ExtResource( 4 )
 length = 42.446
 radius = -400.0
-buildDistance = 0.9
-endrot = -6.07994
-startpos = Vector3( 0, 0, -4.5 )
-endpos = Vector3( 42.3664, 0, -2.25003 )
-otherLength = 100.0
+build_distance = 0.9
+end_rot = -6.07994
+start_pos = Vector3( 0, 0, -4.5 )
+end_pos = Vector3( 42.3664, 0, -2.25003 )
+others_length = 100.0
 
 [node name="Rail8" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 0.994375, 0, -0.105917, 0, 1, 0, 0.105917, 0, 0.994375, 42.366, 0, -2.25 )
 script = ExtResource( 4 )
 length = 42.446
 radius = 400.0
-buildDistance = 0.9
-startrot = -6.08
-endrot = -5.92343e-05
-startpos = Vector3( 42.366, 0, -2.25 )
-endpos = Vector3( 84.7324, 0, 0 )
-otherLength = 100.0
+build_distance = 0.9
+start_rot = -6.08
+end_rot = -5.92343e-05
+start_pos = Vector3( 42.366, 0, -2.25 )
+end_pos = Vector3( 84.7324, 0, 0 )
+others_length = 100.0
 
 [node name="Rail9" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 84.732, 0, 0 )
 script = ExtResource( 4 )
 length = 15.268
-buildDistance = 0.9
-startpos = Vector3( 84.732, 0, 0 )
-endpos = Vector3( 100, 0, 0 )
-otherLength = 100.0
+build_distance = 0.9
+start_pos = Vector3( 84.732, 0, 0 )
+end_pos = Vector3( 100, 0, 0 )
+others_length = 100.0
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 0.146447, -0.853553, 0.5, 0.5, 0.5, 0.707107, -0.853553, 0.146447, 0.5, 0, 80.3552, 0 )
@@ -303,9 +303,9 @@ multimesh = SubResource( 1 )
 script = ExtResource( 13 )
 x = 400.0
 spacing = 15.0
-randomLocation = true
-randomRotation = true
-randomScale = true
+random_location = true
+random_rotation = true
+random_scale = true
 
 [node name="Forest6" type="MultiMeshInstance" parent="Flora" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 36.3853, 0, 11.2188 )
@@ -316,9 +316,9 @@ multimesh = SubResource( 2 )
 script = ExtResource( 13 )
 x = 500.0
 spacing = 15.0
-randomLocation = true
-randomRotation = true
-randomScale = true
+random_location = true
+random_rotation = true
+random_scale = true
 
 [node name="Forest7" type="MultiMeshInstance" parent="Flora" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -296.627, 0, 47.6225 )
@@ -329,9 +329,9 @@ multimesh = SubResource( 3 )
 script = ExtResource( 13 )
 x = 400.0
 spacing = 15.0
-randomLocation = true
-randomRotation = true
-randomScale = true
+random_location = true
+random_rotation = true
+random_scale = true
 
 [node name="Forest8" type="MultiMeshInstance" parent="Flora" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -284.15, 3.8147e-06, -53.8974 )
@@ -342,6 +342,6 @@ multimesh = SubResource( 4 )
 script = ExtResource( 13 )
 x = 70.0
 spacing = 15.0
-randomLocation = true
-randomRotation = true
-randomScale = true
+random_location = true
+random_rotation = true
+random_scale = true

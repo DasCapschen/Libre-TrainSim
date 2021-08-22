@@ -930,16 +930,14 @@ surfaces/0 = {
 [node name="Player" type="Spatial"]
 script = ExtResource( 3 )
 acceleration = 0.8
-brakeAcceleration = 1.0
+brake_acceleration = 1.0
 friction = 0.005
 length = 80.0
-speedLimit = 160.0
-controlType = 1
-doorsClosingTime = 4
+speed_limit = 160.0
+doors_closing_time = 4
 description = "JFR1_DESCRIPTION_RED"
 author = "Jean"
-releaseDate = "11 2020"
-screenshotPath = "res://Trains/JFR1/JFR1-Red.png"
+screenshot_path = "res://Trains/JFR1/JFR1-Red.png"
 wagons = [ NodePath("DriverCabinF"), NodePath("Wagon1"), NodePath("Wagon1"), NodePath("Wagon1"), NodePath("Wagon1"), NodePath("DriverCabinB") ]
 
 [node name="HUD" parent="." instance=ExtResource( 21 )]
@@ -954,7 +952,7 @@ script = ExtResource( 5 )
 
 [node name="Cabin" type="Spatial" parent="."]
 script = ExtResource( 26 )
-cabinMode = true
+cabin_mode = true
 
 [node name="ScreenMiddle" type="MeshInstance" parent="Cabin"]
 transform = Transform( -3.82021e-08, 0.177615, -0.797131, 2.89372e-08, 0.234483, 0.603806, 0.294159, 0, -1.62921e-07, 7.31889, 2.65065, 0 )
@@ -1671,7 +1669,7 @@ connections = [ "PassengerPathNode2", "PassengerSeat9", "PassengerSeat10", "Pass
 visible = false
 script = ExtResource( 26 )
 length = 15.0
-pantographEnabled = true
+is_pantograph_enabled = true
 
 [node name="MeshInstance" type="MeshInstance" parent="DriverCabinB"]
 mesh = ExtResource( 38 )

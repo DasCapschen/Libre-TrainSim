@@ -2,5 +2,5 @@ extends Spatial
 
 onready var player = get_parent()
 
-var distanceToPlayer = 0
+var distance_to_player = 0
 

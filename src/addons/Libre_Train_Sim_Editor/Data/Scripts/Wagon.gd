@@ -6,54 +6,54 @@ extends Spatial
 # var b = "text"
 export (float) var length = 17.5
 
-export (bool) var cabinMode = false
+export (bool) var cabin_mode = false
 
 var baked_route
 var baked_route_direction
-var routeIndex = 0
+var route_index = 0
 var forward
-var currentRail 
-var distanceOnRail = 0
+var current_rail 
+var distance_on_rail = 0
 var distance = 0
 var speed = 0
 
-var leftDoors = []
-var rightDoors = []
+var left_doors = []
+var right_doors = []
 
 var seats = [] # In here the Seats Refernces are safed
-var seatsOccupancy = [] # In here the Persons are safed, they are currently sitting on the seats. Index equal to index of seats
+var seats_occupancy = [] # In here the Persons are safed, they are currently sitting on the seats. Index equal to index of seats
 
-var passengerPathNodes = []
+var passenger_path_nodes = []
 
-var distanceToPlayer = -1
+var distance_to_player = -1
 
-export var pantographEnabled = false
+export var is_pantograph_enabled = false
 
 
 var player
 var world
 
-var attachedPersons = []
+var attached_persons = []
 
-var initialSet = false
+var initial_set = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	if cabinMode:
+	if cabin_mode:
 		length = 4
 		return
-	registerDoors()
-	registerPassengerPathNodes()
-	registerSeats()
+	register_doors()
+	register_passenger_path_nodes()
+	register_seats()
 	
-	var personsNode = Spatial.new()
-	personsNode.name = "Persons"
-	add_child(personsNode)
-	personsNode.owner = self
+	var persons_node = Spatial.new()
+	persons_node.name = "Persons"
+	add_child(persons_node)
+	persons_node.owner = self
 	
 	initialize_outside_announcement_player()
 	pass # Replace with function body.
 
-var initialSwitchCheck = false
+var initial_switch_check = false
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	
@@ -62,133 +62,133 @@ func _process(delta):
 		queue_free()
 		return
 	
-	if not initialSwitchCheck:
-		updateSwitchOnNextChange()
-		initialSwitchCheck = true
+	if not initial_switch_check:
+		update_switch_on_next_change()
+		initial_switch_check = true
 		
 	speed = player.speed
 	
-	if cabinMode:
+	if cabin_mode:
 		drive(delta)
 		return
 	
 	$MeshInstance.show()
 	if get_parent().name != "Players": return
-	if distanceToPlayer == -1:
-		distanceToPlayer = abs(player.distanceOnRail - distanceOnRail)
-	visible = player.wagonsVisible
-	if not initialSet or not visible:
+	if distance_to_player == -1:
+		distance_to_player = abs(player.distance_on_rail - distance_on_rail)
+	visible = player.wagons_visible
+	if not initial_set or not visible:
 		$MeshInstance.hide()
-	if speed != 0 or not initialSet: 
+	if speed != 0 or not initial_set: 
 		drive(delta)
-		initialSet = true
+		initial_set = true
 	check_doors()
 	
-	if pantographEnabled:
+	if is_pantograph_enabled:
 		check_pantograph()
 	
 	if not visible: return
 	if forward:
-		self.transform = currentRail.get_transform_at_rail_distance(distanceOnRail)
+		self.transform = current_rail.get_transform_at_rail_distance(distance_on_rail)
 	else:
-		self.transform = currentRail.get_transform_at_rail_distance(distanceOnRail)
+		self.transform = current_rail.get_transform_at_rail_distance(distance_on_rail)
 		rotate_object_local(Vector3(0,1,0), deg2rad(180))
 	
 	if has_node("InsideLight"):
-		$InsideLight.visible = player.insideLight
+		$InsideLight.visible = player.inside_light
 	
 	
 
 
 
 func drive(delta):
-	if currentRail  == player.currentRail:
+	if current_rail  == player.current_rail:
 		if player.forward:
-			distanceOnRail = player.distanceOnRail - distanceToPlayer
-			distance = player.distance - distanceToPlayer
-			if distanceOnRail > currentRail.length:
+			distance_on_rail = player.distance_on_rail - distance_to_player
+			distance = player.distance - distance_to_player
+			if distance_on_rail > current_rail.length:
 				change_to_next_rail()
 		else:
-			distanceOnRail = player.distanceOnRail + distanceToPlayer
-			distance = player.distance + distanceToPlayer
-			if distanceOnRail < 0:
+			distance_on_rail = player.distance_on_rail + distance_to_player
+			distance = player.distance + distance_to_player
+			if distance_on_rail < 0:
 				change_to_next_rail()
 		
 		
 	else: 
 		## Real Driving - Only used, if wagon isn't at the same rail as his player.
-		var drivenDistance
+		var driven_distance
 		if forward:
-			drivenDistance = speed * delta
-			distanceOnRail += drivenDistance
-			distance += drivenDistance
-			if distanceOnRail > currentRail.length:
+			driven_distance = speed * delta
+			distance_on_rail += driven_distance
+			distance += driven_distance
+			if distance_on_rail > current_rail.length:
 				change_to_next_rail()
 		else:
-			drivenDistance = speed * delta
-			distanceOnRail -= drivenDistance
-			distance += drivenDistance
-			if distanceOnRail < 0:
+			driven_distance = speed * delta
+			distance_on_rail -= driven_distance
+			distance += driven_distance
+			if distance_on_rail < 0:
 				change_to_next_rail()
 
 func change_to_next_rail():
 	if forward:
-		distanceOnRail -= currentRail.length
-	routeIndex += 1
-	currentRail =  world.get_node("Rails").get_node(baked_route[routeIndex])
-	forward = baked_route_direction[routeIndex]
-	updateSwitchOnNextChange()
+		distance_on_rail -= current_rail.length
+	route_index += 1
+	current_rail =  world.get_node("Rails").get_node(baked_route[route_index])
+	forward = baked_route_direction[route_index]
+	update_switch_on_next_change()
 	if not forward:
-		distanceOnRail += currentRail.length
+		distance_on_rail += current_rail.length
 
-var lastDoorStatus = DoorState.CLOSED
+var last_door_status = DoorState.CLOSED
 func check_doors():
-	if (player.doorStatus & DoorState.RIGHT) and not (lastDoorStatus & DoorState.RIGHT):
+	if (player.door_status & DoorState.RIGHT) and not (last_door_status & DoorState.RIGHT):
 		$DoorRight.play("open")
-	if (lastDoorStatus & DoorState.RIGHT) and player.doorStatus == DoorState.CLOSING:
+	if (last_door_status & DoorState.RIGHT) and player.door_status == DoorState.CLOSING:
 		$DoorRight.play_backwards("open")
-	if (player.doorStatus & DoorState.LEFT) and not (lastDoorStatus & DoorState.LEFT):
+	if (player.door_status & DoorState.LEFT) and not (last_door_status & DoorState.LEFT):
 		$DoorLeft.play("open")
-	if (lastDoorStatus & DoorState.LEFT) and player.doorStatus == DoorState.CLOSING:
+	if (last_door_status & DoorState.LEFT) and player.door_status == DoorState.CLOSING:
 		$DoorLeft.play_backwards("open")
 		
-	lastDoorStatus = player.doorStatus
+	last_door_status = player.door_status
 
-var lastPantograph = false
-var lastPantographUp = false
+var last_pantograph = false
+var last_pantograph_up = false
 func check_pantograph():
 	if not self.has_node("Pantograph"): return
-	if not lastPantographUp and player.pantographUp:
+	if not last_pantograph_up and player.pantograph_up:
 		print("Started Pantograph Animation")
 		$Pantograph/AnimationPlayer.play("Up")
-	if lastPantograph and not player.pantograph:
+	if last_pantograph and not player.pantograph:
 		$Pantograph/AnimationPlayer.play_backwards("Up")
-	lastPantograph = player.pantograph
-	lastPantographUp = player.pantographUp
+	last_pantograph = player.pantograph
+	last_pantograph_up = player.pantograph_up
 
 
-## This function is very very basic.. It only checks, if the "end" of the current Rail, or the "beginning" of the next rail is a switch. Otherwise it sets nextSwitchRail to null..
+## This function is very very basic.. It only checks, if the "end" of the current rail, or the "beginning" of the next rail is a switch. Otherwise it sets nextSwitchRail to null..
 #var nextSwitchRail = null
 #var nextSwitchOnBeginning = false
 #func findNextSwitch():
-#	if forward and currentRail.isSwitchPart[1] != "":
-#		nextSwitchRail = currentRail
+#	if forward and current_rail.is_switch_part[1] != "":
+#		nextSwitchRail = current_rail
 #		nextSwitchOnBeginning = false
 #		return
-#	elif not forward and currentRail.isSwitchPart[0] != "":
-#		nextSwitchRail = currentRail
+#	elif not forward and current_rail.is_switch_part[0] != "":
+#		nextSwitchRail = current_rail
 #		nextSwitchOnBeginning = true
 #		return
 #
-#	if baked_route.size() > routeIndex+1:
-#		var nextRail = baked_route[routeIndex+1]
-#		var nextForward = baked_route_direction[routeIndex+1]
-#		if nextForward and nextRail.isSwitchPart[0] != "":
-#			nextSwitchRail = nextRail
+#	if baked_route.size() > route_index+1:
+#		var next_rail = baked_route[route_index+1]
+#		var next_forward = baked_route_direction[route_index+1]
+#		if next_forward and next_rail.is_switch_part[0] != "":
+#			nextSwitchRail = next_rail
 #			nextSwitchOnBeginning = true
 #			return
-#		elif not nextForward and nextRail.isSwitchPart[1] != "":
-#			nextSwitchRail = nextRail
+#		elif not next_forward and next_rail.is_switch_part[1] != "":
+#			nextSwitchRail = next_rail
 #			nextSwitchOnBeginning = true
 #			return
 #
@@ -196,176 +196,176 @@ func check_pantograph():
 	
 
 
-func registerDoors():
+func register_doors():
 	for child in get_children():
 		if child.is_in_group("PassengerDoor"):
 			if child.translation[2] > 0:
 				child.translation += Vector3(0,0,0.5)
-				rightDoors.append(child)
+				right_doors.append(child)
 			else:
 				child.translation -= Vector3(0,0,0.5)
-				leftDoors.append(child)
+				left_doors.append(child)
 
-func registerPerson(person, door):
-	var seatIndex = getRandomFreeSeatIndex()
-	if seatIndex == -1:
+func register_person(person, door):
+	var seat_index = get_random_free_seat_index()
+	if seat_index == -1:
 		person.queue_free()
 		return
-	attachedPersons.append(person)
+	attached_persons.append(person)
 	person.get_parent().remove_child(person)
 	person.owner = self
 	$Persons.add_child(person)
 	person.translation = door.translation
 	
-	var passengerRoutePath = getPathFromTo(door, seats[seatIndex]) 
-	if passengerRoutePath == null:
+	var passenger_route_path = get_path_from_to(door, seats[seat_index]) 
+	if passenger_route_path == null:
 		printerr("Some seats of "+ name + " are not reachable from every door!!")
 		return
-#	print(passengerRoutePath)
-	person.destinationPos = passengerRoutePath
-	person.destinationIsSeat = true
-	person.attachedSeat = seats[seatIndex]
-	seatsOccupancy[seatIndex] = person
+#	print(passenger_route_path)
+	person.destination_pos = passenger_route_path
+	person.is_destination_seat = true
+	person.attached_seat = seats[seat_index]
+	seats_occupancy[seat_index] = person
 	
 	
 
-func getRandomFreeSeatIndex():
-	if attachedPersons.size()+1 > seats.size():
+func get_random_free_seat_index():
+	if attached_persons.size()+1 > seats.size():
 		return -1
 	while (true):
-		var randIndex = int(rand_range(0, seats.size()))
-		if seatsOccupancy[randIndex] == null:
-			return randIndex
+		var rand_index = int(rand_range(0, seats.size()))
+		if seats_occupancy[rand_index] == null:
+			return rand_index
 			
 			
-func getPathFromTo(start, destination):
-	var passengerRoutePath = [] ## Array of Vector3
-	var realStartNode = start
+func get_path_from_to(start, destination):
+	var passenger_route_path = [] ## Array of Vector3
+	var real_start_node = start
 #	print(start.get_groups())
 	if start.is_in_group("PassengerDoor") or start.is_in_group("PassengerSeat"):
 		 # find the connected passengerNode
-		for passengerPathNode in passengerPathNodes:
-			for connection in passengerPathNode.connections:
+		for passenger_path_node in passenger_path_nodes:
+			for connection in passenger_path_node.connections:
 #				print(connection + "  " + start.name)
 				if connection == start.name:
-					passengerRoutePath.append(passengerPathNode.translation)
+					passenger_route_path.append(passenger_path_node.translation)
 #					print("Equals!")
-					realStartNode = passengerPathNode
-#					print(realStartNode.name)
+					real_start_node = passenger_path_node
+#					print(real_start_node.name)
 	
-	if not realStartNode.is_in_group("PassengerPathNode"):
-#		printerr("At " + name + " " + start.name + " is not connected to a passengerPathNode!")
+	if not real_start_node.is_in_group("PassengerPathNode"):
+#		printerr("At " + name + " " + start.name + " is not connected to a passenger_path_node!")
 		return null
 	
-	var restOfpassengerRoutePath = getPathFromToHelper(realStartNode, destination, [])
-	if restOfpassengerRoutePath == null:
+	var rest_of_passenger_route_path = get_path_from_to_helper(real_start_node, destination, [])
+	if rest_of_passenger_route_path == null:
 		return null
-	for routePathPosition in restOfpassengerRoutePath:
-		passengerRoutePath.append(routePathPosition)
-	return passengerRoutePath
+	for route_path_position in rest_of_passenger_route_path:
+		passenger_route_path.append(route_path_position)
+	return passenger_route_path
 
-func getPathFromToHelper(start, destination, visitedNodes): ## Recursion, Simple Pathfinding, Start  has to be a PassengerPathNode.
-#	print("Recursion: " + start.name + " " + destination.name + " " + String(visitedNodes))
+func get_path_from_to_helper(start, destination, visited_nodes): ## Recursion, Simple Pathfinding, Start  has to be a PassengerPathNode.
+#	print("Recursion: " + start.name + " " + destination.name + " " + String(visited_nodes))
 	for connection in start.connections:
-		var connectionN = get_node(connection)
-		if connectionN == destination:
-			return [connectionN.translation]
-		if connectionN.is_in_group("PassengerPathNode"):
-			if visitedNodes.has(connectionN):
+		var connection_n = get_node(connection)
+		if connection_n == destination:
+			return [connection_n.translation]
+		if connection_n.is_in_group("PassengerPathNode"):
+			if visited_nodes.has(connection_n):
 				continue
-			visitedNodes.append(connectionN)
-			var passengerRoutePath = getPathFromToHelper(connectionN, destination, visitedNodes)
-			if  passengerRoutePath != null:
-				passengerRoutePath.push_front(connectionN.translation)
-				return passengerRoutePath
+			visited_nodes.append(connection_n)
+			var passenger_route_path = get_path_from_to_helper(connection_n, destination, visited_nodes)
+			if  passenger_route_path != null:
+				passenger_route_path.push_front(connection_n.translation)
+				return passenger_route_path
 	return null
 
 	
-func registerPassengerPathNodes():
+func register_passenger_path_nodes():
 	for child in get_children():
 		if child.is_in_group("PassengerPathNode"):
-			passengerPathNodes.append(child)
+			passenger_path_nodes.append(child)
 
-func registerSeats():
+func register_seats():
 	for child in get_children():
 		if child.is_in_group("PassengerSeat"):
 			seats.append(child)
-			seatsOccupancy.append(null)
+			seats_occupancy.append(null)
 
-var leavingPassengerNodes = []
+var leaving_passenger_nodes = []
 ## Called by the train when arriving
 ## Randomly picks some to the waggon attached persons, picks randomly a door
 ## on the given side, sends the routeInformation for that to the persons.
-func sendPersonsToDoor(doorDirection, proportion : float = 0.5): 
-	leavingPassengerNodes.clear()
+func send_persons_to_door(door_direction, proportion : float = 0.5): 
+	leaving_passenger_nodes.clear()
 	 #0: No platform, 1: at left side, 2: at right side, 3: at both sides
-	var possibleDoors = []
-	if doorDirection == 1 or doorDirection == 3: # Left
-		for door in leftDoors:
-			possibleDoors.append(door)
-	if doorDirection == 2 or doorDirection == 3: # Right
-		for door in rightDoors:
-			possibleDoors.append(door)
+	var possible_doors = []
+	if door_direction == 1 or door_direction == 3: # Left
+		for door in left_doors:
+			possible_doors.append(door)
+	if door_direction == 2 or door_direction == 3: # Right
+		for door in right_doors:
+			possible_doors.append(door)
 		
 		
-	if possibleDoors.empty():
-		print(name + ": No Doors found for doorDirection: " + String(doorDirection) )
+	if possible_doors.empty():
+		print(name + ": No Doors found for door_direction: " + String(door_direction) )
 		return
 		
 	randomize()
-	for personNode in $Persons.get_children():
+	for person_node in $Persons.get_children():
 		if rand_range(0, 1) < proportion:
-			leavingPassengerNodes.append(personNode)
-			var randomDoor = possibleDoors[int(rand_range(0, possibleDoors.size()))]
+			leaving_passenger_nodes.append(person_node)
+			var random_door = possible_doors[int(rand_range(0, possible_doors.size()))]
 			
-			var seatIndex = -1
-			for i in range(seatsOccupancy.size()):
-				if seatsOccupancy[i] == personNode:
-					seatIndex = i
+			var seat_index = -1
+			for i in range(seats_occupancy.size()):
+				if seats_occupancy[i] == person_node:
+					seat_index = i
 					break
-			if seatIndex == -1:
-				print(name + ": Error: Seat from person" + personNode.name+  " not found!")
+			if seat_index == -1:
+				print(name + ": Error: Seat from person" + person_node.name+  " not found!")
 				return
 			
-			var passengerRoutePath = getPathFromTo(seats[seatIndex], randomDoor)
-			if passengerRoutePath == null:
+			var passenger_route_path = get_path_from_to(seats[seat_index], random_door)
+			if passenger_route_path == null:
 				printerr("Some doors are not reachable from every door! Check your Path configuration")
 				return
 			
 			# Update position of door. (The Persons should stick inside the train while waiting ;)
-			if passengerRoutePath.back().z < 0:
-				passengerRoutePath[passengerRoutePath.size()-1].z += 1.3
+			if passenger_route_path.back().z < 0:
+				passenger_route_path[passenger_route_path.size()-1].z += 1.3
 			else:
-				passengerRoutePath[passengerRoutePath.size()-1].z -= 1.3
+				passenger_route_path[passenger_route_path.size()-1].z -= 1.3
 
-			personNode.destinationPos = passengerRoutePath # Here maybe .append could be better
-			personNode.attachedStation = player.currentStationNode
-			personNode.transitionToStation = true
-			personNode.assignedDoor = randomDoor
-			personNode.attachedSeat = null
-			seatsOccupancy[seatIndex] = null
+			person_node.destination_pos = passenger_route_path # Here maybe .append could be better
+			person_node.attached_station = player.current_station_node
+			person_node.transition_to_station = true
+			person_node.assigned_door = random_door
+			person_node.attached_seat = null
+			seats_occupancy[seat_index] = null
 			# Send Person to door
 			pass
 	pass
 
-func deregisterPerson(personNode):
-	if leavingPassengerNodes.has(personNode):
-		leavingPassengerNodes.erase(personNode)
+func deregister_person(person_node):
+	if leaving_passenger_nodes.has(person_node):
+		leaving_passenger_nodes.erase(person_node)
 
 var outside_announcement_player
 func initialize_outside_announcement_player():
-	var audioStreamPlayer = AudioStreamPlayer3D.new()
+	var audio_stream_player = AudioStreamPlayer3D.new()
 	
-	audioStreamPlayer.unit_size = 10
-	audioStreamPlayer.bus = "Game"
-	outside_announcement_player = audioStreamPlayer
+	audio_stream_player.unit_size = 10
+	audio_stream_player.bus = "Game"
+	outside_announcement_player = audio_stream_player
 	
-	add_child(audioStreamPlayer)
+	add_child(audio_stream_player)
 
 func play_outside_announcement(sound_path : String):
 	if sound_path == "":
 		return
-	if cabinMode:
+	if cabin_mode:
 		return
 	var stream = load(sound_path)
 	if stream == null:
@@ -376,21 +376,21 @@ func play_outside_announcement(sound_path : String):
 		outside_announcement_player.play()
 	
 var switch_on_next_change = false
-func updateSwitchOnNextChange(): ## Exact function also in player.gd. But these are needed: When the player drives over many small rails that could be inaccurate..
-	if forward and currentRail.isSwitchPart[1] != "":
+func update_switch_on_next_change(): ## Exact function also in player.gd. But these are needed: When the player drives over many small rails that could be inaccurate..
+	if forward and current_rail.is_switch_part[1] != "":
 		switch_on_next_change = true
 		return
-	elif not forward and currentRail.isSwitchPart[0] != "":
+	elif not forward and current_rail.is_switch_part[0] != "":
 		switch_on_next_change = true
 		return
 	
-	if baked_route.size() > routeIndex+1:
-		var nextRail = world.get_node("Rails").get_node(baked_route[routeIndex+1])
-		var nextForward = baked_route_direction[routeIndex+1]
-		if nextForward and nextRail.isSwitchPart[0] != "":
+	if baked_route.size() > route_index+1:
+		var next_rail = world.get_node("Rails").get_node(baked_route[route_index+1])
+		var next_forward = baked_route_direction[route_index+1]
+		if next_forward and next_rail.is_switch_part[0] != "":
 			switch_on_next_change = true
 			return
-		elif not nextForward and nextRail.isSwitchPart[1] != "":
+		elif not next_forward and next_rail.is_switch_part[1] != "":
 			switch_on_next_change = true
 			return
 			
