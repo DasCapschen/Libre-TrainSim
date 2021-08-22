@@ -157,6 +157,7 @@ func ready(): ## Called by World!
 		pantograph = true
 		controlType = 0
 		sifaEnabled = false
+		reverser = ReverserState.FORWARD
 
 	if not doors:
 		doorLeft = false
