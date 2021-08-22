@@ -194,13 +194,16 @@ func ready(): ## Called by World!
 		$Sound/SiFa.play()
 	
 	## Get driving handled
-	## Set the Train at the beginning of the rail, and after that set the distance_on_route on the rail forward, which is standing in var start_position
+	## Set the Train at the beginning of the rail, and after that set the distance on the Rail forward, which is standing in var start_position
 	distance_on_rail = start_position
-	distance_on_route = start_position
 	current_rail = world.get_node("Rails/"+start_rail)
 	if current_rail == null:
-		printerr("Can't find rail. Check the route of the Train "+ self.name)
+		printerr("Can't find Rail. Check the route of the Train "+ self.name)
 		return
+	if forward:
+		distance_on_route = start_position
+	else:
+		distance_on_route = current_rail.length - start_position
 
 	## Set Train to Route:
 	if forward:
@@ -1000,7 +1003,8 @@ func bake_route(): ## Generate the whole route for the train.
 
 	var rail_signals = current_r.attached_signals
 	rail_signals.sort_custom(self, "sortSignalsByDistance")
-	if not current_f: rail_signals.invert()
+	if not current_f: 
+		rail_signals.invert()
 	for signal_dict in rail_signals:
 		var signal_instance = world.get_node("Signals/"+signal_dict["name"])
 		if signal_instance.forward != current_f: 
@@ -1049,7 +1053,8 @@ func bake_route(): ## Generate the whole route for the train.
 		# bake signals
 		rail_signals = current_r.attached_signals
 		rail_signals.sort_custom(self, "sortSignalsByDistance")
-		if not current_f: rail_signals.invert()
+		if not current_f: 
+			rail_signals.invert()
 		for signal_dict in rail_signals:
 			var signal_instance = world.get_node("Signals/"+signal_dict["name"])
 			if signal_instance.forward != current_f: 
