@@ -103,14 +103,17 @@ func _process(delta):
 
 func drive(delta):
 	if currentRail  == player.currentRail:
+		## It is IMPORTANT that the `distance > length` and `distance < 0` are SEPARATE!
 		if player.forward:
-			distanceOnRail = player.distanceOnRail - distanceToPlayer
+			distanceOnRail = player.distanceOnRail - distanceToPlayer # possibly < 0 !
 			distanceOnRoute = player.distanceOnRoute - distanceToPlayer
+			if distanceOnRail > currentRail.length:
+				change_to_next_rail()
 		else:
-			distanceOnRail = player.distanceOnRail + distanceToPlayer
+			distanceOnRail = player.distanceOnRail + distanceToPlayer # possibly > currentRail.length !
 			distanceOnRoute = player.distanceOnRoute + distanceToPlayer
-		if distanceOnRail > currentRail.length or distanceOnRail < 0:
-			change_to_next_rail()
+			if distanceOnRail < 0:
+				change_to_next_rail()
 	else: 
 		## Real Driving - Only used, if wagon isn't at the same rail as his player.
 		var drivenDistance = speed * delta
@@ -124,6 +127,7 @@ func drive(delta):
 
 		if distanceOnRail > currentRail.length or distanceOnRail < 0:
 			change_to_next_rail()
+
 
 # TODO: this is almost 100% duplicate code also in Player.gd
 #       can we have a single method that both of them use?
@@ -152,6 +156,7 @@ func change_to_next_rail():
 		distanceOnRail += currentRail.length
 	if forward and (player.reverser == player.ReverserState.REVERSE):
 		distanceOnRail += currentRail.length
+
 
 var lastDoorRight = false
 var lastDoorLeft = false
