@@ -678,7 +678,7 @@ func handle_signal(signalName):
 		else:
 			if signalJustPassed.speed != -1:
 				currentSpeedLimit = find_previous_speed_limit()
-			signalJustPassed.giveSignalFree()  # turn green, we are no longer in the block!
+			signalJustPassed.status = 1  # turn green, we are no longer in the block!
 			# reset last signal, and turn it RED
 			var prev = get_all_previous_signals_of_types(["Signal"])
 			if prev.size() > 0:
