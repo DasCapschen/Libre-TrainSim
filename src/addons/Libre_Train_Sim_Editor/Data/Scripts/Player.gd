@@ -253,6 +253,7 @@ func _process(delta):
 			force_close_doors()
 			force_pantograph_up()
 			startEngine()
+			reverser = ReverserState.FORWARD
 			overrunRedSignal = false
 			enforcedBreaking = false
 			command = 0
