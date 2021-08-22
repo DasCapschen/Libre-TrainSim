@@ -272,6 +272,7 @@ func _process(delta):
 			force_close_doors()
 			force_pantograph_up()
 			start_engine()
+			reverser = ReverserState.FORWARD
 			overrun_red_signal = false
 			enforced_braking = false
 			command = 0
@@ -313,7 +314,6 @@ func _process(delta):
 
 	if not ai:
 		handle_camera(delta)
-	
 
 	if electric:
 		check_pantograph(delta)
@@ -509,7 +509,6 @@ func drive(delta):
 
 	if not forward:
 		driven_distance = -driven_distance
-
 	distance_on_rail += driven_distance
 
 	if distance_on_rail > current_rail.length or distance_on_rail < 0:
@@ -1032,6 +1031,7 @@ func bake_route(): ## Generate the whole route for the train.
 						selected_rail = rail
 						break
 			baked_route.append(selected_rail)
+		
 		
 		
 		## Set Rail to "End" of newly added Rail
