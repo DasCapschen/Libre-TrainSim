@@ -1289,7 +1289,7 @@ func update_next_station(delta):  ## Used for Autopilot
 		if upcoming == null: return
 		next_station_node = world.get_node("Signals").get_node(upcoming)
 		next_station_node.set_waiting_persons(stations["waiting_persons"][0]/100.0 * world.default_persons_at_station)
-	distance_to_next_station = get_distance_to_signal(next_station_node.name) + next_station_node.stationLength
+	distance_to_next_station = get_distance_to_signal(next_station_node.name) + next_station_node.station_length
 
 func get_next_station():
 	var all = get_all_upcoming_signals_of_types([SignalType.STATION])
