@@ -36,12 +36,6 @@ var overrun_red_signal = false
 ## set by the world scneario manager. Holds the timetable. PLEASE DO NOT EDIT THIS TIMETABLE! The passed variable displays, if the train was already there. (true/false)
 var stations = {"node_name" : [], "station_name" : [], "arrival_time" : [], "departure_time" : [], "halt_time" : [], "stop_type" : [], "waiting_persons" : [], "leaving_persons" : [], "passed" : [], "arrival_announce_path" : [], "departure_announce_path" : [], "approach_announce_path" : []} 
 
-
-enum ReverserState {
-	FORWARD = 1,
-	NEUTRAL = 0,
-	REVERSE = -1,
-}
 var reverser = ReverserState.NEUTRAL
 
 ## For current Station:
@@ -74,11 +68,11 @@ export (String) var screenshot_path = ""
 
 ## 0: Free View 1: Cabin View, 2: Outer View
 enum CameraState {
-	FreeView = 0,
-	CabinView = 1,
-	OuterView = 2
+	FREE_VIEW = 0,
+	CABIN_VIEW = 1,
+	OUTER_VIEW = 2
 }
-var camera_state = CameraState.CabinView
+var camera_state = CameraState.CABIN_VIEW
 
 var camera_mid_point = Vector3(0,2,0)
 var camera_y = 90
@@ -378,17 +372,17 @@ func _input(event):
 	if event.is_pressed():
 		# zoom in
 		if Input.is_mouse_button_pressed(BUTTON_WHEEL_UP):
-			if camera_state == CameraState.CabinView:
+			if camera_state == CameraState.CABIN_VIEW:
 				camera_fov_soll = camera_fov + 5
-			elif camera_state == CameraState.OuterView:
+			elif camera_state == CameraState.OUTER_VIEW:
 				camera_distance += camera_distance*0.2
 				camera_distance_changed = true
 			# call the zoom function
 		# zoom out
 		if Input.is_mouse_button_pressed(BUTTON_WHEEL_DOWN):
-			if camera_state == CameraState.CabinView:
+			if camera_state == CameraState.CABIN_VIEW:
 				camera_fov_soll = camera_fov - 5
-			elif camera_state == CameraState.OuterView:
+			elif camera_state == CameraState.OUTER_VIEW:
 				camera_distance -= camera_distance*0.2
 				camera_distance_changed = true
 			# call the zoom function
@@ -437,7 +431,7 @@ func get_command(delta):
 	if door_status & DoorState.BOTH: # if left or right or both
 		blocked_acceleration = true
 	if reverser == ReverserState.NEUTRAL:
-		blockedAcceleration = true
+		blocked_acceleration = true
 		
 	technical_soll = soll_command
 	
@@ -552,7 +546,7 @@ func change_to_next_rail():
 		return
 
 	current_rail =  world.get_node("Rails").get_node(baked_route[route_index])
-	forward = baked_route_direction[routeIndex]
+	forward = baked_route_direction[route_index]
 
 	var new_radius = current_rail.radius
 	if forward:
@@ -590,7 +584,7 @@ func remove_free_camera():
 
 func switch_to_cabin_view():
 	#Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	camera_state = CameraState.CabinView
+	camera_state = CameraState.CABIN_VIEW
 	wagons_visible = false
 	camera_node.transform = camera_zero_transform
 	camera_x = -camera_node.rotation_degrees.x
@@ -602,7 +596,7 @@ func switch_to_cabin_view():
 
 func switch_to_outer_view():
 	wagons_visible = true
-	camera_state = CameraState.OuterView
+	camera_state = CameraState.OUTER_VIEW
 	camera_distance_changed = true # FIX for camera not properly setting itself until 1st input
 	$Camera.fov = ref_fov # reset to reference FOV, zooming works different in this view
 	$Cabin.hide()
@@ -618,7 +612,7 @@ func handle_camera(delta):
 	if Input.is_action_just_pressed("FreeCamera"):
 		$Cabin.hide()
 		wagons_visible = true
-		camera_state = CameraState.FreeView
+		camera_state = CameraState.FREE_VIEW
 		get_node("Camera").current = false
 		var cam = load("res://addons/Libre_Train_Sim_Editor/Data/Modules/FreeCamera.tscn").instance()
 		cam.current = true
@@ -635,7 +629,7 @@ func handle_camera(delta):
 			$Cabin.hide()
 			remove_free_camera()
 
-	if camera_state == CameraState.CabinView:
+	if camera_state == CameraState.CABIN_VIEW:
 		## Camera x Position
 		var soll_camera_position_x = camera_zero_transform.origin.x + (current_real_acceleration/20.0 * -camera_factor * reverser)
 		if speed == 0 or debug:
@@ -662,10 +656,10 @@ func handle_camera(delta):
 			camera_fov += sign(camera_fov_soll - camera_fov)
 			camera_node.fov = camera_fov
 		
-	elif camera_state == CameraState.OuterView:
+	elif camera_state == CameraState.OUTER_VIEW:
 		#if not Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		#	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-		if mouse_motion.length() > 0 or cameraDistanceChanged:
+		if mouse_motion.length() > 0 or camera_distance_changed:
 			var motion_factor = (ref_delta / delta * ref_delta) * mouse_sensitivity
 			camera_y += -mouse_motion.x * motion_factor
 			camera_x += +mouse_motion.y * motion_factor
@@ -715,32 +709,32 @@ func handle_signal(signal_name):
 	var signal_passed = world.get_node("Signals/"+signal_name)
 	if signal_passed.forward != forward: return
 
-	print(name + ": SIGNAL: " + signalJustPassed.name)
+	print(name + ": SIGNAL: " + signal_passed.name)
 
-	if signalJustPassed.type == "Signal": ## Signal
+	if signal_passed.type == SignalType.SIGNAL: ## Signal
 		if reverser == ReverserState.FORWARD:
 			if signal_passed.speed != -1:
 				current_speed_limit = signal_passed.speed
 			if signal_passed.warn_speed != -1: 
 				pass
-			if signalJustPassed.status == 0:
+			if signal_passed.status == SignalState.RED:
 				send_message(TranslationServer.translate("YOU_OVERRUN_RED_SIGNAL"))
 				overrun_red_signal = true
 			else:
 				free_signal_after_driven_train_length(last_driven_signal)
-			signal_passed.status = 0
+			signal_passed.set_state(SignalState.RED)
 			last_driven_signal = signal_passed
 		else:
 			if signal_passed.speed != -1:
 				current_speed_limit = find_previous_speed_limit()
-			signal_passed.status = 1  # turn green, we are no longer in the block!
+			signal_passed.set_state(SignalState.GREEN)  # turn green, we are no longer in the block!
 			# reset last signal_passed, and turn it RED
 			var prev = get_all_previous_signals_of_types([SignalType.SIGNAL])
 			if prev.size() > 0:
 				last_driven_signal = world.get_node("Signals/"+prev[0])
-				last_driven_signal.status = 0
+				last_driven_signal.set_state(SignalState.RED)
 	
-	elif signal_passed.type == "Station": ## Station
+	elif signal_passed.type == SignalType.STATION: ## Station
 		if not stations["node_name"].has(signal_passed.name):
 			print(name + ": Station not found in repository, ingoring station. Maybe you are at the wrong track, or the nodename in the station table of the player is incorrect...")
 			return
@@ -773,7 +767,7 @@ func handle_signal(signal_name):
 				wagon_inst.send_persons_to_door(platform_side, stations["leaving_persons"][current_station_index]/100.0)
 	elif signal_passed.type == SignalType.SPEED:
 		if reverser == ReverserState.REVERSE:
-			currentSpeedLimit = find_previous_speed_limit()
+			current_speed_limit = find_previous_speed_limit()
 		else:
 			current_speed_limit = signal_passed.speed
 	elif signal_passed.type == SignalType.WARN_SPEED:
@@ -821,7 +815,7 @@ func check_station(delta):
 				send_message(TranslationServer.translate("WELCOME_TO") + " " + current_station_name + late_message)
 				
 			
-			if camera_state != CameraState.CabinView:
+			if camera_state != CameraState.CABIN_VIEW:
 				for wagon in wagon_instances:
 					jTools.call_delayed(1, wagon, "play_outside_announcement", [stations["arrival_announce_path"][current_station_index]])
 			elif not ai:
@@ -846,7 +840,7 @@ func check_station(delta):
 					next_station = null
 					send_message(TranslationServer.translate("YOU_CAN_DEPART"))
 					stations["passed"][stations["station_name"].find(current_station_name)] = true
-					if camera_state != CameraState.CabinView:
+					if camera_state != CameraState.CABIN_VIEW:
 						for wagon in wagon_instances:
 							wagon.play_outside_announcement(stations["departure_announce_path"][current_station_index])
 					elif not ai:
@@ -1105,7 +1099,7 @@ func get_all_previous_signals_of_types(types: Array): # returns an sorted array 
 func get_distance_to_signal(signal_name):
 	return baked_route_signal_positions[signal_name] - distance_on_route
 
-var nextStation = ""
+var next_station = ""
 var check_for_next_stationTimer = 0
 var station_message_sent = false
 func check_for_next_station(delta):  ## Used for displaying (In 1000m there is ...)
@@ -1131,7 +1125,7 @@ func check_for_next_station(delta):  ## Used for displaying (In 1000m there is .
 			else:
 				distance_s += "m"
 			send_message(TranslationServer.translate("THE_NEXT_STATION_IS_1") + " " + stations["station_name"][stations["node_name"].find(next_station)]+ ". " + TranslationServer.translate("THE_NEXT_STATION_IS_2")+ " " + distance_s + " " + TranslationServer.translate("THE_NEXT_STATION_IS_3"))
-			if camera_state != CameraState.OuterView and camera_state != CameraState.FreeView and not ai:
+			if camera_state != CameraState.OUTER_VIEW and camera_state != CameraState.FREE_VIEW and not ai:
 #				print(name + ": Playing Sound.......................................................")
 				jTools.call_delayed(10, jAudioManager, "play_game_sound", [stations["approach_announce_path"][stations["node_name"].find(next_station)]])
 #				jAudioManager.play_game_sound(stations["approach_announce_path"][current_station_index+1])
@@ -1252,7 +1246,7 @@ func toggle_automatic_driving():
 var autopilot_in_station = true
 
 var update_next_signal_timer = 0
-func updateNextSignal(delta):
+func update_next_signal(delta):
 	if next_signal == null:
 		var upcoming = get_next_signal()
 		if upcoming == null: return
@@ -1270,7 +1264,7 @@ func get_next_signal():
 	return null
 
 var update_next_speed_limit_timer = 0
-func updateNextSpeedLimit(delta):
+func update_next_speed_limit(delta):
 	if next_speed_limit_node == null:
 		next_speed_limit_node = get_next_speed_limit()
 		if next_speed_limit_node == null:
@@ -1464,8 +1458,8 @@ func fix_obsolete_stations(): ## Checks, if there are stations in the stations t
 #			if not stationNodeName == current_station_name and stations.stop_type[i] != StopType.BEGIN:
 #				stations.passed[i] = true
 
-func updateTrainAudioBus():
-	if camera_state == CameraState.FreeView or camera_state == CameraState.OuterView:
+func update_train_audio_bus():
+	if camera_state == CameraState.FREE_VIEW or camera_state == CameraState.OUTER_VIEW:
 		AudioServer.set_bus_volume_db(2,0)
 	else:
 		AudioServer.set_bus_volume_db(2,sound_isolation)
