@@ -181,6 +181,7 @@ func ready(): ## Called by World!
 		pantograph = true
 		control_type = ControlType.COMBINED
 		is_sifa_enabled = false
+		reverser = ReverserState.FORWARD
 
 	if not doors:
 		door_status = DoorState.CLOSED
