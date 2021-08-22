@@ -117,7 +117,7 @@ func drive(delta):
 	else: 
 		## Real Driving - Only used, if wagon isn't at the same rail as his player.
 		var driven_distance = speed * delta
-		if player.reverser == player.ReverserState.REVERSE:
+		if player.reverser == ReverserState.REVERSE:
 			driven_distance = -driven_distance
 		distance_on_route += driven_distance
 
@@ -132,12 +132,12 @@ func drive(delta):
 # TODO: this is almost 100% duplicate code also in Player.gd
 #       can we have a single method that both of them use?
 func change_to_next_rail():
-	if forward and (player.reverser == player.ReverserState.FORWARD):
+	if forward and (player.reverser == ReverserState.FORWARD):
 		distance_on_rail -= current_rail.length
-	if not forward and (player.reverser == player.ReverserState.REVERSE):
+	if not forward and (player.reverser == ReverserState.REVERSE):
 		distance_on_rail -= current_rail.length
 
-	if player.reverser == player.ReverserState.REVERSE:
+	if player.reverser == ReverserState.REVERSE:
 		route_index -= 1
 	else:
 		route_index += 1
@@ -152,9 +152,9 @@ func change_to_next_rail():
 
 	update_switch_on_next_change()
 
-	if not forward and (player.reverser == player.ReverserState.FORWARD):
+	if not forward and (player.reverser == ReverserState.FORWARD):
 		distance_on_rail += current_rail.length
-	if forward and (player.reverser == player.ReverserState.REVERSE):
+	if forward and (player.reverser == ReverserState.REVERSE):
 		distance_on_rail += current_rail.length
 
 var last_door_status = DoorState.CLOSED

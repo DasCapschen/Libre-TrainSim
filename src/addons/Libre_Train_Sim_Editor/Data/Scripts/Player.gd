@@ -966,8 +966,8 @@ func check_doors(delta):
 		
 	
 ## BAKING
-func sortSignalsByDistance(a, b):
-	if a["distance_on_route"] < b["distance_on_route"]:
+func sort_signals_by_distance(a, b):
+	if a["distance"] < b["distance"]:
 		return true
 	return false
 	
@@ -996,7 +996,7 @@ func bake_route(): ## Generate the whole route for the train.
 	var sum_route_length = 0
 
 	var rail_signals = current_r.attached_signals
-	rail_signals.sort_custom(self, "sortSignalsByDistance")
+	rail_signals.sort_custom(self, "sort_signals_by_distance")
 	if not current_f: 
 		rail_signals.invert()
 	for signal_dict in rail_signals:
@@ -1005,9 +1005,9 @@ func bake_route(): ## Generate the whole route for the train.
 			continue
 		var position_on_route = sum_route_length
 		if current_f: 
-			position_on_route += signal_dict["distance_on_route"]
+			position_on_route += signal_dict["distance"]
 		else: 
-			position_on_route += current_r.length - signal_dict["distance_on_route"]
+			position_on_route += current_r.length - signal_dict["distance"]
 		baked_route_signal_names.append(signal_dict["name"])
 		baked_route_signal_positions[signal_dict["name"]] = position_on_route
 	sum_route_length += current_r.length
@@ -1046,7 +1046,7 @@ func bake_route(): ## Generate the whole route for the train.
 
 		# bake signals
 		rail_signals = current_r.attached_signals
-		rail_signals.sort_custom(self, "sortSignalsByDistance")
+		rail_signals.sort_custom(self, "sort_signals_by_distance")
 		if not current_f: 
 			rail_signals.invert()
 		for signal_dict in rail_signals:
@@ -1055,9 +1055,9 @@ func bake_route(): ## Generate the whole route for the train.
 				continue
 			var position_on_route = sum_route_length
 			if current_f: 
-				position_on_route += signal_dict["distance_on_route"]
+				position_on_route += signal_dict["distance"]
 			else: 
-				position_on_route += current_r.length - signal_dict["distance_on_route"]
+				position_on_route += current_r.length - signal_dict["distance"]
 			baked_route_signal_names.append(signal_dict["name"])
 			baked_route_signal_positions[signal_dict["name"]] = position_on_route
 		sum_route_length += current_r.length
