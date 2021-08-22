@@ -174,11 +174,14 @@ func ready(): ## Called by World!
 	## Get driving handled
 	## Set the Train at the beginning of the rail, and after that set the distance on the Rail forward, which is standing in var startPosition
 	distanceOnRail = startPosition
-	distanceOnRoute = startPosition
 	currentRail = world.get_node("Rails/"+startRail)
 	if currentRail == null:
 		printerr("Can't find Rail. Check the route of the Train "+ self.name)
 		return
+	if forward:
+		distanceOnRoute = startPosition
+	else:
+		distanceOnRoute = currentRail.length - startPosition
 
 	## Set Train to Route:
 	if forward:
@@ -947,7 +950,8 @@ func bake_route(): ## Generate the whole route for the train.
 
 	var railSignals = currentR.attachedSignals
 	railSignals.sort_custom(self, "sortSignalsByDistance")
-	if not currentF: railSignals.invert()
+	if not currentF: 
+		railSignals.invert()
 	for signalDict in railSignals:
 		var signalInstance = world.get_node("Signals/"+signalDict["name"])
 		if signalInstance.forward != currentF: 
@@ -996,7 +1000,8 @@ func bake_route(): ## Generate the whole route for the train.
 		# bake signals
 		railSignals = currentR.attachedSignals
 		railSignals.sort_custom(self, "sortSignalsByDistance")
-		if not currentF: railSignals.invert()
+		if not currentF: 
+			railSignals.invert()
 		for signalDict in railSignals:
 			var signalInstance = world.get_node("Signals/"+signalDict["name"])
 			if signalInstance.forward != currentF: 
