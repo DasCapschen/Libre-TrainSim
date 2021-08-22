@@ -93,7 +93,6 @@ const CAMERA_FOV_MAX = 60
 
 var sound_mode = 0 # 0: Interior, 1: Outer   ## Not currently used
 
-
 export (Array, NodePath) var wagons 
 export var wagon_distance = 0.5 ## Distance between the wagons
 var wagons_visible = false
@@ -148,8 +147,6 @@ var start_rail # rail, on which the train is starting. Set by the scenario mange
 
 # Reference delta at 60fps
 const ref_delta = 0.0167 # 1.0 / 60
-
-
 
 onready var camera_node = $Camera
 var camera_zero_transform # Saves the camera position at the beginning. The Camera Position will be changed, when the train is accelerating, or braking
