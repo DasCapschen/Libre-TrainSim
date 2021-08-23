@@ -1,17 +1,17 @@
-extends Spatial
+extends Node3D
 
 var player
-onready var wagon = get_parent()
+@onready var wagon = get_parent()
 
-export (String) var engine_idle_path = "res://Resources/Basic/Sounds/EngineIdle.ogg"
-export (String) var acceleration_1_path = "res://Resources/Basic/Sounds/Acceleration5.ogg"
-export (String) var acceleration_2_path = "res://Resources/Basic/Sounds/Acceleration6.ogg"
-export (String) var acceleration_transition_path = "res://Resources/Basic/Sounds/AccelerationTransition2.ogg"
+@export_file("*.ogg,*.wav,*.mp3") var engine_idle_path = "res://Resources/Basic/Sounds/EngineIdle.ogg"
+@export_file("*.ogg,*.wav,*.mp3") var acceleration_1_path = "res://Resources/Basic/Sounds/Acceleration5.ogg"
+@export_file("*.ogg,*.wav,*.mp3") var acceleration_2_path = "res://Resources/Basic/Sounds/Acceleration6.ogg"
+@export_file("*.ogg,*.wav,*.mp3") var acceleration_transition_path = "res://Resources/Basic/Sounds/AccelerationTransition2.ogg"
 
-export (float) var acceleration_transititon_at_speed = 10
-export (float) var acceleration_transition_length_in_ms = 1200
-export (float) var acceleration_transition_1_delta_length_in_ms = 400
-export (float) var acceleration_transition_2_delta_length_in_ms = 400
+@export var acceleration_transititon_at_speed: float = 10
+@export var acceleration_transition_length_in_ms: float = 1200
+@export var acceleration_transition_1_delta_length_in_ms: float = 400
+@export var acceleration_transition_2_delta_length_in_ms: float = 400
 
 var acceleration_sound_index = 1 # 0: Transistion from 1 to 2. 1: accleration1. 2: acceleration2
 

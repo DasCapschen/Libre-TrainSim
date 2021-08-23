@@ -8,9 +8,9 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	$Table/Arrival/Label.text = " " + TranslationServer.translate("ARRIVAL:") + " "	
-	$Table/Departure/Label.text = " " + TranslationServer.translate("DEPARTURE:") + " "	
-	$Table/Station/Label.text = " " + TranslationServer.translate("STATION:") + " "	
+	$Table/Arrival/Label.text = " " + str(TranslationServer.translate("ARRIVAL:")) + " "
+	$Table/Departure/Label.text = " " + str(TranslationServer.translate("DEPARTURE:")) + " "
+	$Table/Station/Label.text = " " + str(TranslationServer.translate("STATION:")) + " "
 	pass # Replace with function body.
 
 func update_display(arrivals, departures, station_names, stop_types, passed, is_in_station):

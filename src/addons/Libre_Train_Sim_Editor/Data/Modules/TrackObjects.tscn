@@ -7,7 +7,7 @@
 transform_format = 1
 mesh = ExtResource( 2 )
 
-[node name="TO" type="MultiMeshInstance" groups=[
+[node name="TO" type="MultiMeshInstance3D" groups=[
 "TrackObject",
 ]]
 use_in_baked_light = true

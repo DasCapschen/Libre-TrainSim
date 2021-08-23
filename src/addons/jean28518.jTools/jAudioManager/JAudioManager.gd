@@ -28,7 +28,7 @@ func play(soundPath : String, loop : bool = false, pausable : bool = true, volum
 	audio_stream_player.owner = self
 	audio_stream_player.play()
 	
-	audio_stream_player.connect("finished", self, "queue_me_free", [audio_stream_player])
+	audio_stream_player.finished.connect(self.queue_me_free.bind(audio_stream_player))
 
 func clear_all_sounds():
 	for child in get_children():

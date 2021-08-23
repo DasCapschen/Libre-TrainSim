@@ -6,7 +6,7 @@
 radius = 0.4
 height = 1.5
 
-[node name="Person" type="Spatial"]
+[node name="Person" type="Node3D"]
 script = ExtResource( 1 )
 
 [node name="Body" type="Area" parent="."]

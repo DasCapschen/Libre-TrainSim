@@ -1,12 +1,12 @@
-extends Spatial
+extends Node3D
 
 
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
-export (float) var length = 17.5
+@export var length: float = 17.5
 
-export (bool) var cabin_mode = false
+@export var cabin_mode: bool = false
 
 var baked_route
 var baked_route_direction
@@ -27,7 +27,7 @@ var passenger_path_nodes = []
 
 var distance_to_player = -1
 
-export var is_pantograph_enabled = false
+@export var is_pantograph_enabled: bool = false
 
 
 var player
@@ -45,7 +45,7 @@ func _ready():
 	register_passenger_path_nodes()
 	register_seats()
 	
-	var persons_node = Spatial.new()
+	var persons_node = Node3D.new()
 	persons_node.name = "Persons"
 	add_child(persons_node)
 	persons_node.owner = self
@@ -72,13 +72,13 @@ func _process(delta):
 		drive(delta)
 		return
 	
-	$MeshInstance.show()
+	$MeshInstance3D.show()
 	if get_parent().name != "Players": return
 	if distance_to_player == -1:
 		distance_to_player = abs(player.distance_on_rail - distance_on_rail)
 	visible = player.wagons_visible
 	if not initial_set or not visible:
-		$MeshInstance.hide()
+		$MeshInstance3D.hide()
 	if speed != 0 or not initial_set: 
 		drive(delta)
 		initial_set = true
@@ -143,7 +143,7 @@ func change_to_next_rail():
 		route_index += 1
 
 	if baked_route.size() == route_index:
-		print(name + ": Route no more rail found, despawning me...")
+		print(name, ": Route no more rail found, despawning me...")
 		queue_free()
 		return
 
@@ -215,7 +215,7 @@ func check_pantograph():
 func register_doors():
 	for child in get_children():
 		if child.is_in_group("PassengerDoor"):
-			if child.translation[2] > 0:
+			if child.position[2] > 0:
 				child.translation += Vector3(0,0,0.5)
 				right_doors.append(child)
 			else:
@@ -235,7 +235,7 @@ func register_person(person, door):
 	
 	var passenger_route_path = get_path_from_to(door, seats[seat_index]) 
 	if passenger_route_path == null:
-		printerr("Some seats of "+ name + " are not reachable from every door!!")
+		printerr("Some seats of ", name, " are not reachable from every door!!")
 		return
 #	print(passenger_route_path)
 	person.destination_pos = passenger_route_path
@@ -249,7 +249,7 @@ func get_random_free_seat_index():
 	if attached_persons.size()+1 > seats.size():
 		return -1
 	while (true):
-		var rand_index = int(rand_range(0, seats.size()))
+		var rand_index = int(randi_range(0, seats.size()))
 		if seats_occupancy[rand_index] == null:
 			return rand_index
 			
@@ -259,7 +259,7 @@ func get_path_from_to(start, destination):
 	var real_start_node = start
 #	print(start.get_groups())
 	if start.is_in_group("PassengerDoor") or start.is_in_group("PassengerSeat"):
-		 # find the connected passengerNode
+		# find the connected passengerNode
 		for passenger_path_node in passenger_path_nodes:
 			for connection in passenger_path_node.connections:
 #				print(connection + "  " + start.name)
@@ -281,7 +281,7 @@ func get_path_from_to(start, destination):
 	return passenger_route_path
 
 func get_path_from_to_helper(start, destination, visited_nodes): ## Recursion, Simple Pathfinding, Start  has to be a PassengerPathNode.
-#	print("Recursion: " + start.name + " " + destination.name + " " + String(visited_nodes))
+#	print("Recursion: " + start.name + " " + destination.name + " " + str(visited_nodes))
 	for connection in start.connections:
 		var connection_n = get_node(connection)
 		if connection_n == destination:
@@ -314,7 +314,7 @@ var leaving_passenger_nodes = []
 ## on the given side, sends the routeInformation for that to the persons.
 func send_persons_to_door(door_direction, proportion : float = 0.5): 
 	leaving_passenger_nodes.clear()
-	 #0: No platform, 1: at left side, 2: at right side, 3: at both sides
+	#0: No platform, 1: at left side, 2: at right side, 3: at both sides
 	var possible_doors = []
 	if door_direction == 1 or door_direction == 3: # Left
 		for door in left_doors:
@@ -324,15 +324,15 @@ func send_persons_to_door(door_direction, proportion : float = 0.5):
 			possible_doors.append(door)
 		
 		
-	if possible_doors.empty():
-		print(name + ": No Doors found for door_direction: " + String(door_direction) )
+	if possible_doors.is_empty():
+		print(name, ": No Doors found for door_direction: " + str(door_direction) )
 		return
 		
 	randomize()
 	for person_node in $Persons.get_children():
-		if rand_range(0, 1) < proportion:
+		if randf_range(0, 1) < proportion:
 			leaving_passenger_nodes.append(person_node)
-			var random_door = possible_doors[int(rand_range(0, possible_doors.size()))]
+			var random_door = possible_doors[int(randi_range(0, possible_doors.size()))]
 			
 			var seat_index = -1
 			for i in range(seats_occupancy.size()):
@@ -340,11 +340,11 @@ func send_persons_to_door(door_direction, proportion : float = 0.5):
 					seat_index = i
 					break
 			if seat_index == -1:
-				print(name + ": Error: Seat from person" + person_node.name+  " not found!")
+				print(name, ": Error: Seat from person ",person_node.name, " not found!")
 				return
 			
 			var passenger_route_path = get_path_from_to(seats[seat_index], random_door)
-			if passenger_route_path == null:
+			if passenger_route_path is null:
 				printerr("Some doors are not reachable from every door! Check your Path configuration")
 				return
 			

@@ -1,24 +1,23 @@
-tool
+@tool
 extends Node
 
-onready var Signal = get_parent()
-onready var world = find_parent("World")
+@onready var signal_logic: SignalLogic = get_parent()
+@onready var world: World = find_parent("World")
 
 
-var timer
-
+var timer: Timer
 func _ready():
 	# blink once a second
 	timer = Timer.new()
-	timer.connect("timeout", self, "blink")
+	timer.timeout.connect(self.blink)
 	self.add_child(timer)
 	
-	$Viewport.set_clear_mode(Viewport.CLEAR_MODE_ONLY_NEXT_FRAME)
+	$Viewport.set_clear_mode(SubViewport.CLEAR_MODE_ONCE)
 	var texture = $Viewport.get_texture()
 	$Screen1.material_override = $Screen1.material_override.duplicate(true)
 	$Screen1.material_override.emission_texture = texture
 	
-	$Viewport2.set_clear_mode(Viewport.CLEAR_MODE_ONLY_NEXT_FRAME)
+	$Viewport2.set_clear_mode(SubViewport.CLEAR_MODE_ONCE)
 	texture = $Viewport2.get_texture()
 	$Screen2.material_override = $Screen2.material_override.duplicate(true)
 	$Screen2.material_override.emission_texture = texture
@@ -31,7 +30,7 @@ func green():
 	$Red.visible = false
 	$Orange.visible = false
 	$Green.visible = true
-	if Signal.warn_speed != -1:
+	if signal_logic.warn_speed != -1:
 		timer.start()
 
 func red():
@@ -61,10 +60,10 @@ func update_speed(new_speed):
 	else:
 		if new_speed - 100 >= 0:
 			var output_speed = int(new_speed / 10)
-			$Viewport2/Node2D/Label.text = String(output_speed)
+			$Viewport2/Node2D/Label.text = str(output_speed)
 		else: 
 			var output_speed = int(new_speed / 10)
-			var string = " " + String(output_speed)
+			var string = " " + str(output_speed)
 			$Viewport2/Node2D/Label.text = string
 		$Screen2.visible = true
 
@@ -75,13 +74,13 @@ func update_warn_speed(new_speed):
 	else:
 		if new_speed - 100 >= 0:
 			var output_speed = int(new_speed / 10)
-			$Viewport/Node2D/Label.text = String(output_speed)
+			$Viewport/Node2D/Label.text = str(output_speed)
 		else: 
 			var output_speed = int(new_speed / 10)
-			var string = " " + String(output_speed)
+			var string = " " + str(output_speed)
 			$Viewport/Node2D/Label.text = string
 		$Screen1.visible = true
 		# start the timer in case we updated the speed after the state!
-		if Signal.status == SignalState.GREEN:
+		if signal_logic.status == SignalState.GREEN:
 			timer.start()
 	

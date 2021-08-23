@@ -1,22 +1,34 @@
-tool
-extends Spatial
+@tool
+class_name Station extends Node3D
 
 const type = SignalType.STATION
-onready var world = find_parent("World")
+@onready var world: World = find_parent("World")
 var persons_node
 
-export (int) var station_length
+@export var station_length: int
 
-export (int, "None", "Left", "Right", "Both") var platform_side
-export (bool) var person_system = true
-export (float) var platform_height = 1.2
-export (float) var platform_start = 2.5
-export (float) var platform_end = 4.5
+@export_enum("None", "Left", "Right", "Both") var platform_side: int
+@export var person_system = true
+@export var platform_height = 1.2
+@export var platform_start = 2.5
+@export var platform_end = 4.5
 
-export (String) var attached_rail
-export (int) var on_rail_position
-export (bool) var update setget set_to_rail
-export var forward = true
+@export_node_path(Node3D) # Why can I not use "Rail" here ? I made it a class_name >_>
+var attached_rail_path: NodePath:
+	get: return attached_rail_path
+	set(val): 
+		attached_rail_path = val # NodePath
+		attached_rail = val.get_name(val.get_name_count()-1) # Node Name
+
+var attached_rail: String
+
+
+@export var on_rail_position: int
+@export var update: bool:
+	get: return update
+	set(val): set_to_rail(val)
+
+@export var forward = true
 
 var waiting_person_count = 5
 var attached_persons = []
@@ -33,7 +45,7 @@ func _ready():
 		signals.add_child(self)
 		set_to_rail(true)
 	if not Engine.is_editor_hint():
-		$MeshInstance.queue_free()
+		$MeshInstance3D.queue_free()
 		set_to_rail(true)
 		person_system = person_system and jSettings.get_persons() and not Root.mobile_version
 		
@@ -55,7 +67,7 @@ func set_to_rail(newvar):
 	if find_parent("World").has_node("Rails/"+attached_rail) and attached_rail != "":
 		rail = get_parent().get_parent().get_node("Rails/"+attached_rail)
 		rail.register_signal(self.name, on_rail_position)
-		self.translation = rail.get_pos_at_rail_distance(on_rail_position)
+		self.position = rail.get_pos_at_rail_distance(on_rail_position)
 		
 		
 func get_scenario_data():
@@ -89,9 +101,9 @@ func handle_persons():
 func spawn_random_person():
 	randomize()
 	var person = preload("res://addons/Libre_Train_Sim_Editor/Data/Modules/Person.tscn")
-	var person_vi = world.person_visual_instances[int(rand_range(0, world.person_visual_instances.size()))]
-	var person_i = person.instance()
-	person_i.add_child(person_vi.instance())
+	var person_vi = world.person_visual_instances[int(randi_range(0, world.person_visual_instances.size()))]
+	var person_i = person.instantiate()
+	person_i.add_child(person_vi.instantiate())
 	person_i.attached_station = self
 	person_i.transform = get_random_transform_at_platform()
 	person_i.owner = world
@@ -102,17 +114,17 @@ func spawn_random_person():
 	
 func get_random_transform_at_platform():
 	if forward:
-		var rand_rail_distance = int(rand_range(on_rail_position, on_rail_position+station_length))
+		var rand_rail_distance = int(randi_range(on_rail_position, on_rail_position+station_length))
 		if platform_side == PlatformSide.LEFT:
-			return Transform(Basis(Vector3(0,deg2rad(rail.get_deg_at_rail_distance(rand_rail_distance)), 0)),  rail.get_shifted_pos_at_rail_distance(rand_rail_distance, rand_range(-platform_start, -platform_end)) + Vector3(0, platform_height, 0))
+			return Transform3D(Basis(Vector3(0,deg2rad(rail.get_deg_at_rail_distance(rand_rail_distance)), 0)),  rail.get_shifted_pos_at_rail_distance(rand_rail_distance, randf_range(-platform_start, -platform_end)) + Vector3(0, platform_height, 0))
 		if platform_side == PlatformSide.RIGHT:
-			return Transform(Basis(Vector3(0,deg2rad(rail.get_deg_at_rail_distance(rand_rail_distance)+180.0), 0)) , rail.get_shifted_pos_at_rail_distance(rand_rail_distance, rand_range(platform_start, platform_end)) + Vector3(0, platform_height, 0))
+			return Transform3D(Basis(Vector3(0,deg2rad(rail.get_deg_at_rail_distance(rand_rail_distance)+180.0), 0)) , rail.get_shifted_pos_at_rail_distance(rand_rail_distance, randf_range(platform_start, platform_end)) + Vector3(0, platform_height, 0))
 	else:
-		var rand_rail_distance = int(rand_range(on_rail_position, on_rail_position-station_length))
+		var rand_rail_distance = int(randi_range(on_rail_position, on_rail_position-station_length))
 		if platform_side == PlatformSide.LEFT:
-			return Transform(Basis(Vector3(0,deg2rad(rail.get_deg_at_rail_distance(rand_rail_distance)+180.0), 0)), rail.get_shifted_pos_at_rail_distance(rand_rail_distance, rand_range(platform_start, platform_end)) + Vector3(0, platform_height, 0))
+			return Transform3D(Basis(Vector3(0,deg2rad(rail.get_deg_at_rail_distance(rand_rail_distance)+180.0), 0)), rail.get_shifted_pos_at_rail_distance(rand_rail_distance, randf_range(platform_start, platform_end)) + Vector3(0, platform_height, 0))
 		if platform_side == PlatformSide.RIGHT:
-			return Transform(Basis(Vector3(0,deg2rad(rail.get_deg_at_rail_distance(rand_rail_distance)), 0)) , rail.get_shifted_pos_at_rail_distance(rand_rail_distance, rand_range(-platform_start, -platform_end)) + Vector3(0, platform_height, 0))
+			return Transform3D(Basis(Vector3(0,deg2rad(rail.get_deg_at_rail_distance(rand_rail_distance)), 0)) , rail.get_shifted_pos_at_rail_distance(rand_rail_distance, randf_range(-platform_start, -platform_end)) + Vector3(0, platform_height, 0))
 		
 func set_door_positions(doors, doors_wagon): ## Called by the train
 	if doors.size() == 0:
@@ -121,7 +133,7 @@ func set_door_positions(doors, doors_wagon): ## Called by the train
 		person.clear_destinations()
 		var nearest_door_index = 0
 		for i in range(doors.size()):
-			if doors[i].world_pos.distance_to(person.translation) <  doors[nearest_door_index].world_pos.distance_to(person.translation):
+			if doors[i].world_pos.distance_to(person.position) <  doors[nearest_door_index].world_pos.distance_to(person.position):
 				nearest_door_index = i
 		person.destination_pos.append(doors[nearest_door_index].world_pos)
 		person.transition_to_wagon = true

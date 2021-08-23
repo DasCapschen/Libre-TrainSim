@@ -1,4 +1,4 @@
-tool
+@tool
 extends Node
 
 
@@ -10,4 +10,4 @@ extends Node
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	if not Engine.editor_hint:
-		get_parent().get_node("MeshInstance").queue_free()
+		get_parent().get_node("MeshInstance3D").queue_free()

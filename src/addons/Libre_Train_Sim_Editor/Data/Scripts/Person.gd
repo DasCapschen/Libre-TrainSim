@@ -1,11 +1,11 @@
-extends Spatial
+extends Node3D
 
-export (float) var walking_speed = 1.5
+@export  var walking_speed = 1.5
 
-var attached_station = null
-var attached_wagon = null
-var attached_seat = null
-var assigned_door = null
+var attached_station
+var attached_wagon
+var attached_seat
+var assigned_door
 var is_destination_seat = false
 
 var transition_to_wagon = false
@@ -17,7 +17,7 @@ var status = PersonState.WALKING
 var destination_pos = []
 
 func _ready():
-	walking_speed = rand_range(walking_speed, walking_speed+0.3)
+	walking_speed = randf_range(walking_speed, walking_speed+0.3)
 
 func _process(delta):
 	handle_walk(delta)
@@ -50,9 +50,9 @@ func handle_walk(delta):
 				leave_wagon_timer = 0
 				transition_to_station = false
 				leave_current_wagon()
-		if is_destination_seat and translation.distance_to(attached_seat.translation) < 0.1:
+		if is_destination_seat and position.distance_to(attached_seat.position) < 0.1:
 			is_destination_seat = false
-			rotation_degrees.y = attached_seat.rotation_degrees.y + 90
+			rotation.y = attached_seat.rotation.y + deg2rad(90)
 			status = PersonState.SITTING
 			## Animation Sitting
 			$VisualInstance/AnimationPlayer.play("Sitting")
@@ -66,23 +66,23 @@ func handle_walk(delta):
 		status = PersonState.WALKING
 		$VisualInstance/AnimationPlayer.play("Walking")
 	
-	if translation.distance_to(destination_pos[0]) < 0.1:
+	if position.distance_to(destination_pos[0]) < 0.1:
 		destination_pos.pop_front()
 		return
 	else:
 		if status != PersonState.STOPPING:
-			translation = translation.move_toward(destination_pos[0], delta*walking_speed)
-			var vector_delta = destination_pos[0] - translation
-#			rotation_degrees.y = rad2deg(translation.angle_to(destination_pos[0]))
+			position = position.move_toward(destination_pos[0], delta*walking_speed)
+			var vector_delta = destination_pos[0] - position
+#			rotation.y = position.angle_to(destination_pos[0])
 			if vector_delta.z != 0:
 				if vector_delta.z > 0:
-					rotation_degrees.y = rad2deg(atan(vector_delta.x/vector_delta.z))
+					rotation.y = atan(vector_delta.x/vector_delta.z)
 				else:
-					rotation_degrees.y = rad2deg(atan(vector_delta.x/vector_delta.z))+180
+					rotation.y = atan(vector_delta.x/vector_delta.z)+deg2rad(180)
 
 func leave_current_wagon():
 	destination_pos.append(assigned_door.to_global(Vector3(0,0,0)))
-	translation = to_global(Vector3(0,0,0))
+	position = to_global(Vector3(0,0,0))
 	attached_wagon.deregister_person(self)
 	attached_station.register_person(self)
 	transition_to_station = false

@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 
 signal user_added_entry(entry_name) # string
@@ -10,29 +10,30 @@ signal user_pasted_entries(source_entry_names, source_jList_id, pasted_entry_nam
 signal user_pressed_save(data) # array of strings (equal to entry_names)
 signal user_selected_entry(entry_name) # string
 
-export (String) var _id = "_random"
+@export var _id = "_random"
 var id 
-export (String) var entry_duplicate_text = "_duplicate"
+@export var entry_duplicate_text = "_duplicate"
 
-export (bool) var only_unique_entries_allowed = true
-export (bool) var enable_add_button = true
-export (bool) var enable_remove_button = true
-export (bool) var enable_rename_button = false
-export (bool) var enable_duplicate_button = false
-export (bool) var enable_copy_button = false 
-export (bool) var enable_paste_button = false 
-export (bool) var enable_save_button = false 
+@export var only_unique_entries_allowed = true
+@export var enable_add_button = true
+@export var enable_remove_button = true
+@export var enable_rename_button = false
+@export var enable_duplicate_button = false
+@export var enable_copy_button = false 
+@export var enable_paste_button = false 
+@export var enable_save_button = false 
 
-export (String) var add_button_text = "Add"
-export (String) var remove_button_text = "Remove"
-export (String) var rename_button_text = "Rename"
-export (String) var duplicate_button_text = "Duplicate"
-export (String) var copy_button_text = "Copy"
-export (String) var paste_button_text = "Paste"
-export (String) var save_button_text = "Save"
+@export var add_button_text = "Add"
+@export var remove_button_text = "Remove"
+@export var rename_button_text = "Rename"
+@export var duplicate_button_text = "Duplicate"
+@export var copy_button_text = "Copy"
+@export var paste_button_text = "Paste"
+@export var save_button_text = "Save"
 
 
-export (bool) var update setget update_visible_buttons
+@export var update: bool:
+	set(val): update_visible_buttons(val)
 
 func get_data():
 	var entry_names = []
@@ -65,15 +66,15 @@ func has_entry(entry_name : String):
 	
 func select_entry(entry_name : String):
 	if not has_entry(entry_name):
-		print_debug("jList " + name + ": Entry " + entry_name + " not found. Dont selecting anything...")
+		print_debug("jList ", name, ": Entry " + entry_name + " not found. Dont selecting anything...")
 	$VBoxContainer/ItemList.select(get_entry_id(entry_name))
 
 func get_size():
 	return item_list.get_item_count()#
 
 func revoke_last_user_action(message : String = ""):
-	if undo_buffer == null:
-		print_debug("jList " + name + ": Can't revoke last user action. Nothing stored in buffer.")
+	if undo_buffer.is_empty():
+		print_debug("jList ", name, ": Can't revoke last user action. Nothing stored in buffer.")
 		return
 	set_data(undo_buffer)
 	undo_buffer = null
@@ -87,7 +88,7 @@ func revoke_last_user_action(message : String = ""):
 ## Internal Code ###############################################################
 var item_list
 
-var undo_buffer = null
+var undo_buffer: Array = []
 
 func _ready():
 	update_visible_buttons(true)
@@ -115,7 +116,7 @@ func get_unique_entry_name(entry_name : String):
 
 func rename_entry_id(entry_id : int, new_entry_name : String):
 	if entry_id >= get_size():
-		print_debug("jList " + name + ": rename_entry(): entry_id out of bounds! Skipping...")
+		print_debug("jList ", name, ": rename_entry(): entry_id out of bounds! Skipping...")
 		return
 	if only_unique_entries_allowed:
 		new_entry_name = get_unique_entry_name(new_entry_name)
@@ -127,7 +128,7 @@ func duplicate_entry_id(entry_id : int):
 	
 func remove_entry_id(entry_id : int):
 	if entry_id >= get_size():
-		print_debug("jList " + name + ": remove_entry_id(): entry_id out of bounds! Skipping...")
+		print_debug("jList ", name, ": remove_entry_id(): entry_id out of bounds! Skipping...")
 		return
 	item_list.remove_item(entry_id)
 
@@ -157,7 +158,7 @@ func _enter_tree():
 	if owner != self:
 		if _id == "_random":
 			randomize()
-			id = String(randi())
+			id = str(randi())
 		else:
 			id = _id
 		jListManager.register_jList(self)

@@ -13,7 +13,7 @@ dest_files=["res://.godot/imported/Man_Young_01.gltf-d969f32d7feb7f56d9e4ad51d6d
 
 [params]
 
-nodes/root_type="Spatial"
+nodes/root_type="Node3D"
 nodes/root_name="Scene Root"
 nodes/root_scale=1.0
 meshes/ensure_tangents=true

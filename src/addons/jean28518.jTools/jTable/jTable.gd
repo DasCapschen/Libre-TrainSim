@@ -1,20 +1,21 @@
-tool
+@tool
 extends Control
 
-export (Array, String) var headings
-export (Array, String) var keys
+@export var headings: Array[String]
+@export var keys: Array[String]
 
-export (int) var minimum_column_size = 100
+@export var minimum_column_size = 100
 
-export (bool) var show_save_button = false
-export (bool) var show_clear_button = true
+@export var show_save_button = false
+@export var show_clear_button = true
 
 signal remove_entry_pressed
 signal clear_table_pressed
 signal add_entry_pressed
 signal saved_pressed(tableData) # Gives a Dictionary
 
-export (bool) var _update_table setget update_table_in_editor
+@export var _update_table: bool:
+	set(val): update_table_in_editor(val)
 
 var columns = 0
 var current_entries = 0
@@ -92,10 +93,10 @@ func initialize():
 		
 func check_configuration():
 	if (headings.size() != keys.size() or keys.size() != get_children().size()-1 or headings.size()==0) and current_entries == 0:
-		print_debug("JTable " + name + ": The configuration of the table is wrong!")
+		print_debug("JTable ", name, ": The configuration of the table is wrong!")
 		return false
 	if current_entries != 0:
-		print_debug("JTable " + name + ": Can't check configuration. Table not empty.")
+		print_debug("JTable ", name, ": Can't check configuration. Table not empty.")
 		return false
 	return true
 		
@@ -104,10 +105,10 @@ func new_line():
 		return
 	current_entries += 1
 	
-	var line_control_instance = LineControlResource.instance()
-	line_control_instance.connect("line_up", self, "move_line_up")
-	line_control_instance.connect("line_down", self, "move_line_down")
-	line_control_instance.connect("line_delete", self, "delete_line")
+	var line_control_instance = LineControlResource.instantiate()
+	line_control_instance.line_up.connect(self.move_line_up)
+	line_control_instance.line_down.connect(self.move_line_down)
+	line_control_instance.line_delete.connect(self.delete_line)
 	line_control_instance.update_line(current_entries)
 	grid_node.add_child(line_control_instance)
 	line_control_instance.owner = self

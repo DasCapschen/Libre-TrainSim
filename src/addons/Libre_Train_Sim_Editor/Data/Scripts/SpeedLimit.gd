@@ -1,14 +1,15 @@
-tool
-extends Spatial
+@tool
+extends Node3D
 
 const type = SignalType.SPEED
 
-export (int) var speed
+@export var speed: int
 
-export (String) var attached_rail
-export (int) var on_rail_position
-export (bool) var update setget set_to_rail
-export var forward = true
+@export var attached_rail: String
+@export var on_rail_position: int
+@export var update: bool:
+	set(val): set_to_rail(val)
+@export var forward = true
 
 
 func _ready():
@@ -36,10 +37,10 @@ func set_to_rail(newvar):
 	
 	if speed - 100 >= 0:
 		var output_speed = int(speed / 10)
-		$Viewport/Speed/Label.text = String(output_speed)
+		$Viewport/Speed/Label.text = str(output_speed)
 	else: 
 		var output_speed = int(speed / 10)
-		var string = " " + String(output_speed)
+		var string = " " + str(output_speed)
 		$Viewport/Speed/Label.text = string
 	
 	
@@ -50,10 +51,10 @@ func set_to_rail(newvar):
 	if find_parent("World").has_node("Rails/"+attached_rail) and attached_rail != "":
 		var rail = find_parent("World").get_node("Rails/"+attached_rail)
 		rail.register_signal(self.name, on_rail_position)
-		self.translation = rail.get_pos_at_rail_distance(on_rail_position)
-		self.rotation_degrees.y = rail.get_deg_at_rail_distance(on_rail_position)
+		self.position = rail.get_pos_at_rail_distance(on_rail_position)
+		self.rotation.y = deg2rad(rail.get_deg_at_rail_distance(on_rail_position))
 		if not forward:
-			self.rotation_degrees.y += 180
+			self.rotation.y += deg2rad(180)
 
 
 func set_scenario_data(d):

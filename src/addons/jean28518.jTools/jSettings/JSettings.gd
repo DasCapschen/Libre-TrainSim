@@ -15,27 +15,6 @@ func _ready():
 	if get_parent().name == "root":
 		hide()
 
-	if get_fullscreen() == null:
-		set_fullscreen(true)
-
-	if get_shadows() == null:
-		set_shadows(true)
-
-	if get_anti_aliasing() == null:
-		set_anti_aliasing(2)
-
-	if get_main_volume() == null:
-		set_main_volume(1)
-
-	if get_music_volume() == null:
-		set_music_volume(1)
-
-	if get_game_volume() == null:
-		set_game_volume(1)
-	
-	if get_persons() == null:
-		set_persons(true)
-
 	apply_saved_settings()
 
 
@@ -73,7 +52,7 @@ func update_settings_window():
 ## Setter/Getter ###############################################################
 
 func get_fullscreen():
-	return jSaveManager.get_setting("fullscreen")
+	return jSaveManager.get_setting("fullscreen", true)
 
 func set_fullscreen(val : bool):
 	jSaveManager.save_setting("fullscreen", val)
@@ -84,7 +63,7 @@ func set_shadows(val : bool):
 	jSaveManager.save_setting("shadows", val)
 
 func get_shadows():
-	return jSaveManager.get_setting("shadows")
+	return jSaveManager.get_setting("shadows", true)
 
 
 func set_language(language_code : String):
@@ -100,7 +79,7 @@ func set_anti_aliasing(val : int):
 	ProjectSettings.set_setting("rendering/quality/filters/msaa", val)
 
 func get_anti_aliasing():
-	return jSaveManager.get_setting("antiAliasing")
+	return jSaveManager.get_setting("antiAliasing", 2)
 
 
 func set_main_volume(val : float):
@@ -109,7 +88,7 @@ func set_main_volume(val : float):
 
 
 func get_main_volume():
-	return jSaveManager.get_setting("mainVolume")
+	return jSaveManager.get_setting("mainVolume", 1)
 
 
 func set_music_volume(val : float):
@@ -117,7 +96,7 @@ func set_music_volume(val : float):
 	jAudioManager.set_music_volume_db(val)
 
 func get_music_volume():
-	return jSaveManager.get_setting("musicVolume")
+	return jSaveManager.get_setting("musicVolume", 1)
 
 
 func set_game_volume(val : float):
@@ -125,7 +104,7 @@ func set_game_volume(val : float):
 	jAudioManager.set_game_volume_db(val)
 
 func get_game_volume():
-	return jSaveManager.get_setting("gameVolume")
+	return jSaveManager.get_setting("gameVolume", 1)
 
 
 func set_fog(value : bool):

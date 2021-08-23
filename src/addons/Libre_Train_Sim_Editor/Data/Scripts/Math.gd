@@ -1,4 +1,4 @@
-tool
+@tool
 extends Node
 
 # Get Next Position from a point on a circle after a specific Distance. 
@@ -90,14 +90,14 @@ func sort_signals(signal_table, forward = true): # Gets A Dict like {"name": [],
 	if forward:
 		return export_t
 	else:
-		export_t.invert()
+		export_t.reverse()
 		return export_t
 
 		
 func time_to_string(time):
-	var hour = String(time[0])
-	var minute = String(time[1])
-	var second = String(time[2])
+	var hour = str(time[0])
+	var minute = str(time[1])
+	var second = str(time[2])
 	if hour.length() == 1:
 		hour = "0" + hour
 	if minute.length() == 1:
@@ -108,11 +108,11 @@ func time_to_string(time):
 	
 func distance_to_string(distance):
 	if distance > 10000:
-		return String(int(distance/1000)) + " km"
+		return str(int(distance/1000)) + " km"
 	if distance > 1000:
-		return String(int(distance/100)/10.0) + " km"
+		return str(int(distance/100)/10.0) + " km"
 	if distance > 100:
-		return String((int(distance/100))*100) + " m"
+		return str((int(distance/100))*100) + " m"
 	else:
-		return String((int(distance-10)/10)*10) + " m"
+		return str((int(distance-10)/10)*10) + " m"
 		

@@ -1,9 +1,9 @@
-extends Spatial
+extends Node3D
 
 #onready var drivePitchShift = AudioServer.get_bus_effect(2, 0)
 
-export (float) var AccelerationTransitionTime 
-export (float) var AccelerationTransitionSpeed 
+@export var AccelerationTransitionTime: float
+@export var AccelerationTransitionSpeed: float
 
 
 var sollAccelerationVolume1 = -50
@@ -11,7 +11,7 @@ var sollAccelerationVolume2 = -50
 
 var inSideReduction = -15
 
-onready var player = get_parent()
+@onready var player = get_parent()
 
 
 

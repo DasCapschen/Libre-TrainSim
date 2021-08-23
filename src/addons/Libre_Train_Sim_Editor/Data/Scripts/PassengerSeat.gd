@@ -1,5 +1,5 @@
-extends Spatial
+extends Node3D
 
 func _ready():
-	$MeshInstance.queue_free()
+	$MeshInstance3D.queue_free()
 	$MeshInstance2.queue_free()

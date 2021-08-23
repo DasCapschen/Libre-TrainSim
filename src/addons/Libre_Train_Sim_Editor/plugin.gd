@@ -1,4 +1,4 @@
-tool
+@tool
 extends EditorPlugin
 
 var rail_builder
@@ -10,7 +10,10 @@ var eds = get_editor_interface().get_selection()
 #var fileDialog
 
 func _process(delta):
-	configuration.world = get_editor_interface().get_edited_scene_root()
+	if configuration != null:
+		configuration.world = get_editor_interface().get_edited_scene_root()
+	pass
+	#configuration.world = get_editor_interface().get_edited_scene_root()
 	
 #	if fileSelecting != "":
 #		var fileDialog = EditorFileDialog.new()
@@ -20,27 +23,29 @@ func _process(delta):
 #		fileSelecting = ""
 
 func _enter_tree():
+	if get_editor_interface() == null:
+		return
+
 	# Initialization of the plugin goes here
-	rail_builder = preload("res://addons/Libre_Train_Sim_Editor/Docks/RailBuilder/RailBuilder.tscn").instance()
-	add_control_to_dock(DOCK_SLOT_RIGHT_UL, rail_builder)
-
-	rail_builder.world = get_editor_interface().get_edited_scene_root()
-	rail_builder.eds = eds
+	rail_builder = preload("res://addons/Libre_Train_Sim_Editor/Docks/RailBuilder/RailBuilder.tscn").instantiate()
+	if rail_builder != null:
+		add_control_to_dock(DOCK_SLOT_RIGHT_UL, rail_builder)
+		rail_builder.world = get_editor_interface().get_edited_scene_root()
+		rail_builder.eds = eds
 	
-
+	rail_attachements = preload("res://addons/Libre_Train_Sim_Editor/Docks/RailAttachments/RailAttachments.tscn").instantiate()
+	if rail_attachements != null:
+		add_control_to_dock(DOCK_SLOT_RIGHT_UL, rail_attachements)
+		rail_attachements.world = get_editor_interface().get_edited_scene_root()
+		rail_attachements.eds = eds
+		rail_attachements.plugin_root = self
 	
-	rail_attachements = preload("res://addons/Libre_Train_Sim_Editor/Docks/RailAttachments/RailAttachments.tscn").instance()
-	add_control_to_dock(DOCK_SLOT_RIGHT_UL, rail_attachements)
-	rail_attachements.world = get_editor_interface().get_edited_scene_root()
-	rail_attachements.eds = eds
-	rail_attachements.plugin_root = self
+	eds.selection_changed.connect(self._on_selection_changed)
 	
-	eds.connect("selection_changed", self, "_on_selection_changed")
-	
-	configuration = preload("res://addons/Libre_Train_Sim_Editor/Docks/Configuration/Configuration.tscn").instance()
-	add_control_to_dock(DOCK_SLOT_RIGHT_UL, configuration)
-	configuration.world = get_editor_interface().get_edited_scene_root()
-
+	configuration = preload("res://addons/Libre_Train_Sim_Editor/Docks/Configuration/Configuration.tscn").instantiate()
+	if configuration != null:
+		add_control_to_dock(DOCK_SLOT_RIGHT_UL, configuration)
+		configuration.world = get_editor_interface().get_edited_scene_root()
 	pass
 
 func _exit_tree():
@@ -65,7 +70,7 @@ func _on_selection_changed():
 	# Returns an array of selected nodes
 	var selected = eds.get_selected_nodes() 
 
-	if not selected.empty():
+	if not selected.is_empty():
 		# Always pick first node in selection
 		rail_builder.update_selected_rail(selected[0])
 		rail_attachements.update_selected_rail(selected[0])

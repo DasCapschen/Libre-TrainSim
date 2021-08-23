@@ -1,7 +1,8 @@
-extends Spatial
+extends Node3D
 
-export (Array,String) var connections
+# TODO: NodePath ?
+@export var connections: Array[String]
 
 func _ready():
-	$MeshInstance.queue_free()
+	$MeshInstance3D.queue_free()
 

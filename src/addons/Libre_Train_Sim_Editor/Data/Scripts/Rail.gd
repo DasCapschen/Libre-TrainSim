@@ -1,20 +1,21 @@
-tool
-extends Spatial
+@tool
+class_name Rail extends Node3D
 
 ## Documentation Notes:
 # Please be aware of the parallel Mode:
 # If 'parallel_rail != ""' All local train Settings apart from 'railType' and 'distance_to_parllel_rail' are deprecated. The rail gets the rest information from parallel rail.
 
 
-export (String) var rail_type_path = "res://Resources/Basic/RailTypes/Default.tscn"
-export (float) var length
-export (float) var radius
-export (float) var build_distance = 1
-export (int) var visible_segments
+@export_file("*.tscn") var rail_type_path = "res://Resources/Basic/RailTypes/Default.tscn"
+@export var length: float
+@export var radius: float
+@export var build_distance: float = 1
+@export var visible_segments: int
 # warning-ignore:unused_class_variable
-export (bool) var update setget _update
+@export var update: bool:
+	set(val): _update(val)
 
-export (bool) var manual_moving = false
+@export var manual_moving = false
 var fixed_transform
 
 var track_objects = []
@@ -22,40 +23,49 @@ var track_objects = []
 
 var MAX_LENGTH = 1000
 
-export (float) var start_rot
-export (float) var end_rot
-export (Vector3) var start_pos
-export (Vector3) var end_pos
+@export var start_rot: float
+@export var end_rot: float
+@export var start_pos: Vector3
+@export var end_pos: Vector3
 
-export (float) var others_distance = -4.5
-export (float) var others_radius
-export (float) var others_length
+@export var others_distance = -4.5
+@export var others_radius: float
+@export var others_length: float
 # warning-ignore:unused_class_variable
-export (bool) var calculate setget calc_parallel_rail
+@export var calculate: bool:
+	set(val): calc_parallel_rail(val)
 
-export (float) var in_shift = 2.25
+@export var in_shift = 2.25
 # warning-ignore:unused_class_variable
-export (float) var in_radius = 400
-export (float) var out_length
+@export var in_radius = 400
+@export var out_length: float
 # warning-ignore:unused_class_variable
-export (bool) var calculate_shift setget calc_shift
+@export var calculate_shift: bool:
+	set(val): calc_shift(val)
 
 ## Steep
-export (float) var start_slope = 0 # Degree
-export (float) var end_slope = 0 # Degree
+@export var start_slope = 0 # Degree
+@export var end_slope = 0 # Degree
 
-export (float) var start_tend = 0
-export (float) var tend1_pos = -1
-export (float) var tend1 = 0
-export (float) var tend2_pos = 0
-export (float) var tend2 = 0
-export (float) var end_tend
-export (float) var automatic_tendency = false
+@export var start_tend = 0
+@export var tend1_pos = -1
+@export var tend1 = 0
+@export var tend2_pos = 0
+@export var tend2 = 0
+@export var end_tend: float
+@export var automatic_tendency = false
 
-export (String) var parallel_rail = ""
-export (float) var distance_to_parllel_rail = 0
 
-export (bool) var overhead_line = false
+@export_node_path(Rail)
+var parallel_rail_path: 
+	set(val):
+		parallel_rail_path = val
+		parallel_rail = val.get_name(get_name_count()-1)
+
+var parallel_rail = ""
+@export var distance_to_parllel_rail = 0
+
+@export var overhead_line = false
 var overhead_line_height1 = 5.3
 var overhead_line_height2 = 6.85
 var overhead_line_thickness = 0.02
@@ -68,8 +78,8 @@ var rail_type_node
 
 
 
-onready var world = find_parent("World")
-onready var buildings = world.get_node("Buildings")
+@onready var world: World = find_parent("World")
+@onready var buildings = world.get_node("Buildings")
 
 
 var attached_signals = []
@@ -102,8 +112,8 @@ func _process(delta):
 			transform = fixed_transform
 		else:
 			fixed_transform = transform
-		if name.match(" "):
-			name = name.replace(" ", "_")
+		if str(name).match(" "):
+			name = str(name).replace(" ", "_")
 		## Move buildings to the buildings Node
 		for child in get_children():
 			if not child.owner == self:
@@ -113,9 +123,9 @@ func _process(delta):
 
 func _update(newvar):
 	if ResourceLoader.exists(rail_type_path):
-		rail_type_node = load(rail_type_path).instance()
+		rail_type_node = load(rail_type_path).instantiate()
 	if rail_type_node == null:
-		rail_type_node = preload("res://Resources/Basic/RailTypes/Default.tscn").instance()
+		rail_type_node = preload("res://Resources/Basic/RailTypes/Default.tscn").instantiate()
 	build_distance = rail_type_node.build_distance
 	overhead_line_height1 = rail_type_node.overhead_line_height1
 	overhead_line_height2 = rail_type_node.overhead_line_height2
@@ -138,14 +148,14 @@ func _update(newvar):
 		else:
 			radius = par_rail.radius + distance_to_parllel_rail
 			length = par_rail.length * ((radius)/(par_rail.radius))
-		translation = par_rail.get_shifted_pos_at_rail_distance(0, distance_to_parllel_rail) ## Hier verstehe ich das minus nicht
-		rotation_degrees.y = par_rail.rotation_degrees.y
+		position = par_rail.get_shifted_pos_at_rail_distance(0, distance_to_parllel_rail) ## Hier verstehe ich das minus nicht
+		rotation.y = par_rail.rotation.y
 		fixed_transform = transform
 	
 
 	if length > MAX_LENGTH:
 		length = MAX_LENGTH
-		print(self.name + ": The max length is " + String(MAX_LENGTH) + ". Shrinking the length to maximal length.")
+		print(self.name, ": The max length is " + str(MAX_LENGTH) + ". Shrinking the length to maximal length.")
 	update_positions_and_rotations()
 	visible_segments = length / build_distance +1
 
@@ -153,15 +163,15 @@ func _update(newvar):
 	update_overhead_line()
 
 	if Engine.is_editor_hint():
-		$Ending.translation = get_local_transform_at_rail_distance(length).origin
+		$Ending.position = get_local_transform_at_rail_distance(length).origin
 
 
 func check_visual_instance():
 	if visible:
-		if get_node_or_null("MultiMeshInstance") == null:
+		if get_node_or_null("MultiMeshInstance3D") == null:
 			load_visible_instance()
 	else:
-		if get_node_or_null("MultiMeshInstance") != null:
+		if get_node_or_null("MultiMeshInstance3D") != null:
 			unload_visible_instance()
 
 func get_track_object(track_object_name : String): # (Searches for the description of track objects
@@ -171,10 +181,10 @@ func get_track_object(track_object_name : String): # (Searches for the descripti
 	return null
 
 func build_rail():
-	if get_node_or_null("MultiMeshInstance") == null:
+	if get_node_or_null("MultiMeshInstance3D") == null:
 		return
-	get_node("MultiMeshInstance").set_multimesh(get_node("MultiMeshInstance").multimesh.duplicate(false))
-	var multimesh = get_node("MultiMeshInstance").multimesh
+	get_node("MultiMeshInstance3D").set_multimesh(get_node("MultiMeshInstance3D").multimesh.duplicate(false))
+	var multimesh = get_node("MultiMeshInstance3D").multimesh
 	multimesh.mesh = rail_type_node.get_child(0).mesh.duplicate(true)
 	for i in range(rail_type_node.get_child(0).get_surface_material_count()):
 		multimesh.mesh.surface_set_material(i, rail_type_node.get_child(0).get_surface_material(i))
@@ -188,14 +198,14 @@ func build_rail():
 
 func get_transform_at_rail_distance(distance):
 	var loc_transform = get_local_transform_at_rail_distance(distance)
-	return Transform(loc_transform.basis.rotated(Vector3(0,1,0), deg2rad(rotation_degrees.y)) ,translation + loc_transform.origin.rotated(Vector3(0,1,0), deg2rad(rotation_degrees.y)))
+	return Transform3D(loc_transform.basis.rotated(Vector3(0,1,0), rotation.y) ,position + loc_transform.origin.rotated(Vector3(0,1,0), rotation.y))
 
 func get_local_transform_at_rail_distance(distance):
 	if parallel_rail == "":
-		return Transform(Basis().rotated(Vector3(1,0,0),deg2rad(get_tend_at_rail_distance(distance))).rotated(Vector3(0,0,1), deg2rad(get_height_rot(distance))).rotated(Vector3(0,1,0), deg2rad(circle_get_deg(radius, distance))), get_local_pos_at_rail_distance(distance) )
+		return Transform3D(Basis().rotated(Vector3(1,0,0),deg2rad(get_tend_at_rail_distance(distance))).rotated(Vector3(0,0,1), deg2rad(get_height_rot(distance))).rotated(Vector3(0,1,0), deg2rad(circle_get_deg(radius, distance))), get_local_pos_at_rail_distance(distance) )
 	else:
 		var par_distance = distance/length * par_rail.length
-		return Transform(Basis().rotated(Vector3(1,0,0),deg2rad(par_rail.get_tend_at_rail_distance(par_distance))).rotated(Vector3(0,0,1), deg2rad(par_rail.get_height_rot(par_distance))).rotated(Vector3(0,1,0), deg2rad(par_rail.circle_get_deg(par_rail.radius, par_distance))), par_rail.get_shifted_local_pos_at_rail_distance(par_distance, distance_to_parllel_rail)+ ((par_rail.start_pos-start_pos).rotated(Vector3(0,1,0), deg2rad(-rotation_degrees.y))))#+(-translation+par_rail.translation).rotated(Vector3(0,1,0), deg2rad(rotation_degrees.y)) )
+		return Transform3D(Basis().rotated(Vector3(1,0,0),deg2rad(par_rail.get_tend_at_rail_distance(par_distance))).rotated(Vector3(0,0,1), deg2rad(par_rail.get_height_rot(par_distance))).rotated(Vector3(0,1,0), deg2rad(par_rail.circle_get_deg(par_rail.radius, par_distance))), par_rail.get_shifted_local_pos_at_rail_distance(par_distance, distance_to_parllel_rail)+ ((par_rail.start_pos-start_pos).rotated(Vector3(0,1,0), -rotation.y)))#+(-position+par_rail.position).rotated(Vector3(0,1,0), deg2rad(rotation.y)) )
 
 func speed_to_kmh(speed):
 	return speed*3.6
@@ -222,7 +232,7 @@ func calc_shift(newvar):
 		return
 	var angle = rad2deg(acos((radius-in_shift)/radius))
 
-	if String(angle) == "nan":
+	if str(angle) == "nan":
 		out_length = length
 		return
 	out_length = 2.0 * PI * radius * angle / 360.0
@@ -246,7 +256,7 @@ func get_local_deg_at_rail_distance(distance):
 	return circle_get_deg(radius, distance)
 
 func get_shifted_pos_at_rail_distance(distance, shift):
-	return get_shifted_local_pos_at_rail_distance(distance, shift).rotated(Vector3(0,1,0),deg2rad(rotation_degrees.y)) + start_pos
+	return get_shifted_local_pos_at_rail_distance(distance, shift).rotated(Vector3(0,1,0),rotation.y) + start_pos
 #	var railpos = get_pos_at_rail_distance(distance)
 #	return railpos + (Vector3(1, 0, 0).rotated(Vector3(0,1,0), deg2rad(get_deg_at_rail_distance(distance)+90))*shift)
 
@@ -261,18 +271,18 @@ func get_shifted_local_pos_at_rail_distance(distance, shift):
 	return(Vector3(circle_pos.x, get_height(distance), -circle_pos.y+shift))
 
 func unload_visible_instance():
-	print("Unloading visible Instance for rail "+name)
+	print("Unloading visible Instance for rail ",name)
 	visible = false
-	$MultiMeshInstance.queue_free()
+	$MultiMeshInstance3D.queue_free()
 
 func load_visible_instance():
 	visible = true
-	if get_node_or_null("MultiMeshInstance") != null: return
-	print("Loading visible Instance for rail "+name)
-	var multimesh_instance = MultiMeshInstance.new()#
+	if get_node_or_null("MultiMeshInstance3D") != null: return
+	print("Loading visible Instance for rail ",name)
+	var multimesh_instance = MultiMeshInstance3D.new()
 	multimesh_instance.multimesh = MultiMesh.new().duplicate(true)
 	multimesh_instance.multimesh.transform_format = MultiMesh.TRANSFORM_3D
-	multimesh_instance.name = "MultiMeshInstance"
+	multimesh_instance.name = "MultiMeshInstance3D"
 	add_child(multimesh_instance)
 	multimesh_instance.owner = self
 	_update(true)
@@ -408,13 +418,13 @@ func update_overhead_line():
 	if not overhead_line: 
 		return
 		
-	var overhead_line_mesh_instance = MeshInstance.new()
+	var overhead_line_mesh_instance = MeshInstance3D.new()
 	overhead_line_mesh_instance.name = "OverheadLine"
 	self.add_child(overhead_line_mesh_instance)
 	overhead_line_mesh_instance.owner = self
 	
-	vertices = PoolVector3Array()
-	indices = PoolIntArray()
+	vertices = []
+	indices = []
 
 	## Get Pole Points:
 	var pole_positions = []
@@ -493,7 +503,7 @@ func create_3D_line(start, end, thickness):
 	vertices.push_back(end + Vector3(0,-thickness,0))
 	vertices.push_back(end + Vector3(0,0,thickness))
 	
-	var indices_array = PoolIntArray([0+x, 2+x, 4+x,  2+x, 4+x, 6+x,  1+x, 5+x, 7+x,  1+x, 7+x, 3+x])
+	var indices_array = [0+x, 2+x, 4+x,  2+x, 4+x, 6+x,  1+x, 5+x, 7+x,  1+x, 7+x, 3+x]
 
 	indices.append_array(indices_array)
 	
@@ -509,18 +519,18 @@ func create_3D_line_up(start, end, thickness):
 	vertices.push_back(end + Vector3(-thickness,0,0))
 	vertices.push_back(end + Vector3(0,0,thickness))
 	
-	var indices_array = PoolIntArray([0+x, 2+x, 4+x,  2+x, 4+x, 6+x,  1+x, 5+x, 7+x,  1+x, 7+x, 3+x])
+	var indices_array = [0+x, 2+x, 4+x,  2+x, 4+x, 6+x,  1+x, 5+x, 7+x,  1+x, 7+x, 3+x]
 
 	indices.append_array(indices_array)
 
 ###############################################################################
 func update_positions_and_rotations():
 	start_pos = self.get_translation()
-	start_rot = self.rotation_degrees.y
+	start_rot = self.rotation.y
 	end_rot = get_deg_at_rail_distance(length)
 	end_pos = get_pos_at_rail_distance(length)
 
-export var is_switch_part = ["", ""]
+@export var is_switch_part = ["", ""]
 # 0: is rail at beginning part of switch? 1: is the rail at end part of switch if not 
 # It is saved the name of the other rail which is part of switch
 func update_is_switch_part():

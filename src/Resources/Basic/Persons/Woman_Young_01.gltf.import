@@ -13,7 +13,7 @@ dest_files=["res://.godot/imported/Woman_Young_01.gltf-47008b41cc3b4ef0cbb5723ed
 
 [params]
 
-nodes/root_type="Spatial"
+nodes/root_type="Node3D"
 nodes/root_name="Scene Root"
 nodes/root_scale=1.0
 meshes/ensure_tangents=true

@@ -1,12 +1,15 @@
-tool
+@tool
 extends Control
 
 
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
-export var version = ""
-export (bool) var mobile_version setget update_project_for_mobile
+@export var version: String = ""
+@export var mobile_version: bool:
+	get: return mobile_version
+	set(value): update_project_for_mobile(value)
+
 var save_path = OS.get_executable_path().get_base_dir()+"config.cfg"
 
 # Called when the node enters the scene tree for the first time.
@@ -14,7 +17,7 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 	update_config()
-	$Version.text = "Version: " + String(version)
+	$Version.text = "Version: " + str(version)
 	var open_times = jSaveManager.get_value("open_times", 0)
 	open_times += 1
 	jSaveManager.save_value("open_times", open_times)
@@ -110,7 +113,7 @@ func update_config():
 		if file.get_extension() == "pck":
 			found_content_packs.append(file)
 	dir.list_dir_end()
-	print("Found Content Packs: " + String(found_content_packs))
+	print("Found Content Packs: " + str(found_content_packs))
 
 	for content_pack in found_content_packs:
 		if ProjectSettings.load_resource_pack(content_pack, false):
@@ -181,8 +184,8 @@ func _on_ItemList_itemTracks_selected(index):
 		$Play/Selection/Scenarios.hide()
 		return
 	$Play/Info/Description.text = TranslationServer.translate(w_data["TrackDesciption"])
-	$Play/Info/Info/Author.text = " "+ TranslationServer.translate("MENU_AUTHOR") + ": " + w_data["Author"] + " "
-	$Play/Info/Info/ReleaseDate.text = " "+ TranslationServer.translate("MENU_RELEASE") + ": " + String(w_data["ReleaseDate"][1]) + " " + String(w_data["ReleaseDate"][2]) + " "
+	$Play/Info/Info/Author.text = " "+ str(TranslationServer.translate("MENU_AUTHOR")) + ": " + w_data["Author"] + " "
+	$Play/Info/Info/ReleaseDate.text = " "+ str(TranslationServer.translate("MENU_RELEASE")) + ": " + str(w_data["ReleaseDate"][1]) + " " + str(w_data["ReleaseDate"][2]) + " "
 	$Play/Info/Screenshot.texture = load(w_data["ThumbnailPath"])
 
 	$Play/Selection/Scenarios.show()
@@ -199,7 +202,7 @@ func _on_ItemList_itemTracks_selected(index):
 
 ## Content Page:
 func update_content():
-	$Content/Label.text = TranslationServer.translate("MENU_TO_ADD_CONTENT") + " " + OS.get_executable_path().get_base_dir()
+	$Content/Label.text = str(TranslationServer.translate("MENU_TO_ADD_CONTENT")) + " " + OS.get_executable_path().get_base_dir()
 	$Content/ItemList.clear()
 	for content_pack in found_content_packs:
 		$Content/ItemList.add_item(content_pack)
@@ -223,7 +226,7 @@ func _on_ItemList_scenario_selected(index):
 	var load_response = config.load(save_path)
 	var scenario_data = config.get_value("Scenarios", "scenario_data", {})
 	$Play/Info/Description.text = TranslationServer.translate(scenario_data[current_scenario]["Description"])
-	$Play/Info/Info/Duration.text = TranslationServer.translate("MENU_DURATION")+": " + String(scenario_data[current_scenario]["Duration"]) + " min"
+	$Play/Info/Info/Duration.text = str(TranslationServer.translate("MENU_DURATION")) +": " + str(scenario_data[current_scenario]["Duration"]) + " min"
 	$Play/Selection/Trains.show()
 	$Play/Info/Info/EasyMode.hide()
 	update_train_list()
@@ -245,17 +248,17 @@ func _on_ItemList_scenario_selected(index):
 func _on_ItemList_Train_selected(index):
 	current_train = found_trains[index]
 	Root.check_and_load_translations_for_train(current_train.get_base_dir())
-	var train = load(current_train).instance()
+	var train = load(current_train).instantiate()
 	current_train = found_trains[index]
 	print("Current Train: "+current_train)
 	$Play/Info/Description.text = TranslationServer.translate(train.description)
-	$Play/Info/Info/ReleaseDate.text = TranslationServer.translate("MENU_RELEASE")+": "+ train.release_date
-	$Play/Info/Info/Author.text = TranslationServer.translate("MENU_AUTHOR")+": "+ train.author
+	$Play/Info/Info/ReleaseDate.text = str(TranslationServer.translate("MENU_RELEASE"))+": "+ train.release_date
+	$Play/Info/Info/Author.text = str(TranslationServer.translate("MENU_AUTHOR"))+": "+ train.author
 	$Play/Info/Screenshot.texture = load(train.screenshot_path)#
-	var electric = TranslationServer.translate("YES")
+	var electric = str(TranslationServer.translate("YES"))
 	if not train.electric:
-		electric = TranslationServer.translate("NO")
-	$Play/Info/Info/Duration.text = TranslationServer.translate("MENU_ELECTRIC")+ ": " + electric
+		electric = str(TranslationServer.translate("NO"))
+	$Play/Info/Info/Duration.text = str(TranslationServer.translate("MENU_ELECTRIC"))+ ": " + electric
 	if not Root.mobile_version:
 		$Play/Info/Info/EasyMode.show()
 	else:

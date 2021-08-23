@@ -1,4 +1,4 @@
-tool
+@tool
 extends Node
 
 func call_delayed(delay : float, object : Object, method : String, arg_array : Array = []):

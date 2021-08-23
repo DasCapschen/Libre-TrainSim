@@ -1,4 +1,4 @@
-tool
+@tool
 extends Node
 
 func get_jList(id : String):
@@ -51,7 +51,7 @@ func deregister_jList(node : Node): # Called by the jList itself while exiting t
 func _enter_tree():
 	InputMap.add_action("jList_enter")
 	var key_event_enter = InputEventKey.new()
-	key_event_enter.scancode = KEY_ENTER
+	key_event_enter.keycode = KEY_ENTER
 	InputMap.action_add_event("jList_enter", key_event_enter)
 	
 func _exit_tree():
@@ -65,10 +65,10 @@ func check_duplicate(id : String, node : Node):
 		print_debug("jListGlobal.check_duplicate: id == null or node == null!")
 		return true
 	if registered_jList_ids.has(id):
-		print_debug("jList " + node.name + ": There currently exists a node with the same ID.")
+		print_debug("jList ", node.name, ": There currently exists a node with the same ID.")
 		return_value = true
 	if registered_nodes.has(node):
-		print_debug("jListGlobal.jListGlobal.check_duplicate: " + node.name + " is already registered!")
+		print_debug("jListGlobal.jListGlobal.check_duplicate: ", node.name, " is already registered!")
 		return_value = true
 	
 	return return_value

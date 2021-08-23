@@ -1,40 +1,50 @@
-tool
-extends MultiMeshInstance
+@tool
+extends MultiMeshInstance3D
 
-export (String) var description = ""
-export (String) var attached_rail 
-export (float) var on_rail_position
-export (float) var length
+@export var description = ""
 
-export (String) var object_path
-export var material_paths = []
-export (int) var sides = 0#0: No Side, 1: Left, 2: Right 4: Both
-export (float) var spawn_rate = 1
-export (float) var rows
-export (float) var distance_length = 10
-export (float) var distance_rows
-export (float) var shift
-export (float) var height
-export (float) var rotation_objects = 0
-export (bool) var random_location
-export (float) var random_location_factor = 0.3
-export (bool) var random_rotation
-export (bool) var random_scale 
-export (float) var random_scale_factor = 0.2
-export (bool) var place_last = false
-export (bool) var apply_slope_rotation = false
+@export_node_path(Node3D)
+var attached_rail_path:
+	set(val):
+		attached_rail_path = val
+		attached_rail = val.get_name(val.get_name_count()-1)
 
-export (int) var random_seed = 0
+var attached_rail: String
 
-export (bool) var whole_rail
+
+@export var on_rail_position: float
+@export var length: float
+
+@export_file("*.tscn,*.tres") var object_path
+@export var material_paths: Array[String]  # export_file does not work for arrays >_>
+
+@export_enum("None", "Left", "Right", "Both") var sides = 0
+@export var spawn_rate = 1
+@export  var rows: int
+@export  var distance_length: float = 10
+@export  var distance_rows: float
+@export  var shift: float
+@export  var height: float
+@export  var rotation_objects: float = 0
+@export  var random_location: bool
+@export  var random_location_factor = 0.3
+@export  var random_rotation: bool
+@export  var random_scale: bool
+@export  var random_scale_factor = 0.2
+@export  var place_last = false
+@export  var apply_slope_rotation = false
+
+@export  var random_seed: int = 0
+@export  var whole_rail: bool
 
 var material_updated = false
 
 
-export (bool) var update setget _update
+@export  var update: bool: 
+	set(val): _update(val)
 
 
-onready var world = find_parent("World")
+@onready var world = get_tree().current_scene
 var rail
 var updated = false
 
@@ -128,7 +138,7 @@ func attach_to_rail():
 		if not rail.track_objects.has(self):
 			rail.track_objects.append(self)#
 	else:
-		print("track_object " + name + " can't find rail! Deleting...")
+		print("track_object " , name, " can't find rail! Deleting...")
 		queue_free()
 
 func detach_from_rail():
@@ -156,7 +166,7 @@ func _update(newvar):
 	## Set to rail:
 	if world.has_node("Rails/"+attached_rail) and attached_rail != "":
 		rail = world.get_node("Rails/"+attached_rail)
-		translation = rail.get_pos_at_rail_distance(on_rail_position)
+		position = rail.get_pos_at_rail_distance(on_rail_position)
 	
 	
 	if object_path == "" : return
@@ -186,15 +196,15 @@ func _update(newvar):
 	for a in range(straight_count):
 		for b in range(rows):
 			if sides == 1 or sides == 3: ## Left Side
-				if rand_range(0,1) < spawn_rate:
-					var position = rail.get_shifted_pos_at_rail_distance(railpos, -(shift+(b)*distance_rows)) - self.translation + Vector3(0,height,0)
+				if randf_range(0,1) < spawn_rate:
+					var position = rail.get_shifted_pos_at_rail_distance(railpos, -(shift+(b)*distance_rows)) - self.position + Vector3(0,height,0)
 					if random_location:
-						var shift_x = rand_range(-distance_length * random_location_factor, distance_length * random_location_factor)
-						var shift_z = rand_range(-distance_rows * random_location_factor, distance_rows * random_location_factor)
+						var shift_x = randf_range(-distance_length * random_location_factor, distance_length * random_location_factor)
+						var shift_z = randf_range(-distance_rows * random_location_factor, distance_rows * random_location_factor)
 						position += Vector3(shift_x, 0, shift_z)
 					var rot = rail.get_deg_at_rail_distance(railpos)
 					if random_rotation:
-						rot = rand_range(0,360)
+						rot = randf_range(0,360)
 					else:
 						rot += rotation_objects
 					var slope_rot = 0
@@ -202,20 +212,20 @@ func _update(newvar):
 						slope_rot = rail.get_height_rot(railpos)
 					var scale = Vector3(1,1,1)
 					if random_scale:
-						var scale_val = rand_range(1 - random_scale_factor, 1 + random_scale_factor)
+						var scale_val = randf_range(1 - random_scale_factor, 1 + random_scale_factor)
 						scale = Vector3(scale_val, scale_val, scale_val)
-					self.multimesh.set_instance_transform(idx, Transform(Basis.rotated(Vector3(0,0,1), deg2rad(slope_rot)).rotated(Vector3(0,1,0), deg2rad(rot)).scaled(scale), position))
+					self.multimesh.set_instance_transform(idx, Transform3D(Basis().rotated(Vector3(0,0,1), deg2rad(slope_rot)).rotated(Vector3(0,1,0), deg2rad(rot)).scaled(scale), position))
 					idx += 1
 			if sides == 2 or sides == 3: ## Right Side
-				if rand_range(0,1) < spawn_rate:
-					var position = rail.get_shifted_pos_at_rail_distance(railpos, (shift+(b)*distance_rows)) - self.translation + Vector3(0,height,0)
+				if randf_range(0,1) < spawn_rate:
+					var position = rail.get_shifted_pos_at_rail_distance(railpos, (shift+(b)*distance_rows)) - self.position + Vector3(0,height,0)
 					if random_location:
-						var shift_x = rand_range(-distance_length * random_location_factor, distance_length * random_location_factor)
-						var shift_z = rand_range(-distance_rows * random_location_factor, distance_rows * random_location_factor)
+						var shift_x = randf_range(-distance_length * random_location_factor, distance_length * random_location_factor)
+						var shift_z = randf_range(-distance_rows * random_location_factor, distance_rows * random_location_factor)
 						position += Vector3(shift_x, 0, shift_z)
 					var rot = rail.get_deg_at_rail_distance(railpos)
 					if random_rotation:
-						rot = rand_range(0,360)
+						rot = randf_range(0,360)
 					else:
 						rot += rotation_objects
 					var slope_rot = 0
@@ -223,9 +233,9 @@ func _update(newvar):
 						slope_rot = rail.get_height_rot(railpos)
 					var scale = Vector3(1,1,1)
 					if random_scale:
-						var scale_val = rand_range(1 - random_scale_factor, 1 + random_scale_factor)
+						var scale_val = randf_range(1 - random_scale_factor, 1 + random_scale_factor)
 						scale = Vector3(scale_val, scale_val, scale_val)
-					self.multimesh.set_instance_transform(idx, Transform(Basis.rotated(Vector3(0,0,1), deg2rad(slope_rot)).rotated(Vector3(0,1,0), deg2rad(rot)).scaled(scale), position))
+					self.multimesh.set_instance_transform(idx, Transform3D(Basis().rotated(Vector3(0,0,1), deg2rad(slope_rot)).rotated(Vector3(0,1,0), deg2rad(rot)).scaled(scale), position))
 					idx += 1
 		railpos += distance_length
 		self.multimesh.visible_instance_count = idx
@@ -234,4 +244,4 @@ func _update(newvar):
 
 func newSeed():
 	randomize()
-	random_seed = rand_range(-1000000,1000000)
+	random_seed = randi_range(-1000000,1000000)

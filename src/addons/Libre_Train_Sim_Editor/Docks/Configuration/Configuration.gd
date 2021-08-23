@@ -1,11 +1,11 @@
-tool
-extends Control
+@tool
+class_name ConfigurationDock extends Control
 
 
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
-var world
+var world: World
 var config
 var save_path
 
@@ -17,7 +17,7 @@ func get_all_scenarios():
 	return config.get_value("Scenarios", "List", [])
 
 func get_world_config():
-	if world == null or world.name != "World" or world.track_name == null:
+	if typeof(world) == TYPE_NIL or world.name != "World" or world.track_name.is_empty():
 		return null
 	var file_name = world.track_name + "/" + world.track_name
 	save_path = "res://Worlds/" + file_name + "-scenarios.cfg"
@@ -549,7 +549,7 @@ func _on_WorldLoading_Load_pressed():
 	if chunks == null:
 		return
 	world.load_chunks(chunks)
-	print("Loaded Chunks " + String(chunks))
+	print("Loaded Chunks " + str(chunks))
 
 
 func _on_Chunks_Save_pressed():

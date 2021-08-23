@@ -1,21 +1,22 @@
-tool
-extends MultiMeshInstance
+@tool
+extends MultiMeshInstance3D
 
-export (float) var x = 100
-export (float) var z = 50
-export (float) var spacing = 4
-export (bool) var random_location
-export (float) var random_location_factor = 0.3
-export (bool) var random_rotation
-export (bool) var random_scale 
-export (float) var random_scale_factor = 0.2
-export (bool) var update setget _update
+@export var x = 100
+@export var z = 50
+@export var spacing = 4
+@export var random_location: bool
+@export var random_location_factor = 0.3
+@export var random_rotation: bool
+@export var random_scale: bool
+@export var random_scale_factor = 0.2
+@export var update:bool:
+	set(val): _update(val)
 
 func _ready():
 	if not Engine.is_editor_hint():
-		$MeshInstance.visible = false
-	$MeshInstance.translation = Vector3(x/2,0,z/2)
-	$MeshInstance.scale = Vector3(x,rand_range(0,10),z)
+		$MeshInstance3D.visible = false
+	$MeshInstance3D.position = Vector3(x/2,0,z/2)
+	$MeshInstance3D.scale = Vector3(x,randf_range(0,10),z)
 
 
 func _update(newvar):
@@ -27,20 +28,20 @@ func _update(newvar):
 		for b in range(int(z / spacing)):
 			var position = Vector3(a*spacing, 0, b * spacing)
 			if random_location:
-				var shift_x = rand_range(-spacing * random_location_factor, spacing * random_location_factor)
-				var shift_z = rand_range(-spacing * random_location_factor, spacing * random_location_factor)
+				var shift_x = randf_range(-spacing * random_location_factor, spacing * random_location_factor)
+				var shift_z = randf_range(-spacing * random_location_factor, spacing * random_location_factor)
 				position += Vector3(shift_x, 0, shift_z)
 				#position = position.translated(Vector3(shift_x, 0, shift_z))
 			
 			var rot = 0
 			if random_rotation:
-				rot = rand_range(0,1)
+				rot = randf_range(0,1)
 				#position = position.rotated(Vector3(0, 1, 0), rand_range(0, 1))
 				#position = Vector3(Basis().rotated(Vector3(0, 1, 0), rand_range(0, 1), position.
 			var scale = Vector3(1,1,1)
 			if random_scale:
-				var scale_val = rand_range(1 - random_scale_factor, 1 + random_scale_factor)
+				var scale_val = randf_range(1 - random_scale_factor, 1 + random_scale_factor)
 				scale = Vector3(scale_val, scale_val, scale_val)
 				
-			self.multimesh.set_instance_transform(idx, Transform(Basis.rotated(Vector3(0,1,0), rot).scaled(scale), position))
+			self.multimesh.set_instance_transform(idx, Transform3D(Basis().rotated(Vector3(0,1,0), rot).scaled(scale), position))
 			idx += 1

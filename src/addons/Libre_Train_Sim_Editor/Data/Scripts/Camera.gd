@@ -1,32 +1,32 @@
-extends Camera
+extends Camera3D
 
 # General purpose configurable camera script
 # later getting things like "follow player" for camera at stations
 
-export var fly_speed = 0.5
-export var mouse_sensitivity = 10
-export var camera_factor = 0.1 ## The Factor, how much the camera moves at acceleration and braking
+@export var fly_speed = 0.5
+@export var mouse_sensitivity = 10
+@export var camera_factor = 0.1 ## The Factor, how much the camera moves at acceleration and braking
 
 var yaw = 0
 var pitch = 0
 
 # whether the camera is tied to a point or can move around with wasd
-export var fixed = true
+@export var fixed = true
 
 # whether to apply or not acceleration effect on camera
-export var accel = false
+@export var accel = false
 
 # Saves the camera position at the beginning. The Camera Position will be changed, when the train is accelerating, or braking
-onready var camera_zero_transform = transform
+@onready var camera_zero_transform = transform
 
 # Reference delta at 60fps
 const ref_delta = 0.0167 # 1.0 / 60
 
 
-onready var world = find_parent("World")
+@onready var world = find_parent("World")
 
 # used for accel if any.
-onready var player = world.find_node("Player")
+@onready var player = world.find_node("Player")
 
 func _ready():
 	# Initialization here
@@ -47,8 +47,10 @@ func _input(event):
 	if current and event is InputEventMouseMotion:
 		mouse_motion = mouse_motion + event.relative
 
-onready var camera_y = rotation_degrees.y - 90.0
-onready var camera_x = -rotation_degrees.x
+@onready var camera_y = rotation.y - deg2rad(90.0)
+@onready var camera_x = -rotation.x
+const CAM_X_MAX = deg2rad(85)
+const CAM_X_MIN = deg2rad(-85)
 
 func _process(delta):
 	if not current:
@@ -62,10 +64,9 @@ func _process(delta):
 		var motion_factor = (ref_delta / delta * ref_delta) * mouse_sensitivity
 		camera_y += -mouse_motion.x * motion_factor
 		camera_x += +mouse_motion.y * motion_factor
-		if camera_x > 85: camera_x = 85
-		if camera_x < -85: camera_x = -85
-		rotation_degrees.y = camera_y +90
-		rotation_degrees.x = -camera_x
+		camera_x = clamp(camera_x, CAM_X_MIN, CAM_X_MAX)
+		rotation.y = camera_y + deg2rad(90)
+		rotation.x = -camera_x
 		mouse_motion = Vector2(0,0)
 
 
@@ -75,8 +76,8 @@ func _process(delta):
 		var soll_camera_position = camera_zero_transform.origin.x + (current_real_acceleration * -camera_factor)
 		if speed == 0:
 			soll_camera_position = camera_zero_transform.origin.x
-		var missing_camera_position = translation.x - soll_camera_position
-		translation.x -= missing_camera_position * delta
+		var missing_camera_position = position.x - soll_camera_position
+		position.x -= missing_camera_position * delta
 
 	if not fixed:
 		var delta_fly_speed = (delta / ref_delta) * fly_speed
@@ -85,7 +86,7 @@ func _process(delta):
 			self.set_translation(self.get_translation() - get_global_transform().basis*Vector3(0,0,1) * delta_fly_speed)
 		if(Input.is_key_pressed(KEY_S)):
 			self.set_translation(self.get_translation() - get_global_transform().basis*Vector3(0,0,1) * -delta_fly_speed)
-		if(Input.is_key_pressed(KEY_A) and not Input.is_key_pressed(KEY_CONTROL)):
+		if(Input.is_key_pressed(KEY_A) and not Input.is_key_pressed(KEY_CTRL)):
 			self.set_translation(self.get_translation() - get_global_transform().basis*Vector3(1,0,0) * delta_fly_speed)
 		if(Input.is_key_pressed(KEY_D)):
 			self.set_translation(self.get_translation() - get_global_transform().basis*Vector3(1,0,0) * -delta_fly_speed)

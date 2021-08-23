@@ -1,4 +1,4 @@
-tool
+@tool
 extends Node
 
 var current_scenario
@@ -8,7 +8,7 @@ var mobile_version = false
 
 
 
-var world ## Reference to world
+var world: World ## Reference to world
 
 # Declare member variables here. Examples:
 # var a = 2

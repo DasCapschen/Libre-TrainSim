@@ -38,16 +38,16 @@ instance_count = 15
 mesh = ExtResource( 12 )
 transform_array = PoolVector3Array( 0.879272, 0, 0.240807, 0, 0.911651, 0, -0.240807, 0, 0.879272, -3.52549, 0, -3.84588, 0.539221, 0, 0.664891, 0, 0.85606, 0, -0.664891, 0, 0.539221, -3.09657, 0, 17.5046, 0.977983, 0, 0.0154501, 0, 0.978105, 0, -0.0154501, 0, 0.977983, -0.792957, 0, 32.3011, 0.830378, 0, 0.604093, 0, 1.02687, 0, -0.604093, 0, 0.830378, 18.7804, 0, -1.05802, 0.82715, 0, 0.669196, 0, 1.06396, 0, -0.669196, 0, 0.82715, 18.7283, 0, 12.4712, 0.814091, 0, 0.072373, 0, 0.817302, 0, -0.072373, 0, 0.814091, 13.9085, 0, 29.4232, 0.980013, 0, 0.159854, 0, 0.992964, 0, -0.159854, 0, 0.980013, 27.3788, 0, -0.786643, 0.755307, 0, 0.556747, 0, 0.938326, 0, -0.556747, 0, 0.755307, 30.4397, 0, 12.2861, 1.15224, 0, 0.071122, 0, 1.15443, 0, -0.071122, 0, 1.15224, 33.6897, 0, 32.1914, 0.98887, 0, 0.16085, 0, 1.00187, 0, -0.16085, 0, 0.98887, 46.3454, 0, 0.0289745, 0.751898, 0, 0.345683, 0, 0.827555, 0, -0.345683, 0, 0.751898, 41.0726, 0, 12.6621, 0.784946, 0, 0.623273, 0, 1.0023, 0, -0.623273, 0, 0.784946, 44.1476, 0, 31.0392, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 
-[node name="World" type="Spatial"]
+[node name="World" type="Node3D"]
 script = ExtResource( 1 )
 
-[node name="Players" type="Spatial" parent="."]
+[node name="Players" type="Node3D" parent="."]
 
 [node name="Player" parent="Players" instance=ExtResource( 2 )]
 route = [ "Rail2", "Rail7", "Rail8", "Rail9", "Player2", "Player3", "Player4", "Player5" ]
 start_position = 10.0
 
-[node name="Rails" type="Spatial" parent="."]
+[node name="Rails" type="Node3D" parent="."]
 
 [node name="Player5" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1010.09, 0, -385.59 )
@@ -68,7 +68,7 @@ others_length = 500.0
 in_shift = -2.25
 in_radius = 15.0
 
-[node name="Player2" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
+[node name="Player2" type="Node3D" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 0, 0 )
 script = ExtResource( 4 )
 length = 200.0
@@ -78,7 +78,7 @@ start_pos = Vector3( 100, 0, 0 )
 end_pos = Vector3( 291.77, 0, -48.967 )
 others_length = 100.0
 
-[node name="Player3" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
+[node name="Player3" type="Node3D" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 0.877582, 0, 0.479427, 0, 1, 0, -0.479427, 0, 0.877582, 291.77, 0, -48.967 )
 script = ExtResource( 4 )
 length = 600.0
@@ -89,7 +89,7 @@ start_pos = Vector3( 291.77, 0, -48.967 )
 end_pos = Vector3( 818.319, 0, -336.623 )
 others_length = 100.0
 
-[node name="Player4" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
+[node name="Player4" type="Node3D" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 0.877582, 0, 0.479427, 0, 1, 0, -0.479427, 0, 0.877582, 818.319, 0, -336.623 )
 script = ExtResource( 4 )
 length = 200.0
@@ -101,7 +101,7 @@ start_pos = Vector3( 818.319, 0, -336.623 )
 end_pos = Vector3( 1010.09, 0, -385.59 )
 others_length = 100.0
 
-[node name="Rail" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
+[node name="Rail" type="Node3D" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 0, 0 )
 script = ExtResource( 4 )
 length = 1000.0
@@ -110,7 +110,7 @@ start_pos = Vector3( 100, 0, 0 )
 end_pos = Vector3( 1100, 0, 0 )
 others_length = 100.0
 
-[node name="Rail10" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
+[node name="Rail10" type="Node3D" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -300, 0, 0 )
 script = ExtResource( 4 )
 length = 384.732
@@ -119,7 +119,7 @@ start_pos = Vector3( -300, 0, 0 )
 end_pos = Vector3( 84.732, 0, 0 )
 others_length = 100.0
 
-[node name="Rail11" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
+[node name="Rail11" type="Node3D" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4.5 )
 script = ExtResource( 4 )
 length = 100.0
@@ -128,7 +128,7 @@ start_pos = Vector3( 0, 0, -4.5 )
 end_pos = Vector3( 100, 0, -4.5 )
 others_length = 100.0
 
-[node name="Rail2" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
+[node name="Rail2" type="Node3D" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -300, 0, -4.5 )
 script = ExtResource( 4 )
 length = 300.0
@@ -137,7 +137,7 @@ start_pos = Vector3( -300, 0, -4.5 )
 end_pos = Vector3( 0, 0, -4.5 )
 others_length = 100.0
 
-[node name="Rail3" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
+[node name="Rail3" type="Node3D" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 0, -4.5 )
 script = ExtResource( 4 )
 length = 197.75
@@ -148,7 +148,7 @@ start_pos = Vector3( 100, 0, -4.5 )
 end_pos = Vector3( 289.613, 0, -52.9161 )
 others_length = 100.0
 
-[node name="Rail4" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
+[node name="Rail4" type="Node3D" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 0.877582, 0, 0.479427, 0, 1, 0, -0.479427, 0, 0.877582, 289.613, 0, -52.916 )
 script = ExtResource( 4 )
 length = 600.0
@@ -159,7 +159,7 @@ start_pos = Vector3( 289.613, 0, -52.916 )
 end_pos = Vector3( 816.162, 0, -340.572 )
 others_length = 100.0
 
-[node name="Rail5" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
+[node name="Rail5" type="Node3D" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 0.877582, 0, 0.479427, 0, 1, 0, -0.479427, 0, 0.877582, 816.162, 0, -340.572 )
 script = ExtResource( 4 )
 length = 202.25
@@ -171,7 +171,7 @@ start_pos = Vector3( 816.162, 0, -340.572 )
 end_pos = Vector3( 1010.09, 0, -390.09 )
 others_length = 100.0
 
-[node name="Rail7" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
+[node name="Rail7" type="Node3D" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4.5 )
 script = ExtResource( 4 )
 length = 42.446
@@ -182,7 +182,7 @@ start_pos = Vector3( 0, 0, -4.5 )
 end_pos = Vector3( 42.3664, 0, -2.25003 )
 others_length = 100.0
 
-[node name="Rail8" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
+[node name="Rail8" type="Node3D" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 0.994375, 0, -0.105917, 0, 1, 0, 0.105917, 0, 0.994375, 42.366, 0, -2.25 )
 script = ExtResource( 4 )
 length = 42.446
@@ -194,7 +194,7 @@ start_pos = Vector3( 42.366, 0, -2.25 )
 end_pos = Vector3( 84.7324, 0, 0 )
 others_length = 100.0
 
-[node name="Rail9" type="Spatial" parent="Rails" instance=ExtResource( 3 )]
+[node name="Rail9" type="Node3D" parent="Rails" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 84.732, 0, 0 )
 script = ExtResource( 4 )
 length = 15.268
@@ -207,7 +207,7 @@ others_length = 100.0
 transform = Transform( 0.146447, -0.853553, 0.5, 0.5, 0.5, 0.707107, -0.853553, 0.146447, 0.5, 0, 80.3552, 0 )
 shadow_enabled = true
 
-[node name="Grass" type="Spatial" parent="."]
+[node name="Grass" type="Node3D" parent="."]
 
 [node name="grass" parent="Grass" instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0 )
@@ -217,84 +217,84 @@ visible = false
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2000, -0.5, 0 )
 visible = false
 
-[node name="grass3" type="MeshInstance" parent="Grass"]
+[node name="grass3" type="MeshInstance3D" parent="Grass"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0 )
 material_override = ExtResource( 6 )
 mesh = ExtResource( 7 )
 material/0 = null
 
-[node name="Platforms" type="Spatial" parent="."]
+[node name="Platforms" type="Node3D" parent="."]
 
-[node name="platform" type="MeshInstance" parent="Platforms"]
+[node name="platform" type="MeshInstance3D" parent="Platforms"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -300, 0, -5 )
 mesh = ExtResource( 8 )
 material/0 = null
 
-[node name="platform2" type="MeshInstance" parent="Platforms"]
+[node name="platform2" type="MeshInstance3D" parent="Platforms"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -270, 0, -5 )
 mesh = ExtResource( 8 )
 material/0 = null
 
-[node name="platform3" type="MeshInstance" parent="Platforms"]
+[node name="platform3" type="MeshInstance3D" parent="Platforms"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -270, 0, 0 )
 mesh = ExtResource( 8 )
 material/0 = null
 
-[node name="platform4" type="MeshInstance" parent="Platforms"]
+[node name="platform4" type="MeshInstance3D" parent="Platforms"]
 transform = Transform( -1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -240, 0, 0 )
 mesh = ExtResource( 8 )
 material/0 = null
 
-[node name="Buildings" type="Spatial" parent="."]
+[node name="Buildings" type="Node3D" parent="."]
 
-[node name="house11" type="MeshInstance" parent="Buildings"]
+[node name="house11" type="MeshInstance3D" parent="Buildings"]
 transform = Transform( 0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -283.518, 0, 23.703 )
 mesh = ExtResource( 9 )
 material/0 = null
 
-[node name="house12" type="MeshInstance" parent="Buildings"]
+[node name="house12" type="MeshInstance3D" parent="Buildings"]
 transform = Transform( 0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, 12.0555, 0, 23.703 )
 mesh = ExtResource( 9 )
 material/0 = null
 
-[node name="house13" type="MeshInstance" parent="Buildings"]
+[node name="house13" type="MeshInstance3D" parent="Buildings"]
 transform = Transform( 0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -249.007, 0, 23.703 )
 mesh = ExtResource( 9 )
 material/0 = null
 
-[node name="house14" type="MeshInstance" parent="Buildings"]
+[node name="house14" type="MeshInstance3D" parent="Buildings"]
 transform = Transform( 0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -216.763, 0, 23.703 )
 mesh = ExtResource( 9 )
 material/0 = null
 
-[node name="house15" type="MeshInstance" parent="Buildings"]
+[node name="house15" type="MeshInstance3D" parent="Buildings"]
 transform = Transform( 0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -185.306, 0, 23.703 )
 mesh = ExtResource( 9 )
 material/0 = null
 
-[node name="house16" type="MeshInstance" parent="Buildings"]
+[node name="house16" type="MeshInstance3D" parent="Buildings"]
 transform = Transform( 0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -152.821, 0, 23.703 )
 mesh = ExtResource( 9 )
 material/0 = null
 
-[node name="house17" type="MeshInstance" parent="Buildings"]
+[node name="house17" type="MeshInstance3D" parent="Buildings"]
 transform = Transform( 0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -122.317, 0, 23.703 )
 mesh = ExtResource( 9 )
 material/0 = null
 
-[node name="house19" type="MeshInstance" parent="Buildings"]
+[node name="house19" type="MeshInstance3D" parent="Buildings"]
 transform = Transform( 0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -56.659, 0, 23.703 )
 mesh = ExtResource( 9 )
 material/0 = null
 
-[node name="house20" type="MeshInstance" parent="Buildings"]
+[node name="house20" type="MeshInstance3D" parent="Buildings"]
 transform = Transform( 0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866025, -23.7412, 0, 23.703 )
 mesh = ExtResource( 9 )
 material/0 = null
 
-[node name="Flora" type="Spatial" parent="."]
+[node name="Flora" type="Node3D" parent="."]
 
-[node name="Forest5" type="MultiMeshInstance" parent="Flora" instance=ExtResource( 10 )]
+[node name="Forest5" type="MultiMeshInstance3D" parent="Flora" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -230.1, 0, -51.4945 )
 material_override = ExtResource( 11 )
 use_in_baked_light = true
@@ -307,7 +307,7 @@ random_location = true
 random_rotation = true
 random_scale = true
 
-[node name="Forest6" type="MultiMeshInstance" parent="Flora" instance=ExtResource( 10 )]
+[node name="Forest6" type="MultiMeshInstance3D" parent="Flora" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 36.3853, 0, 11.2188 )
 material_override = ExtResource( 11 )
 use_in_baked_light = true
@@ -320,7 +320,7 @@ random_location = true
 random_rotation = true
 random_scale = true
 
-[node name="Forest7" type="MultiMeshInstance" parent="Flora" instance=ExtResource( 10 )]
+[node name="Forest7" type="MultiMeshInstance3D" parent="Flora" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -296.627, 0, 47.6225 )
 material_override = ExtResource( 11 )
 use_in_baked_light = true
@@ -333,7 +333,7 @@ random_location = true
 random_rotation = true
 random_scale = true
 
-[node name="Forest8" type="MultiMeshInstance" parent="Flora" instance=ExtResource( 10 )]
+[node name="Forest8" type="MultiMeshInstance3D" parent="Flora" instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -284.15, 3.8147e-06, -53.8974 )
 material_override = ExtResource( 11 )
 use_in_baked_light = true

@@ -2,7 +2,7 @@ extends Control
 
 var COMMAND_STEP = 0.2
 
-onready var world = find_parent("World")
+@onready var world = find_parent("World")
 var player
 
 

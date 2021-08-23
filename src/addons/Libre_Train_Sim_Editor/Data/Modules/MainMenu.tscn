@@ -1,27 +1,29 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=7 format=3 uid="uid://yqwet5yysbyn"]
 
-[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Scripts/MainMenu.gd" type="Script" id=1]
-[ext_resource path="res://screenshot.png" type="Texture" id=2]
-[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Misc/FontIngame.tres" type="DynamicFont" id=3]
-[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Misc/FontMenu.tres" type="DynamicFont" id=4]
-[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Misc/FontMedium.tres" type="DynamicFont" id=5]
-[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Misc/follow-that-dream-by-luca-fraula-from-filmmusic-io.ogg" type="AudioStream" id=6]
+[ext_resource type="Script" path="res://addons/Libre_Train_Sim_Editor/Data/Scripts/MainMenu.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://dafnc3mbo5eu6" path="res://screenshot.png" id="2"]
+[ext_resource type="Font" path="res://addons/Libre_Train_Sim_Editor/Data/Misc/FontIngame.tres" id="3"]
+[ext_resource type="Font" path="res://addons/Libre_Train_Sim_Editor/Data/Misc/FontMenu.tres" id="4"]
+[ext_resource type="Font" path="res://addons/Libre_Train_Sim_Editor/Data/Misc/FontMedium.tres" id="5"]
+[ext_resource type="AudioStream" uid="uid://d3x8m2r7a573r" path="res://addons/Libre_Train_Sim_Editor/Data/Misc/follow-that-dream-by-luca-fraula-from-filmmusic-io.ogg" id="6"]
 
 [node name="MainMenu" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 1 )
+script = ExtResource( "1" )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 version = "0.8"
+mobile_version = false
 
 [node name="Background" type="TextureRect" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-texture = ExtResource( 2 )
+texture = ExtResource( "2" )
 expand = true
 stretch_mode = 7
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -29,114 +31,109 @@ __meta__ = {
 [node name="Front" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Front"]
 anchor_bottom = 1.0
-margin_left = 21.0
-margin_right = 253.0
 alignment = 1
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Play" type="Button" parent="Front/VBoxContainer"]
-margin_top = 164.0
-margin_right = 232.0
-margin_bottom = 215.0
-rect_min_size = Vector2( 180, 0 )
+offset_top = 214.0
+offset_right = 180.0
+offset_bottom = 245.0
+rect_min_size = Vector2(180, 0)
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 5 )
+theme_override_fonts/font = ExtResource( "5" )
 text = "MENU_PLAY"
+script = null
 
 [node name="Content" type="Button" parent="Front/VBoxContainer"]
-margin_top = 219.0
-margin_right = 232.0
-margin_bottom = 270.0
-rect_min_size = Vector2( 180, 0 )
+offset_top = 249.0
+offset_right = 180.0
+offset_bottom = 280.0
+rect_min_size = Vector2(180, 0)
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 5 )
+theme_override_fonts/font = ExtResource( "5" )
 text = "MENU_CONTENT"
+script = null
 
 [node name="Create" type="Button" parent="Front/VBoxContainer"]
-margin_top = 274.0
-margin_right = 232.0
-margin_bottom = 325.0
-rect_min_size = Vector2( 180, 0 )
+offset_top = 284.0
+offset_right = 180.0
+offset_bottom = 315.0
+rect_min_size = Vector2(180, 0)
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 5 )
+theme_override_fonts/font = ExtResource( "5" )
 text = "MENU_CREATE"
+script = null
 
 [node name="Settings" type="Button" parent="Front/VBoxContainer"]
-margin_top = 329.0
-margin_right = 232.0
-margin_bottom = 380.0
-rect_min_size = Vector2( 180, 0 )
+offset_top = 319.0
+offset_right = 180.0
+offset_bottom = 350.0
+rect_min_size = Vector2(180, 0)
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 5 )
+theme_override_fonts/font = ExtResource( "5" )
 text = "MENU_SETTINGS"
+script = null
 
 [node name="Quit" type="Button" parent="Front/VBoxContainer"]
-margin_top = 384.0
-margin_right = 232.0
-margin_bottom = 435.0
-rect_min_size = Vector2( 180, 0 )
+offset_top = 354.0
+offset_right = 180.0
+offset_bottom = 385.0
+rect_min_size = Vector2(180, 0)
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 5 )
+theme_override_fonts/font = ExtResource( "5" )
 text = "MENU_QUIT"
+script = null
 
 [node name="VBoxContainerAndoid" type="VBoxContainer" parent="Front"]
 visible = false
 anchor_bottom = 1.0
-margin_left = 21.0
-margin_right = 253.0
 alignment = 1
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Play" type="Button" parent="Front/VBoxContainerAndoid"]
-margin_top = 116.0
-margin_right = 600.0
-margin_bottom = 236.0
-rect_min_size = Vector2( 600, 120 )
+rect_min_size = Vector2(600, 120)
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 4 )
+theme_override_fonts/font = ExtResource( "4" )
 text = "MENU_PLAY"
+script = null
 
 [node name="Feedback" type="Button" parent="Front/VBoxContainerAndoid"]
-margin_top = 240.0
-margin_right = 600.0
-margin_bottom = 360.0
 grow_horizontal = 0
-rect_min_size = Vector2( 0, 120 )
-custom_fonts/font = ExtResource( 4 )
+rect_min_size = Vector2(0, 120)
+theme_override_fonts/font = ExtResource( "4" )
 text = "MENU_FEEDBACK_WANTED"
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Quit" type="Button" parent="Front/VBoxContainerAndoid"]
-margin_top = 364.0
-margin_right = 600.0
-margin_bottom = 484.0
-rect_min_size = Vector2( 200, 120 )
+rect_min_size = Vector2(200, 120)
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 4 )
+theme_override_fonts/font = ExtResource( "4" )
 text = "MENU_QUIT"
+script = null
 
 [node name="Feedback" type="Button" parent="Front"]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -221.894
-margin_top = 13.2964
-margin_right = -14.894
-margin_bottom = 49.2964
 grow_horizontal = 0
-custom_fonts/font = ExtResource( 3 )
+theme_override_fonts/font = ExtResource( "3" )
 text = "MENU_FEEDBACK_WANTED"
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -145,250 +142,209 @@ __meta__ = {
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 18.0
-margin_top = 13.0
-margin_right = -22.0
-margin_bottom = -17.0
-rect_min_size = Vector2( 400, 563 )
+rect_min_size = Vector2(400, 563)
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ColorRect" type="ColorRect" parent="MenuBackground"]
-margin_right = 760.0
-margin_bottom = 570.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-color = Color( 0.180392, 0.184314, 0.223529, 0.960784 )
+color = Color(0.180392, 0.184314, 0.223529, 0.960784)
+script = null
 
 [node name="Play" type="VBoxContainer" parent="."]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 25.0
-margin_top = 13.0
-margin_right = -29.0
-margin_bottom = -24.0
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Selection" type="HBoxContainer" parent="Play"]
-margin_right = 746.0
-margin_bottom = 304.0
 size_flags_vertical = 3
+script = null
 
 [node name="Tracks" type="VBoxContainer" parent="Play/Selection"]
-margin_right = 746.0
-margin_bottom = 304.0
 size_flags_horizontal = 3
+script = null
 
 [node name="Label" type="Label" parent="Play/Selection/Tracks"]
-margin_right = 746.0
-margin_bottom = 45.0
-custom_fonts/font = ExtResource( 5 )
+theme_override_fonts/font = ExtResource( "5" )
 text = "MENU_TRACKS:"
 align = 1
+structured_text_bidi_override_options = []
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ItemList" type="ItemList" parent="Play/Selection/Tracks"]
-margin_top = 49.0
-margin_right = 746.0
-margin_bottom = 304.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = ExtResource( 5 )
-items = [ "Strecke 1", null, false ]
+theme_override_fonts/font = ExtResource( "5" )
+items = ["Strecke 1", null, false]
+script = null
 
 [node name="Scenarios" type="VBoxContainer" parent="Play/Selection"]
 visible = false
-margin_left = 324.0
-margin_right = 645.0
-margin_bottom = 508.0
 size_flags_horizontal = 3
+script = null
 
 [node name="Label" type="Label" parent="Play/Selection/Scenarios"]
-margin_right = 321.0
-margin_bottom = 45.0
-custom_fonts/font = ExtResource( 5 )
+theme_override_fonts/font = ExtResource( "5" )
 text = "MENU_SCENARIOS:"
 align = 1
+structured_text_bidi_override_options = []
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ItemList" type="ItemList" parent="Play/Selection/Scenarios"]
-margin_top = 49.0
-margin_right = 321.0
-margin_bottom = 508.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = ExtResource( 5 )
-items = [ "Strecke 1", null, false ]
+theme_override_fonts/font = ExtResource( "5" )
+items = ["Strecke 1", null, false]
+script = null
 
 [node name="Trains" type="VBoxContainer" parent="Play/Selection"]
 visible = false
-margin_left = 487.0
-margin_right = 970.0
-margin_bottom = 508.0
 size_flags_horizontal = 3
+script = null
 
 [node name="Label" type="Label" parent="Play/Selection/Trains"]
-margin_right = 483.0
-margin_bottom = 45.0
-custom_fonts/font = ExtResource( 5 )
+theme_override_fonts/font = ExtResource( "5" )
 text = "MENU_TRAIN:"
 align = 1
+structured_text_bidi_override_options = []
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ItemList" type="ItemList" parent="Play/Selection/Trains"]
-margin_top = 49.0
-margin_right = 483.0
-margin_bottom = 508.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = ExtResource( 5 )
-items = [ "Strecke 1", null, false ]
+theme_override_fonts/font = ExtResource( "5" )
+items = ["Strecke 1", null, false]
+script = null
 
 [node name="Info" type="HBoxContainer" parent="Play"]
-margin_top = 308.0
-margin_right = 746.0
-margin_bottom = 508.0
-rect_min_size = Vector2( 0, 200 )
+rect_min_size = Vector2(0, 200)
+script = null
 
 [node name="Description" type="RichTextLabel" parent="Play/Info"]
-margin_right = 382.0
-margin_bottom = 200.0
 size_flags_horizontal = 3
-custom_fonts/normal_font = ExtResource( 3 )
+theme_override_fonts/normal_font = ExtResource( "3" )
+custom_effects = []
+structured_text_bidi_override_options = []
+script = null
 
 [node name="Info" type="VBoxContainer" parent="Play/Info"]
-margin_left = 386.0
-margin_right = 386.0
-margin_bottom = 200.0
+script = null
 
 [node name="Author" type="Label" parent="Play/Info/Info"]
-margin_bottom = 30.0
-custom_fonts/font = ExtResource( 3 )
+theme_override_fonts/font = ExtResource( "3" )
+structured_text_bidi_override_options = []
+script = null
 
 [node name="ReleaseDate" type="Label" parent="Play/Info/Info"]
-margin_top = 34.0
-margin_bottom = 64.0
-custom_fonts/font = ExtResource( 3 )
+theme_override_fonts/font = ExtResource( "3" )
+structured_text_bidi_override_options = []
+script = null
 
 [node name="Duration" type="Label" parent="Play/Info/Info"]
-margin_top = 68.0
-margin_bottom = 98.0
-custom_fonts/font = ExtResource( 3 )
+theme_override_fonts/font = ExtResource( "3" )
+structured_text_bidi_override_options = []
+script = null
 
 [node name="EasyMode" type="CheckBox" parent="Play/Info/Info"]
 visible = false
-margin_top = 102.0
-margin_right = 104.0
-margin_bottom = 140.0
-custom_fonts/font = ExtResource( 3 )
+theme_override_fonts/font = ExtResource( "3" )
 pressed = true
 text = "MENU_EASY_MODE"
+script = null
 
 [node name="Screenshot" type="TextureRect" parent="Play/Info"]
-margin_left = 390.0
-margin_right = 746.0
-margin_bottom = 200.0
-rect_min_size = Vector2( 356, 0 )
+rect_min_size = Vector2(356, 0)
 expand = true
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Buttons" type="HBoxContainer" parent="Play"]
-margin_top = 512.0
-margin_right = 746.0
-margin_bottom = 563.0
+script = null
 
 [node name="Back" type="Button" parent="Play/Buttons"]
-margin_right = 371.0
-margin_bottom = 51.0
-rect_min_size = Vector2( 200, 0 )
+rect_min_size = Vector2(200, 0)
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 5 )
+theme_override_fonts/font = ExtResource( "5" )
 text = "MENU_BACK"
+script = null
 
 [node name="Play" type="Button" parent="Play/Buttons"]
-margin_left = 375.0
-margin_right = 746.0
-margin_bottom = 51.0
-rect_min_size = Vector2( 200, 0 )
+rect_min_size = Vector2(200, 0)
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 5 )
+theme_override_fonts/font = ExtResource( "5" )
 text = "MENU_PLAY"
+script = null
 
 [node name="Content" type="VBoxContainer" parent="."]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 25.0
-margin_top = 13.0
-margin_right = -29.0
-margin_bottom = -24.0
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Label" type="Label" parent="Content"]
-margin_right = 746.0
-margin_bottom = 30.0
-custom_fonts/font = ExtResource( 3 )
+theme_override_fonts/font = ExtResource( "3" )
 text = "MENU_TO_ADD_CONTENT"
+structured_text_bidi_override_options = []
+script = null
 
 [node name="Label2" type="Label" parent="Content"]
-margin_top = 34.0
-margin_right = 746.0
-margin_bottom = 64.0
-custom_fonts/font = ExtResource( 3 )
+theme_override_fonts/font = ExtResource( "3" )
 text = "MENU_CURRENT_LOADED_PACKS"
+structured_text_bidi_override_options = []
+script = null
 
 [node name="ItemList" type="ItemList" parent="Content"]
-margin_top = 68.0
-margin_right = 746.0
-margin_bottom = 474.0
 size_flags_vertical = 3
-custom_fonts/font = ExtResource( 3 )
+theme_override_fonts/font = ExtResource( "3" )
+items = []
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Label3" type="Label" parent="Content"]
-margin_top = 478.0
-margin_right = 746.0
-margin_bottom = 508.0
-custom_fonts/font = ExtResource( 3 )
+theme_override_fonts/font = ExtResource( "3" )
 text = "MENU_HINT_UPDATED_CONTENT_PACK"
+structured_text_bidi_override_options = []
+script = null
 
 [node name="Buttons" type="HBoxContainer" parent="Content"]
-margin_top = 512.0
-margin_right = 746.0
-margin_bottom = 563.0
+script = null
 
 [node name="Back" type="Button" parent="Content/Buttons"]
-margin_right = 371.0
-margin_bottom = 51.0
-rect_min_size = Vector2( 200, 0 )
+rect_min_size = Vector2(200, 0)
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 5 )
+theme_override_fonts/font = ExtResource( "5" )
 text = "MENU_BACK"
+script = null
 
 [node name="Reload" type="Button" parent="Content/Buttons"]
-margin_left = 375.0
-margin_right = 746.0
-margin_bottom = 51.0
-rect_min_size = Vector2( 200, 0 )
+rect_min_size = Vector2(200, 0)
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 5 )
+theme_override_fonts/font = ExtResource( "5" )
 text = "MENU_RELOAD"
+script = null
 
 [node name="Loading" type="Label" parent="."]
 visible = false
@@ -396,26 +352,22 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -372.0
-margin_top = -151.0
-margin_right = 189.0
-margin_bottom = 120.0
-custom_fonts/font = ExtResource( 4 )
+theme_override_fonts/font = ExtResource( "4" )
 text = "MENU_LOADING"
+structured_text_bidi_override_options = []
+script = null
 
 [node name="Version" type="Label" parent="."]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -201.0
-margin_top = -33.0
-margin_right = -6.0
-margin_bottom = -3.0
 grow_horizontal = 0
-custom_fonts/font = ExtResource( 3 )
+theme_override_fonts/font = ExtResource( "3" )
 text = "Version: 0.0"
 align = 2
+structured_text_bidi_override_options = []
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -424,25 +376,16 @@ __meta__ = {
 visible = false
 anchor_top = 1.0
 anchor_bottom = 1.0
-margin_top = -30.0
-margin_right = 306.0
-custom_fonts/font = ExtResource( 3 )
+theme_override_fonts/font = ExtResource( "3" )
 text = "MENU_MUSIC:"
+structured_text_bidi_override_options = []
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="FeedBack" type="WindowDialog" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -227.5
-margin_top = -80.5
-margin_right = 227.5
-margin_bottom = 80.5
-window_title = "Feedback"
-resizable = true
+[node name="FeedBack" type="Node" parent="."]
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -450,42 +393,50 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="FeedBack"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = null
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="RichTextLabel" type="RichTextLabel" parent="FeedBack/VBoxContainer"]
-margin_right = 455.0
-margin_bottom = 121.0
+offset_right = 800.0
+offset_bottom = 565.0
 size_flags_vertical = 3
-custom_fonts/normal_font = ExtResource( 3 )
+theme_override_fonts/normal_font = ExtResource( "3" )
 text = "MENU_FEEDBACK_QUESTION"
+custom_effects = []
+structured_text_bidi_override_options = []
+script = null
 
 [node name="HBoxContainer" type="HBoxContainer" parent="FeedBack/VBoxContainer"]
-margin_top = 125.0
-margin_right = 455.0
-margin_bottom = 161.0
+offset_top = 569.0
+offset_right = 800.0
+offset_bottom = 600.0
 size_flags_horizontal = 3
+script = null
 
 [node name="Later" type="Button" parent="FeedBack/VBoxContainer/HBoxContainer"]
-margin_right = 225.0
-margin_bottom = 36.0
+offset_right = 398.0
+offset_bottom = 31.0
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 3 )
+theme_override_fonts/font = ExtResource( "3" )
 text = "MENU_LATER"
+script = null
 
 [node name="OpenWebBrowser" type="Button" parent="FeedBack/VBoxContainer/HBoxContainer"]
-margin_left = 229.0
-margin_right = 455.0
-margin_bottom = 36.0
+offset_left = 402.0
+offset_right = 800.0
+offset_bottom = 31.0
 size_flags_horizontal = 3
-custom_fonts/font = ExtResource( 3 )
+theme_override_fonts/font = ExtResource( "3" )
 text = "MENU_OPEN_IN_BROWSER"
+script = null
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 6 )
+stream = ExtResource( "6" )
 volume_db = -25.384
-bus = "Music"
+bus = &"Music"
+script = null
 
 [connection signal="pressed" from="Front/VBoxContainer/Play" to="." method="_on_PlayFront_pressed"]
 [connection signal="pressed" from="Front/VBoxContainer/Content" to="." method="_on_Content_pressed"]

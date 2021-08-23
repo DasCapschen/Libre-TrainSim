@@ -3643,14 +3643,14 @@ albedo_color = Color( 0.00392157, 0.996078, 0.576471, 0.0235294 )
 [sub_resource type="CubeMesh" id=4]
 size = Vector3( 1, 1, 1 )
 
-[node name="Forest" type="MultiMeshInstance"]
+[node name="Forest" type="MultiMeshInstance3D"]
 material_override = ExtResource( 1 )
 use_in_baked_light = true
 lod_max_distance = 100.0
 multimesh = SubResource( 2 )
 script = ExtResource( 3 )
 
-[node name="MeshInstance" type="MeshInstance" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform( 100, 0, 0, 0, 6.21225, 0, 0, 0, 50, 50, 0, 25 )
 material_override = SubResource( 3 )
 mesh = SubResource( 4 )

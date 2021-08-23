@@ -1,10 +1,10 @@
-extends Spatial
+extends Node3D
 
 var player
-onready var wagon = get_parent()
+@onready var wagon = get_parent()
 
-export (String) var engine_idle_path = "res://Resources/Basic/Sounds/EngineIdle.ogg"
-export (String) var acceleration_path = "res://Resources/Basic/Sounds/Acceleration3.ogg"
+@export_file("*.ogg,*.wav,*.mp3") var engine_idle_path = "res://Resources/Basic/Sounds/EngineIdle.ogg"
+@export_file("*.ogg,*.wav,*.mp3") var acceleration_path = "res://Resources/Basic/Sounds/Acceleration3.ogg"
 
 func _ready():
 	$Idle.stream = load(engine_idle_path)

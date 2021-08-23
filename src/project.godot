@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[{
+"base": "Control",
+"class": &"ConfigurationDock",
+"language": &"GDScript",
+"path": "res://addons/Libre_Train_Sim_Editor/Docks/Configuration/Configuration.gd"
+}, {
 "base": "RefCounted",
 "class": &"ControlType",
 "language": &"GDScript",
@@ -29,10 +34,30 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/Enums/PlatformSide.gd"
 }, {
+"base": "Node3D",
+"class": &"Rail",
+"language": &"GDScript",
+"path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/Rail.gd"
+}, {
+"base": "Control",
+"class": &"RailAttachmentsDock",
+"language": &"GDScript",
+"path": "res://addons/Libre_Train_Sim_Editor/Docks/RailAttachments/RailAttachments.gd"
+}, {
+"base": "Control",
+"class": &"RailBuilderDock",
+"language": &"GDScript",
+"path": "res://addons/Libre_Train_Sim_Editor/Docks/RailBuilder/RailBuilder.gd"
+}, {
 "base": "RefCounted",
 "class": &"ReverserState",
 "language": &"GDScript",
 "path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/Enums/ReverserState.gd"
+}, {
+"base": "Node3D",
+"class": &"SignalLogic",
+"language": &"GDScript",
+"path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/Signal.gd"
 }, {
 "base": "RefCounted",
 "class": &"SignalState",
@@ -44,20 +69,43 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/Enums/SignalType.gd"
 }, {
+"base": "Node3D",
+"class": &"Station",
+"language": &"GDScript",
+"path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/Station.gd"
+}, {
 "base": "RefCounted",
 "class": &"StopType",
 "language": &"GDScript",
 "path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/Enums/StopType.gd"
+}, {
+"base": "Control",
+"class": &"TimeField",
+"language": &"GDScript",
+"path": "res://addons/Libre_Train_Sim_Editor/Docks/Configuration/time_field.gd"
+}, {
+"base": "Node3D",
+"class": &"World",
+"language": &"GDScript",
+"path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/World.gd"
 }]
 _global_script_class_icons={
+"ConfigurationDock": "",
 "ControlType": "",
 "DoorState": "",
 "PersonState": "",
 "PlatformSide": "",
+"Rail": "",
+"RailAttachmentsDock": "",
+"RailBuilderDock": "",
 "ReverserState": "",
+"SignalLogic": "",
 "SignalState": "",
 "SignalType": "",
-"StopType": ""
+"Station": "",
+"StopType": "",
+"TimeField": "",
+"World": ""
 }
 
 [application]
@@ -92,6 +140,7 @@ settings/stdout/verbose_stdout=true
 window/size/width="800"
 window/size/height="600"
 window/handheld/orientation="sensor_landscape"
+window/stretch/aspect="ignore"
 
 [editor_plugins]
 

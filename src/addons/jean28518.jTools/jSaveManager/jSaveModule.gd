@@ -1,8 +1,8 @@
-tool
+@tool
 extends Node
 
 # Example: "res://Levels/Level1/Level1.save"
-export (String) var save_path = ""
+@export var save_path = ""
 
 
 func set_save_path(save_path : String):
@@ -33,7 +33,7 @@ func _ready():
 
 func _load_current_config():
 	if save_path == "":
-		print_debug("Save path not configured correctly. Not initializing jSaveModlue "+ name + ".")
+		print_debug("Save path not configured correctly. Not initializing jSaveModlue ", name, ".")
 	_config = ConfigFile.new()
 	
 	var dir = Directory.new()

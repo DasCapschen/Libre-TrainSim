@@ -1,5 +1,5 @@
-tool
-extends Control
+@tool
+class_name RailAttachmentsDock extends Control
 
 
 # Declare member variables here. Examples:
@@ -83,7 +83,7 @@ func _on_jListTrackObjects_user_removed_entries(entry_names):
 		var track_object_name = track_object.name
 		track_object.queue_free()
 		current_rail.track_objects.erase(track_object)
-		print("track_object " + track_object_name + " deleted")
+		print("track_object ", track_object_name, " deleted")
 	update_item_list()
 
 
@@ -91,7 +91,7 @@ func _on_jListTrackObjects_user_removed_entries(entry_names):
 #	if $Tab/TrackObjects/HBoxContainer/LineEdit.text != "":
 #		clear_materials_view()
 #		var TO_object = load("res://addons/Libre_Train_Sim_Editor/Data/Modules/TrackObjects.tscn")
-#		var to = TO_object.instance()
+#		var to = TO_object.instantiate()
 #		to.description = $Tab/TrackObjects/HBoxContainer/LineEdit.text
 #		to.name = current_rail.name + " " + $Tab/TrackObjects/HBoxContainer/LineEdit.text
 #		to.attached_rail = current_rail.name
@@ -107,15 +107,15 @@ func _on_jListTrackObjects_user_removed_entries(entry_names):
 func _on_jListTrackObjects_user_added_entry(entry_name):
 	print(entry_name)
 	clear_materials_view()
-	var track_object = track_object_resource.instance()
+	var track_object = track_object_resource.instantiate()
 	track_object.description = entry_name
-	track_object.name = current_rail.name + " " + entry_name
+	track_object.name = str(current_rail.name) + " " + entry_name
 	track_object.attached_rail = current_rail.name
 	track_object.material_paths = []
 	world.get_node("TrackObjects").add_child(track_object)
 	track_object.set_owner(world)
 	
-	print("Created track object " + track_object.name)
+	print("Created track object ", track_object.name)
 
 #func _on_RenameTO_pressed():
 #	if $Tab/TrackObjects/HBoxContainer/LineEdit.text != "":
@@ -127,13 +127,13 @@ func _on_jListTrackObjects_user_added_entry(entry_name):
 func _on_jListTrackObjects_user_renamed_entry(old_name, new_name):
 	var track_object = current_rail.get_track_object(old_name)
 	track_object.description = new_name
-	track_object.name = current_rail.name + " " + new_name
-	print("track_object renamed from "+ old_name + " to " + new_name)
+	track_object.name = str(current_rail.name) + " " + new_name
+	print("track_object renamed from ", old_name, " to ", new_name)
 
 #
 #func _on_DuplicateTO_pressed():
 #	var TO_object = load("res://addons/Libre_Train_Sim_Editor/Data/Modules/TrackObjects.tscn")
-#	var to = TO_object.instance()
+#	var to = TO_object.instantiate()
 #	var data = current_TO.get_data()
 #	to.set_data(data)
 #	to.description = current_TO.description + " (Duplicate)"
@@ -151,14 +151,14 @@ func _on_jListTrackObjects_user_duplicated_entries(source_entry_names, duplicate
 		var duplicated_entry_name = duplicated_entry_names[i]
 		var source_track_object = current_rail.get_track_object(source_entry_name)
 		copy_track_object_to_current_rail(source_track_object, duplicated_entry_name)
-		print("track_object " +  source_entry_name + " duplicated.")
+		print("track_object ", source_entry_name, " duplicated.")
 	pass # Replace with function body.
 
 func copy_track_object_to_current_rail(source_track_object : Node, new_description : String, mirror : bool  = false):
-	var new_track_object = track_object_resource.instance()
+	var new_track_object = track_object_resource.instantiate()
 	var data = source_track_object.get_data()
 	new_track_object.set_data(data)
-	new_track_object.name = current_rail.name + " " + new_description
+	new_track_object.name = str(current_rail.name) + " " + new_description
 	new_track_object.description = new_description
 	new_track_object.attached_rail = current_rail.name
 	world.get_node("TrackObjects").add_child(new_track_object)
@@ -216,7 +216,7 @@ func get_materials(): ## Prepare the View of the Materials-Table
 	for x in range(current_TO.material_paths.size()):
 		var entry = $"Tab/TrackObjects/Settings/Tab/Object/GridContainer/Material 0".duplicate()
 		$Tab/TrackObjects/Settings/Tab/Object/GridContainer.add_child(entry)
-		entry.get_node("Label").text = "Material " + String(x+1)
+		entry.get_node("Label").text = "Material " + str(x+1)
 		entry.get_node("LineEdit").text =  current_TO.material_paths[x]
 		entry.visible = true
 
@@ -391,7 +391,7 @@ func _on_jListTrackObjects_user_pasted_entries(source_entry_names, source_jList_
 #func duplicate_newTO(set):
 #	if set != null:
 #			var TO_object = load("res://addons/Libre_Train_Sim_Editor/Data/Modules/TrackObjects.tscn")
-#			var to = TO_object.instance()
+#			var to = TO_object.instantiate()
 #			var data = set.get_data()
 #			update_position()
 #			to.set_data(data)
@@ -447,7 +447,7 @@ func _on_FileDialog_onject_selected(path):
 var current_material = 0
 func _on_FileDialogMaterials_file_selected(path):
 	if current_material != 0:
-		get_node("Tab/track_objects/Settings/Tab/Object/GridContainer/Material " + String(current_material) + "/LineEdit").text = path
+		get_node("Tab/track_objects/Settings/Tab/Object/GridContainer/Material " + str(current_material) + "/LineEdit").text = path
 		_on_SaveMaterials_pressed()
 		update_current_rail_attachment() # update
 
@@ -470,15 +470,3 @@ func _on_MaterialRemove_pressed():
 func _on_Randomize_pressed():
 	current_TO.newSeed()
 	update_current_rail_attachment() # update
-
-
-
-
-
-
-
-
-
-
-
-

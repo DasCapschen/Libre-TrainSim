@@ -1,6 +1,6 @@
-extends Spatial
+extends Node3D
 
-onready var player = get_parent()
+@onready var player = get_parent()
 
 var distance_to_player = 0
 

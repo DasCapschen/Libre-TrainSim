@@ -1,4 +1,4 @@
-tool
+@tool
 extends Node
 
 # If you don't need the whole package of jTools, you can easily deactivate some parts.
@@ -32,7 +32,7 @@ func get_value_of(node : Node):
 	if node is TimeField:
 		return node.get_data()
 
-	print_debug("Node Type of " + node.name + " in jTable currently not supported. Add me!")
+	print_debug("Node Type of ", node.name, " in jTable currently not supported. Add me!")
 	return 0
 
 func set_value_to(node : Node, value):
@@ -47,4 +47,4 @@ func set_value_to(node : Node, value):
 		node.set_data(value)
 		return
 
-	print_debug("Node Type of " + node.name + " in jTable currently not supported. Add me!")
+	print_debug("Node Type of ", node.name, " in jTable currently not supported. Add me!")

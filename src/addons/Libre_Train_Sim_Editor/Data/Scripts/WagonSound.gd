@@ -1,15 +1,15 @@
-extends Spatial
+extends Node3D
 
 var player
-onready var wagon = get_parent()
+@onready var wagon = get_parent()
 
 var soll_curve_sound = -50
 var soll_drive_sound = -50
 
-export (String) var drive_sound_path = "res://Resources/Basic/Sounds/Drive.ogg"
-export (String) var curve_sound_path = "res://Resources/Basic/Sounds/Curve.ogg"
-export (String) var switch_sound_path = "res://Resources/Basic/Sounds/DriveOverSwitch.ogg"
-export (String) var brake_sound_path = "res://Resources/Basic/Sounds/Brakes.ogg"
+@export_file("*.ogg,*.wav,*.mp3") var drive_sound_path = "res://Resources/Basic/Sounds/Drive.ogg"
+@export_file("*.ogg,*.wav,*.mp3") var curve_sound_path = "res://Resources/Basic/Sounds/Curve.ogg"
+@export_file("*.ogg,*.wav,*.mp3") var switch_sound_path = "res://Resources/Basic/Sounds/DriveOverSwitch.ogg"
+@export_file("*.ogg,*.wav,*.mp3") var brake_sound_path = "res://Resources/Basic/Sounds/Brakes.ogg"
 
 
 

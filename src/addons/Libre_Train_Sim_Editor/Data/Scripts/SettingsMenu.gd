@@ -79,11 +79,11 @@ func updateLanguage():
 	for language_file in language_files["Array"]:
 		if language_file.get_file().begins_with("MainMenu") or language_file.get_file().begins_with("Ingame"):
 			TranslationServer.add_translation(load(language_file))
-			print("Added " + String(language_file))
+			print("Added " + str(language_file))
 		var language = language_file.get_file().rsplit(".")[1]
 		if not languages.has(language):
 			languages.append(language)
-	print("Found Languages: " + String(languages))
+	print("Found Languages: " + str(languages))
 	languages.sort()
 	language_table.clear()
 	var i = 0

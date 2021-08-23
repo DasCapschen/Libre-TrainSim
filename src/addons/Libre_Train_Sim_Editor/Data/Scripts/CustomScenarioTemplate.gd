@@ -1,7 +1,7 @@
 extends Node
 
 var scenario = Root.current_scenario
-onready var world = find_parent("World")
+@onready var world = find_parent("World")
 var step = 0
 var message = ""
 var player

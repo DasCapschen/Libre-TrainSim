@@ -4,7 +4,7 @@ extends CanvasLayer
 ## To Content-Creators: DO NOT EDIT THIS SCRIPT!! This Script will be overwritten by the game.
 ################################################################################
 
-onready var player = get_parent()
+@onready var player = get_parent()
 
 func _ready():
 	$MobileHUD.visible = Root.mobile_version
@@ -33,10 +33,10 @@ func _process(delta):
 		if messaget > 4:
 			$Message.play("FadeOut")
 			sending = false
-	$FPS.text = String(Engine.get_frames_per_second())
+	$FPS.text = str(Engine.get_frames_per_second())
 	
-#	$IngameInformation/Speed/Speed.text = "Speed: " + String(int(Math.speed_to_kmh((get_parent().speed)))) + " km/h"
-#	$IngameInformation/Speed/CurrentLimit.text = "Speed Limit: " + String(get_parent().current_speed_limit) + " km/h"
+#	$IngameInformation/Speed/Speed.text = "Speed: " + str(int(Math.speed_to_kmh((get_parent().speed)))) + " km/h"
+#	$IngameInformation/Speed/CurrentLimit.text = "Speed Limit: " + str(get_parent().current_speed_limit) + " km/h"
 	
 #	var alpha = (Math.speed_to_kmh(get_parent().speed)/get_parent().current_speed_limit)*2 -1
 #	if alpha < 0:
@@ -140,7 +140,7 @@ func update_nextTable(delta):
 	
 	if player.next_speed_limit_node != null:
 		$IngameInformation/Next/GridContainer/DistanceToSpeedLimit.text = Math.distance_to_string(player.distance_to_next_speed_limit)
-		$IngameInformation/Next/GridContainer/SpeedLimit.text = String(player.next_speed_limit_node.speed) + " km/h"
+		$IngameInformation/Next/GridContainer/SpeedLimit.text = str(player.next_speed_limit_node.speed) + " km/h"
 	else:
 		$IngameInformation/Next/GridContainer/DistanceToSpeedLimit.text = "-"
 	

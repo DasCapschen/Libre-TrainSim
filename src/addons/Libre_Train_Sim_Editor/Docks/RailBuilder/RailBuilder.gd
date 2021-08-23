@@ -1,11 +1,11 @@
-tool
-extends Control
+@tool
+class_name RailBuilderDock extends Control
 
 
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
-var world
+var world: World
 var current_rail
 var eds # Editor Selection
 # Called when the node enters the scene tree for the first time.
@@ -34,9 +34,9 @@ func update_selected_rail(node):
 			return
 		$S/Settings.show()
 		$S/General/ParallelRail.hide()
-		$S/Settings/Length/LineEdit.text = String(node.length)
-		$S/Settings/Radius/LineEdit.text = String(node.radius)
-		$S/Settings/Angle/LineEdit.text =  String(current_rail.end_rot - current_rail.start_rot)
+		$S/Settings/Length/LineEdit.text = str(node.length)
+		$S/Settings/Radius/LineEdit.text = str(node.radius)
+		$S/Settings/Angle/LineEdit.text =  str(current_rail.end_rot - current_rail.start_rot)
 		
 		
 		self.set_tendSlopeData(current_rail.get_tendSlopeData())
@@ -112,10 +112,10 @@ func _on_AddRail_pressed():
 	if $AddRail/Mode.selected == 0: ## After rail
 		var rail_parent = world.get_node("Rails")
 		var rail_node = preload("res://addons/Libre_Train_Sim_Editor/Data/Modules/Rail.tscn")
-		var new_rail = rail_node.instance()
+		var new_rail = rail_node.instantiate()
 		new_rail.name = current_rail.name
-		new_rail.translation = current_rail.end_pos
-		new_rail.rotation_degrees.y = current_rail.end_rot
+		new_rail.position = current_rail.end_pos
+		new_rail.rotation.y = current_rail.end_rot
 		new_rail.length = float($S/Settings/Length/LineEdit.text)
 		new_rail.radius = float($S/Settings/Radius/LineEdit.text)
 		new_rail.rail_type_path = $S/General/RailType/LineEdit.text
@@ -131,14 +131,14 @@ func _on_AddRail_pressed():
 	if $AddRail/Mode.selected == 1: ## Parallel rail
 		var rail_parent = current_rail.get_parent()
 		var rail_node = preload("res://addons/Libre_Train_Sim_Editor/Data/Modules/Rail.tscn")
-		var new_rail = rail_node.instance()
+		var new_rail = rail_node.instantiate()
 		new_rail.name = current_rail.name + "P"
 		new_rail.parallel_rail = current_rail.name
 		new_rail.distance_to_parllel_rail = float($AddRail/ParallelDistance/LineEdit.text)
 #		current_rail.others_distance = float($AddRail/ParallelDistance/LineEdit.text)
 #		current_rail.calc_parallel_rail(true)
-#		new_rail.translation = current_rail.translation + (Vector3(1, 0, 0).rotated(Vector3(0,1,0), deg2rad(current_rail.rotation_degrees.y-90))*float($AddRail/ParallelDistance/LineEdit.text))
-#		new_rail.rotation_degrees.y = current_rail.rotation_degrees.y
+#		new_rail.translation = current_rail.translation + (Vector3(1, 0, 0).rotated(Vector3(0,1,0), current_rail.rotation.y-90)*float($AddRail/ParallelDistance/LineEdit.text))
+#		new_rail.rotation.y = current_rail.rotation.y
 #		new_rail.length = current_rail.others_length
 #		new_rail.radius = current_rail.others_radius
 #		new_rail.railType = $S/General/RailType/LineEdit.text
@@ -151,10 +151,10 @@ func _on_AddRail_pressed():
 	if $AddRail/Mode.selected == 2: ## Before rail
 		var rail_parent = current_rail.get_parent()
 		var rail_node = preload("res://addons/Libre_Train_Sim_Editor/Data/Modules/Rail.tscn")
-		var new_rail = rail_node.instance()
+		var new_rail = rail_node.instantiate()
 		new_rail.name = current_rail.name
 		new_rail.translation = current_rail.translation
-		new_rail.rotation_degrees.y = current_rail.rotation_degrees.y + 180
+		new_rail.rotation.y = current_rail.rotation.y + deg2rad(180)
 		new_rail.length = float($S/Settings/Length/LineEdit.text)
 		new_rail.radius = float($S/Settings/Radius/LineEdit.text)
 		new_rail.rail_type_path = $S/General/RailType/LineEdit.text
@@ -264,7 +264,7 @@ func _on_Connect_pressed():
 	var rot1
 	if $RailConnector/FirstRail/OptionButton.selected == 0:
 		pos1 = first_rail.translation
-		rot1 = first_rail.rotation_degrees.y + 180
+		rot1 = first_rail.rotation.y + deg2rad(180)
 	else:
 		pos1 = first_rail.end_pos
 		rot1 = first_rail.end_rot
@@ -273,7 +273,7 @@ func _on_Connect_pressed():
 	var rot2
 	if $RailConnector/SecondRail/OptionButton.selected == 0:
 		pos2 = second_rail.translation
-		rot2 = second_rail.rotation_degrees.y +180
+		rot2 = second_rail.rotation.y + deg2rad(180)
 	else:
 		pos2 = second_rail.end_pos
 		rot2 = second_rail.end_rot
@@ -285,10 +285,10 @@ func _on_Connect_pressed():
 	var rail_node = preload("res://addons/Libre_Train_Sim_Editor/Data/Modules/Rail.tscn")
 	
 	## rail 1:
-	var new_rail = rail_node.instance()
-	new_rail.name = first_rail.name + "Connector"
+	var new_rail = rail_node.instantiate()
+	new_rail.name = str(first_rail.name) + "Connector"
 	new_rail.translation = pos1
-	new_rail.rotation_degrees.y = rot1
+	new_rail.rotation.y = rot1
 	var data = calc_shift(vector.x, -vector.z)
 	new_rail.length = data[1]
 	new_rail.radius = data[0]
@@ -298,10 +298,10 @@ func _on_Connect_pressed():
 	rot2 = new_rail.end_rot
 	
 	## rail 2:
-	new_rail = rail_node.instance()
-	new_rail.name = second_rail.name + "Connector"
-	new_rail.translation = pos2
-	new_rail.rotation_degrees.y = rot2
+	new_rail = rail_node.instantiate()
+	new_rail.name = str(second_rail.name) + "Connector"
+	new_rail.position = pos2
+	new_rail.rotation.y = rot2
 	data = calc_shift(vector.x, -vector.z)
 	new_rail.length = data[1]
 	new_rail.radius = -data[0]
@@ -385,16 +385,16 @@ func set_tendSlopeData(data):
 	
 
 func update_RotationHeightData():
-	$RotationHeight/StartRotation.text = String(current_rail.start_rot)
-	$RotationHeight/EndRotation.text =String( current_rail.end_rot)
-	$RotationHeight/StartHeight.text = String(current_rail.start_pos.y)
-	$RotationHeight/EndHeight.text = String(current_rail.end_pos.y)
+	$RotationHeight/StartRotation.text = str(current_rail.start_rot)
+	$RotationHeight/EndRotation.text =str( current_rail.end_rot)
+	$RotationHeight/StartHeight.text = str(current_rail.start_pos.y)
+	$RotationHeight/EndHeight.text = str(current_rail.end_pos.y)
 
 func update_generalInformation():
 	$S/General/RailType/LineEdit.text = current_rail.rail_type_path
 	$S/General/OverheadLine.pressed = current_rail.overhead_line
 	$S/General/ParallelRail/ParallelRail.text = current_rail.parallel_rail
-	$S/General/ParallelRail/ParallelDistance.text = String(current_rail.distance_to_parllel_rail)
+	$S/General/ParallelRail/ParallelDistance.text = str(current_rail.distance_to_parllel_rail)
 	
 
 

@@ -5,7 +5,7 @@
 [ext_resource path="res://Resources/Basic/Sounds/Drive.ogg" type="AudioStream" id=3]
 [ext_resource path="res://Resources/Basic/Sounds/DriveOverSwitch.ogg" type="AudioStream" id=4]
 
-[node name="WagonSound" type="Spatial"]
+[node name="WagonSound" type="Node3D"]
 script = ExtResource( 2 )
 
 [node name="DriveSound" type="AudioStreamPlayer3D" parent="."]

@@ -1,22 +1,23 @@
-tool
-extends Spatial
+@tool
+class_name World extends Node3D
 
-var time_hour 
-var time_minute
-var time_second 
-var time_milliseconds = 0
-onready var time = [time_hour,time_minute,time_second]
+@onready var time_hour: int = 0
+@onready var time_minute: int = 0
+@onready var time_second: int = 0
+@onready var time_milliseconds: int = 0
+@onready var time: Array[int] = [time_hour,time_minute,time_second]
 
-var default_persons_at_station = 20
+var default_persons_at_station: int = 20
 
-var global_dict = {} ## Used, if some nodes need to communicate globally. Modders could use it. Please make sure, that you pick an unique key_name
+var global_dict: Dictionary = {} ## Used, if some nodes need to communicate globally. Modders could use it. Please make sure, that you pick an unique key_name
 
 ################################################################################
-var current_scenario = ""
+var current_scenario: String = ""
 
-export (String) var file_name = "Name Me!"
-onready var track_name = file_name.rsplit("/")[0]
-var chunk_size = 1000
+@export var file_name: String = "Name Me!"
+@onready var track_name: String = file_name.rsplit("/")[0]
+
+var chunk_size: int = 1000
 
 var all_chunks = [] # All Chunks of the world
 var ist_chunks = [] # All Current loaded Chunks
@@ -31,7 +32,7 @@ var description = ""
 
 var pending_trains = {"TrainName" : [], "SpawnTime" : []}
 
-var player
+var player: Node
 
 var train_files = {"Array" : []}
 
@@ -47,10 +48,10 @@ var person_visual_instances = []
 
 func _ready():
 	jEssentials.call_delayed(2.0, self, "get_actual_loaded_chunks")
-	if track_name == null:
+	if track_name.is_empty():
 		track_name = file_name
 	print("track_name: " +track_name + " " + file_name)
-	$jSaveModule.set_save_path(String("res://Worlds/" + track_name + "/" + track_name + ".save"))
+	$jSaveModule.set_save_path(str("res://Worlds/" + track_name + "/" + track_name + ".save"))
 	
 	if Engine.editor_hint:
 #		update_all_rails_overhead_line_setting(false)
@@ -67,7 +68,7 @@ func _ready():
 		
 		
 		## Create Persons-Node:
-		var persons_node = Spatial.new()
+		var persons_node = Node3D.new()
 		persons_node.name = "Persons"
 		persons_node.owner = self
 		add_child(persons_node)
@@ -88,7 +89,7 @@ func _ready():
 		apply_soll_chunks()
 
 		player = $Players/Player
-		last_chunk = pos_to_chunk(get_original_pos_big_chunk(player.translation))
+		last_chunk = pos_to_chunk(get_original_pos_big_chunk(player.position))
 		
 		apply_user_settings()
 
@@ -116,21 +117,21 @@ func apply_user_settings():
 	
 func _process(delta):
 	if not Engine.editor_hint:
-		time(delta)
+		update_time(delta)
 		check_train_spawn(delta)
 		handle_chunk()
 		check_big_chunk()
 	else:
-		var buildings = get_node("Buildings")
+		var buildings: Node3D = get_node("Buildings")
 		for child in get_children():
-			if child.is_class("MeshInstance"):
+			if child.is_class("MeshInstance3D"):
 				remove_child(child)
 				buildings.add_child(child)
 				child.owner = self
 
 
 
-func time(delta):
+func update_time(delta):
 	time_milliseconds += delta
 	if time_milliseconds > 1:
 		time_milliseconds -= 1
@@ -156,11 +157,11 @@ func compare_chunks(pos1, pos2):
 	return (pos1.x == pos2.x && pos1.z == pos2.z)
 	
 func chunk_to_string(position : Vector3):
-	return (String(position.x) + ","+String(position.z))
+	return (str(position.x) + "," + str(position.z))
 	
 func string_to_chunk(string : String):
-	var array = string.split(",")
-	return Vector3(int(array[0]), 0 , int(array[1]))
+	var array: Array = string.split(",")
+	return Vector3(array[0].to_int(), 0 , array[1].to_int())
 
 func get_chunk_neighbours(chunk):
 	return [
@@ -176,30 +177,30 @@ func get_chunk_neighbours(chunk):
 
 func save_chunk(position):
 	
-	var chunk = {} #"position" : position, "Rails" : {}, "Buildings" : {}, "Flora" : {}}
+	var chunk: Dictionary = {} #"position" : position, "Rails" : {}, "Buildings" : {}, "Flora" : {}}
 	chunk.position = position
 	chunk["Rails"] = {}
-	var rails = get_node("Rails").get_children()
+	var rails: Array = get_node("Rails").get_children()
 	chunk["Rails"] = []
 	for rail in rails:
-		if compare_chunks(pos_to_chunk(rail.translation), position):
+		if compare_chunks(pos_to_chunk(rail.position), position):
 			rail.update_is_switch_part()
 			chunk["Rails"].append(rail.name)
 
 	
 	chunk["Buildings"] = {}
-	var buildings = get_node("Buildings").get_children()
+	var buildings: Array = get_node("Buildings").get_children()
 	for building in buildings:
-		if compare_chunks(pos_to_chunk(building.translation), position):
+		if compare_chunks(pos_to_chunk(building.position), position):
 			var surface_arr = []
 			for i in range(building.get_surface_material_count()):
 				surface_arr.append(building.get_surface_material(i))
 			chunk["Buildings"][building.name] = {name = building.name, transform = building.transform, mesh_path = building.mesh.resource_path, surface_arr = surface_arr}
 
 	chunk["Flora"] = {}
-	var flora = get_node("Flora").get_children()
+	var flora: Array = get_node("Flora").get_children()
 	for forest in flora:
-		if compare_chunks(pos_to_chunk(forest.translation), position):
+		if compare_chunks(pos_to_chunk(forest.position), position):
 			chunk["Flora"][forest.name] = {name = forest.name, transform = forest.transform, x = forest.x, z = forest.z, spacing = forest.spacing, random_location = forest.random_location, random_location_factor = forest.random_location_factor, random_rotation = forest.random_rotation, random_scale = forest.random_scale, random_scale_factor = forest.random_scale_factor, multimesh = forest.multimesh, material_override = forest.material_override}
 	
 
@@ -208,7 +209,7 @@ func save_chunk(position):
 	var track_objects = get_node("TrackObjects").get_children()
 	for track_object in track_objects:
 
-		if compare_chunks(pos_to_chunk(track_object.translation), position):
+		if compare_chunks(pos_to_chunk(track_object.position), position):
 			chunk["TrackObjects"][track_object.name] = {name = track_object.name, transform = track_object.transform, data = track_object.get_data()}
 	$jSaveModule.save_value(chunk_to_string(position), null)
 	$jSaveModule.save_value(chunk_to_string(position), chunk)
@@ -221,31 +222,31 @@ func unload_chunk(position : Vector3):
 	var chunk = $jSaveModule.get_value(chunk_to_string(position), null)
 	if chunk == null:
 		return
-	var rails = get_node("Rails").get_children()
+	var rails: Array = get_node("Rails").get_children()
 	for rail in rails:
-		if compare_chunks(pos_to_chunk(rail.translation), position):
+		if compare_chunks(pos_to_chunk(rail.position), position):
 			if chunk["Rails"].has(rail.name):
 				rail.unload_visible_instance()
 	
-	var buildings = get_node("Buildings").get_children()
+	var buildings: Array = get_node("Buildings").get_children()
 	for building in buildings:
-		if compare_chunks(pos_to_chunk(building.translation), position):
+		if compare_chunks(pos_to_chunk(building.position), position):
 			if chunk["Buildings"].has(building.name):
 				building.queue_free()
 			else:
 				print("Object not saved! I wont unload this for you...")
 	
-	var flora = get_node("Flora").get_children()
+	var flora: Array = get_node("Flora").get_children()
 	for forest in flora:
-		if compare_chunks(pos_to_chunk(forest.translation), position):
+		if compare_chunks(pos_to_chunk(forest.position), position):
 			if chunk["Flora"].has(forest.name):
 				forest.queue_free()
 			else:
 				print("Object not saved! I wont unload this for you...")
 	
-	var track_objects = get_node("TrackObjects").get_children()
+	var track_objects: Array = get_node("TrackObjects").get_children()
 	for node in track_objects:
-		if compare_chunks(pos_to_chunk(node.translation), position):
+		if compare_chunks(pos_to_chunk(node.position), position):
 			if chunk["TrackObjects"].has(node.name):
 				node.queue_free()
 			else:
@@ -264,7 +265,7 @@ func load_chunk(position : Vector3):
 		print("Chunk "+chunk_to_string(position) + " not found in Save File. Chunk not loaded!")
 		return
 	## rails:
-	var rails = chunk["Rails"]
+	var rails: Array = chunk["Rails"]
 	for rail in rails:
 		print("Loading rail: " + rail)
 		## IF YOU GET HERE AN ERROR: Do Save and Create Chunks, and check, if only rails are assigned to the "Rails" Node
@@ -275,15 +276,15 @@ func load_chunk(position : Vector3):
 		
 
 	##buildings:
-	var buildings_node = get_node("Buildings")
-	var buildings = chunk["Buildings"]
+	var buildings_node: Node3D = get_node("Buildings")
+	var buildings: Array = chunk["Buildings"]
 	for building in buildings:
 		if buildings_node.find_node(building) == null:
-			var mesh_instance = MeshInstance.new()
+			var mesh_instance = MeshInstance3D.new()
 			mesh_instance.name = buildings[building].name
 			mesh_instance.set_mesh(load(buildings[building].mesh_path))
 			mesh_instance.transform = buildings[building].transform
-			mesh_instance.translation = get_new_pos_big_chunk(mesh_instance.translation)
+			mesh_instance.position = get_new_pos_big_chunk(mesh_instance.position)
 			var surface_arr = buildings[building].surface_arr
 			if surface_arr == null:
 				surface_arr = []
@@ -297,12 +298,12 @@ func load_chunk(position : Vector3):
 	
 	
 	##flora:
-	var flora_node = get_node("Flora")
-	var flora = chunk["Flora"]
+	var flora_node: Node3D = get_node("Flora")
+	var flora: Array = chunk["Flora"]
 	var forest_node = preload("res://addons/Libre_Train_Sim_Editor/Data/Modules/Forest.tscn")
 	for forest in flora:#
 		if flora_node.find_node(forest) == null:
-			var forest_instance = forest_node.instance()
+			var forest_instance = forest_node.instantiate()
 			forest_instance.name = flora[forest].name
 			forest_instance.multimesh = flora[forest].multimesh
 			forest_instance.random_location = flora[forest].random_location
@@ -312,7 +313,7 @@ func load_chunk(position : Vector3):
 			forest_instance.random_scale_factor = flora[forest].random_scale_factor
 			forest_instance.spacing = flora[forest].spacing
 			forest_instance.transform = flora[forest].transform
-			forest_instance.translation = get_new_pos_big_chunk(forest_instance.translation)
+			forest_instance.position = get_new_pos_big_chunk(forest_instance.position)
 			forest_instance.x = flora[forest].x
 			forest_instance.z = flora[forest].z
 			forest_instance.material_override = flora[forest].material_override
@@ -324,22 +325,22 @@ func load_chunk(position : Vector3):
 			
 			
 	##track_objects:
-	var parent_node = get_node("TrackObjects")
-	var node_array = chunk["TrackObjects"]
+	var parent_node: Node3D = get_node("TrackObjects")
+	var node_array: Array = chunk["TrackObjects"]
 	var node_prefab = preload("res://addons/Libre_Train_Sim_Editor/Data/Modules/TrackObjects.tscn")
 	for node in node_array:
 		if parent_node.find_node(node) == null:
-			var node_instance = node_prefab.instance()
+			var node_instance = node_prefab.instantiate()
 			node_instance.name = node_array[node].name
 			node_instance.set_data(node_array[node].data)
 			node_instance.transform = node_array[node].transform
-			node_instance.translation = get_new_pos_big_chunk(node_instance.translation)
+			node_instance.position = get_new_pos_big_chunk(node_instance.position)
 			parent_node.add_child(node_instance)
 			node_instance.set_owner(self)
 		else:
 			print("Node " + node + " already loaded!") 
 	
-	var unloaded_chunks = get_value("unloaded_chunks", [])
+	var unloaded_chunks: Array = get_value("unloaded_chunks", [])
 	unloaded_chunks.erase(chunk_to_string(position))
 	save_value("unloaded_chunks", unloaded_chunks)
 	
@@ -348,12 +349,12 @@ func load_chunk(position : Vector3):
 
 func get_all_chunks(): # Returns Array of Strings
 	all_chunks = []
-	var rail_node = get_node("Rails")
+	var rail_node: Node3D = get_node("Rails")
 	if rail_node == null:
 		printerr("Rail Node not found. World is corrupt!")
 		return
 	for rail in rail_node.get_children():
-		var rail_chunk = pos_to_chunk(rail.translation)
+		var rail_chunk = pos_to_chunk(rail.position)
 		all_chunks = add_single_to_array(all_chunks, chunk_to_string(rail_chunk))
 
 		for chunk in get_chunk_neighbours(rail_chunk):
@@ -375,28 +376,28 @@ func configure_soll_chunks(chunk):
 
 func apply_soll_chunks():
 	print("applying soll chunks...")
-	print("ist_chunks: " + String(ist_chunks))
-	print("soll_chunks: " + String(soll_chunks))
+	print("ist_chunks: " + str(ist_chunks))
+	print("soll_chunks: " + str(soll_chunks))
 	var old_ist_chunks = ist_chunks.duplicate()
 	for a in old_ist_chunks:
 		if not soll_chunks.has(a):
 			unload_chunk(string_to_chunk(a))
 			ist_chunks.remove(ist_chunks.find(a))
-	print("ist_chunks: " + String(ist_chunks))
+	print("ist_chunks: " + str(ist_chunks))
 	for a in soll_chunks:
 		if not ist_chunks.has(a):
 			load_chunk(string_to_chunk(a))
 			ist_chunks.append(a)
 			
-var last_chunk
+var last_chunk: Vector3
 func handle_chunk():
 	var player = $Players/Player
-	var current_chunk = pos_to_chunk(get_original_pos_big_chunk(player.translation))
+	var current_chunk = pos_to_chunk(get_original_pos_big_chunk(player.position))
 	if not compare_chunks(current_chunk, last_chunk):
 		active_chunk = current_chunk
 		configure_soll_chunks(current_chunk)
 		apply_soll_chunks()
-	last_chunk = pos_to_chunk(get_original_pos_big_chunk(player.translation))
+	last_chunk = pos_to_chunk(get_original_pos_big_chunk(player.position))
 
 
 
@@ -418,15 +419,15 @@ func get_original_pos_big_chunk(pos):
 	return Vector3(pos.x+current_big_chunk.x*5000.0, pos.y, pos.z+current_big_chunk.y*5000.0)
 		
 func check_big_chunk():
-	var player = $Players/Player
-	var new_chunk = pos_to_big_chunk(player.translation)
+	var player: Node = $Players/Player
+	var new_chunk = pos_to_big_chunk(player.position)
 
 	if (new_chunk != current_big_chunk):
 		var deltaChunk = current_big_chunk - new_chunk
 		current_big_chunk = new_chunk
 		print (new_chunk)
 		print(current_big_chunk)
-		print("Changed to new big Chunk. Changing Objects translation..")
+		print("Changed to new big Chunk. Changing Objects position..")
 		update_world_trasform_big_chunk(deltaChunk)
 		
 
@@ -435,20 +436,20 @@ func update_world_trasform_big_chunk(delta_chunk):
 	var delta_translation = Vector3(delta_chunk.x*5000, 0, delta_chunk.y*5000)
 	print(delta_translation)
 	for player in $Players.get_children():
-		player.translation += delta_translation
+		player.position += delta_translation
 	for rail in $Rails.get_children():
-		rail.translation += delta_translation
+		rail.position += delta_translation
 		rail._update(true)
 	for signal_n in $Signals.get_children():
-		signal_n.translation += delta_translation
+		signal_n.position += delta_translation
 	for building in $Buildings.get_children():
-		building.translation += delta_translation
+		building.position += delta_translation
 	for forest in $Flora.get_children():
-		forest.translation += delta_translation
+		forest.position += delta_translation
 	for to in $TrackObjects.get_children():
-		to.translation += delta_translation
+		to.position += delta_translation
 	for person in $Persons.get_children():
-		person.translation += delta_translation
+		person.position += delta_translation
 	
 		
 
@@ -460,13 +461,13 @@ func apply_scenario_to_signals(signals):
 			signal_n.set_scenario_data(signals[signal_n.name])
 			
 func get_signal_data_for_scenario():
-	var signals = {}
+	var signals: Dictionary = {}
 	for s in $Signals.get_children():
 		signals[s.name] = s.get_scenario_data()
 	return signals
 	
 func set_scenario_to_world():
-	var scenario_save_path = "res://Worlds/" + track_name + "/" + track_name + "-scenarios.cfg"
+	var scenario_save_path: String = "res://Worlds/" + track_name + "/" + track_name + "-scenarios.cfg"
 	var scenario_config = ConfigFile.new()
 	var load_response = scenario_config.load(scenario_save_path)
 	var scenario_data = scenario_config.get_value("Scenarios", "scenario_data", {})
@@ -504,21 +505,21 @@ func spawn_train(train_name):
 		pending_trains["SpawnTime"].append(scenario["Trains"][train_name]["SpawnTime"].duplicate())
 		return
 	# Find preferred train:
-	var player
+	var player: Node
 	var preferred_train = scenario["Trains"][train_name].get("PreferredTrain", "")
 	if (preferred_train == "" and not train_name == "Player") or train_name == "Player":
 		if not train_name == "Player":
 			print("no preferred train specified. Loading player train...")
-		player = load(Root.current_train).instance()
+		player = load(Root.current_train).instantiate()
 	else:
 		for train_file in train_files:
 			print(train_file)
 			print(preferred_train)
 			if train_file.find(preferred_train) != -1:
-				player = load(train_file).instance()
+				player = load(train_file).instantiate()
 		if player == null:
 			print("Preferred train not found. Loading player train...")
-			player = load(Root.current_train).instance()
+			player = load(Root.current_train).instantiate()
 		
 	player.name = train_name
 	$Players.add_child(player)
@@ -552,7 +553,7 @@ func spawn_train(train_name):
 		3:
 			player.door_status = DoorState.BOTH
 	
-	player.ready()
+	player.custom_ready()
 	
 
 var checkTrainSpawnTimer = 0
@@ -590,13 +591,13 @@ func _get_path_from_to_helper(start_rail : Node, forward : bool, already_visited
 	if start_rail == destination_rail:
 		return already_visited_rails
 	else:
-		var possbile_rails
+		var possbile_rails = []
 		if forward:
 			possbile_rails = start_rail.get_connected_rails_at_ending()
 		else:
 			possbile_rails = start_rail.get_connected_rails_at_beginning()
 		for rail_node in possbile_rails:
-			print("Possible rails" + String(possbile_rails))
+			print("Possible rails" + str(possbile_rails))
 			if not already_visited_rails.has(rail_node):
 				if rail_node.get_connected_rails_at_ending().has(start_rail):
 					forward = false
@@ -612,14 +613,14 @@ func _get_path_from_to_helper(start_rail : Node, forward : bool, already_visited
 func get_actual_loaded_chunks():
 	var actual_loaded_chunks = []
 	for rail_node in $Rails.get_children():
-		if rail_node.visible and not actual_loaded_chunks.has(chunk_to_string(pos_to_chunk(rail_node.translation))): 
-			actual_loaded_chunks.append(chunk_to_string(pos_to_chunk(rail_node.translation)))
+		if rail_node.visible and not actual_loaded_chunks.has(chunk_to_string(pos_to_chunk(rail_node.position))): 
+			actual_loaded_chunks.append(chunk_to_string(pos_to_chunk(rail_node.position)))
 	for building_node in $Buildings.get_children():
-		if building_node.visible and not actual_loaded_chunks.has(chunk_to_string(pos_to_chunk(building_node.translation))): 
-			actual_loaded_chunks.append(chunk_to_string(pos_to_chunk(building_node.translation)))
+		if building_node.visible and not actual_loaded_chunks.has(chunk_to_string(pos_to_chunk(building_node.position))): 
+			actual_loaded_chunks.append(chunk_to_string(pos_to_chunk(building_node.position)))
 	for flora_node in $Flora.get_children():
-		if flora_node.visible and not actual_loaded_chunks.has(chunk_to_string(pos_to_chunk(flora_node.translation))): 
-			actual_loaded_chunks.append(chunk_to_string(pos_to_chunk(flora_node.translation)))
+		if flora_node.visible and not actual_loaded_chunks.has(chunk_to_string(pos_to_chunk(flora_node.position))): 
+			actual_loaded_chunks.append(chunk_to_string(pos_to_chunk(flora_node.position)))
 	
 	return actual_loaded_chunks
 
@@ -679,7 +680,7 @@ func get_chunks_between_rails(start_rail : String, destination_rail : String, in
 	
 	var chunks = []
 	for rail_node in rail_nodes:
-		chunks.append(chunk_to_string(pos_to_chunk(rail_node.translation)))
+		chunks.append(chunk_to_string(pos_to_chunk(rail_node.position)))
 	chunks = jEssentials.remove_duplicates(chunks)
 	if not include_neighbour_chunks:
 		return chunks

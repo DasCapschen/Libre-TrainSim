@@ -1,6 +1,5 @@
-tool
-extends Control
-class_name TimeField
+@tool
+class_name TimeField extends Control
 
 func _ready():
 	pass # Replace with function body.
