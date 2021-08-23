@@ -2,12 +2,13 @@
 
 importer="ogg_vorbis"
 type="AudioStreamOGGVorbis"
-path="res://.import/SampleMusic.ogg-eb09020b9dcee1eeda4f959545a4d37c.oggstr"
+uid="uid://buj4ydlfydhc0"
+path="res://.godot/imported/SampleMusic.ogg-eb09020b9dcee1eeda4f959545a4d37c.oggstr"
 
 [deps]
 
 source_file="res://addons/jean28518.jTools/example/SampleMusic.ogg"
-dest_files=[ "res://.import/SampleMusic.ogg-eb09020b9dcee1eeda4f959545a4d37c.oggstr" ]
+dest_files=["res://.godot/imported/SampleMusic.ogg-eb09020b9dcee1eeda4f959545a4d37c.oggstr"]
 
 [params]
 

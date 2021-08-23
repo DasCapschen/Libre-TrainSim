@@ -2,13 +2,14 @@
 
 importer="csv_translation"
 type="Translation"
+uid="uid://cdncmyyvpskno"
 
 [deps]
 
-files=[ "res://Trains/JFR1/JFR1.en.translation", "res://Trains/JFR1/JFR1.de.translation", "res://Trains/JFR1/JFR1.uk.translation" ]
+files=["res://Trains/JFR1/JFR1.en.translation", "res://Trains/JFR1/JFR1.de.translation", "res://Trains/JFR1/JFR1.uk.translation"]
 
 source_file="res://Trains/JFR1/JFR1.csv"
-dest_files=[ "res://Trains/JFR1/JFR1.en.translation", "res://Trains/JFR1/JFR1.de.translation", "res://Trains/JFR1/JFR1.uk.translation" ]
+dest_files=["res://Trains/JFR1/JFR1.en.translation", "res://Trains/JFR1/JFR1.de.translation", "res://Trains/JFR1/JFR1.uk.translation"]
 
 [params]
 

@@ -1,19 +1,21 @@
 [remap]
 
 importer="wavefront_obj"
+importer_version=1
 type="Mesh"
-path="res://.import/Wall32m.obj-4ef9173cd1c40d2504403f7822ec13f2.mesh"
+uid="uid://dbil8gegmkhp0"
+path="res://.godot/imported/Wall32m.obj-4ef9173cd1c40d2504403f7822ec13f2.mesh"
 
 [deps]
 
-files=[ "res://.import/Wall32m.obj-4ef9173cd1c40d2504403f7822ec13f2.mesh" ]
+files=["res://.godot/imported/Wall32m.obj-4ef9173cd1c40d2504403f7822ec13f2.mesh"]
 
 source_file="res://Resources/Basic/Wall32m.obj"
-dest_files=[ "res://.import/Wall32m.obj-4ef9173cd1c40d2504403f7822ec13f2.mesh", "res://.import/Wall32m.obj-4ef9173cd1c40d2504403f7822ec13f2.mesh" ]
+dest_files=["res://.godot/imported/Wall32m.obj-4ef9173cd1c40d2504403f7822ec13f2.mesh", "res://.godot/imported/Wall32m.obj-4ef9173cd1c40d2504403f7822ec13f2.mesh"]
 
 [params]
 
 generate_tangents=true
-scale_mesh=Vector3( 1, 1, 1 )
-offset_mesh=Vector3( 0, 0, 0 )
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
 optimize_mesh=true

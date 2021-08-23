@@ -2,12 +2,13 @@
 
 importer="ogg_vorbis"
 type="AudioStreamOGGVorbis"
-path="res://.import/EngineIdle.ogg-8b55fae09974ef3361c9078674082049.oggstr"
+uid="uid://ctnq3qjquidiw"
+path="res://.godot/imported/EngineIdle.ogg-8b55fae09974ef3361c9078674082049.oggstr"
 
 [deps]
 
 source_file="res://Resources/Basic/Sounds/EngineIdle.ogg"
-dest_files=[ "res://.import/EngineIdle.ogg-8b55fae09974ef3361c9078674082049.oggstr" ]
+dest_files=["res://.godot/imported/EngineIdle.ogg-8b55fae09974ef3361c9078674082049.oggstr"]
 
 [params]
 

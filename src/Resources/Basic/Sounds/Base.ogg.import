@@ -2,12 +2,13 @@
 
 importer="ogg_vorbis"
 type="AudioStreamOGGVorbis"
-path="res://.import/Base.ogg-379f546ec8bdb1031097292fadf78181.oggstr"
+uid="uid://ceaneevko4egn"
+path="res://.godot/imported/Base.ogg-379f546ec8bdb1031097292fadf78181.oggstr"
 
 [deps]
 
 source_file="res://Resources/Basic/Sounds/Base.ogg"
-dest_files=[ "res://.import/Base.ogg-379f546ec8bdb1031097292fadf78181.oggstr" ]
+dest_files=["res://.godot/imported/Base.ogg-379f546ec8bdb1031097292fadf78181.oggstr"]
 
 [params]
 

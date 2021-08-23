@@ -2,12 +2,13 @@
 
 importer="ogg_vorbis"
 type="AudioStreamOGGVorbis"
-path="res://.import/Acceleration6.ogg-028d59c142bbff98e3d5b5e6bedfa081.oggstr"
+uid="uid://bxbhqdctwf2fb"
+path="res://.godot/imported/Acceleration6.ogg-028d59c142bbff98e3d5b5e6bedfa081.oggstr"
 
 [deps]
 
 source_file="res://Resources/Basic/Sounds/Acceleration6.ogg"
-dest_files=[ "res://.import/Acceleration6.ogg-028d59c142bbff98e3d5b5e6bedfa081.oggstr" ]
+dest_files=["res://.godot/imported/Acceleration6.ogg-028d59c142bbff98e3d5b5e6bedfa081.oggstr"]
 
 [params]
 

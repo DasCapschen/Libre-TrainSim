@@ -1,19 +1,21 @@
 [remap]
 
 importer="wavefront_obj"
+importer_version=1
 type="Mesh"
-path="res://.import/Control-Roll.obj-8a9c19d842190086c766e7cf6c207694.mesh"
+uid="uid://cmv3jmf50ka5n"
+path="res://.godot/imported/Control-Roll.obj-8a9c19d842190086c766e7cf6c207694.mesh"
 
 [deps]
 
-files=[ "res://.import/Control-Roll.obj-8a9c19d842190086c766e7cf6c207694.mesh" ]
+files=["res://.godot/imported/Control-Roll.obj-8a9c19d842190086c766e7cf6c207694.mesh"]
 
 source_file="res://Resources/Basic/Control-Roll.obj"
-dest_files=[ "res://.import/Control-Roll.obj-8a9c19d842190086c766e7cf6c207694.mesh", "res://.import/Control-Roll.obj-8a9c19d842190086c766e7cf6c207694.mesh" ]
+dest_files=["res://.godot/imported/Control-Roll.obj-8a9c19d842190086c766e7cf6c207694.mesh", "res://.godot/imported/Control-Roll.obj-8a9c19d842190086c766e7cf6c207694.mesh"]
 
 [params]
 
 generate_tangents=true
-scale_mesh=Vector3( 1, 1, 1 )
-offset_mesh=Vector3( 0, 0, 0 )
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
 optimize_mesh=true

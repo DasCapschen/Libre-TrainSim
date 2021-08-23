@@ -2,12 +2,13 @@
 
 importer="ogg_vorbis"
 type="AudioStreamOGGVorbis"
-path="res://.import/next_station_tutorialbach.ogg-747dcc301e88d6a8842e87bfa3bf769f.oggstr"
+uid="uid://cjilee4hcj3ke"
+path="res://.godot/imported/next_station_tutorialbach.ogg-747dcc301e88d6a8842e87bfa3bf769f.oggstr"
 
 [deps]
 
 source_file="res://Resources/Tutorials/Sounds/next_station_tutorialbach.ogg"
-dest_files=[ "res://.import/next_station_tutorialbach.ogg-747dcc301e88d6a8842e87bfa3bf769f.oggstr" ]
+dest_files=["res://.godot/imported/next_station_tutorialbach.ogg-747dcc301e88d6a8842e87bfa3bf769f.oggstr"]
 
 [params]
 

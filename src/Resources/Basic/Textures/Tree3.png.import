@@ -1,8 +1,9 @@
 [remap]
 
 importer="texture"
-type="StreamTexture"
-path="res://.import/Tree3.png-71e84ab6e28c45f5bdb410f4e37788db.stex"
+type="StreamTexture2D"
+uid="uid://ble8o6c6vowlb"
+path="res://.godot/imported/Tree3.png-71e84ab6e28c45f5bdb410f4e37788db.stex"
 metadata={
 "vram_texture": false
 }
@@ -10,25 +11,25 @@ metadata={
 [deps]
 
 source_file="res://Resources/Basic/Textures/Tree3.png"
-dest_files=[ "res://.import/Tree3.png-71e84ab6e28c45f5bdb410f4e37788db.stex" ]
+dest_files=["res://.godot/imported/Tree3.png-71e84ab6e28c45f5bdb410f4e37788db.stex"]
 
 [params]
 
 compress/mode=0
 compress/lossy_quality=0.7
-compress/hdr_mode=0
+compress/hdr_compression=1
 compress/bptc_ldr=0
 compress/normal_map=0
-flags/repeat=0
-flags/filter=true
-flags/mipmaps=false
-flags/anisotropic=true
-flags/srgb=1
+compress/channel_pack=0
+compress/streamed=false
+mipmaps/generate=false
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
+process/normal_map_invert_y=false
 process/HDR_as_SRGB=false
-process/invert_color=false
-stream=false
-size_limit=0
-detect_3d=false
+process/size_limit=0
+detect_3d/compress_to=1
 svg/scale=1.0

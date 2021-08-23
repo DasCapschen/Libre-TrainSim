@@ -1,19 +1,21 @@
 [remap]
 
 importer="wavefront_obj"
+importer_version=1
 type="Mesh"
-path="res://.import/EasyTree_big.obj-8289c106fa91ca2eeef3cf6532597794.mesh"
+uid="uid://cpsdqxgx1i7id"
+path="res://.godot/imported/EasyTree_big.obj-8289c106fa91ca2eeef3cf6532597794.mesh"
 
 [deps]
 
-files=[ "res://.import/EasyTree_big.obj-8289c106fa91ca2eeef3cf6532597794.mesh" ]
+files=["res://.godot/imported/EasyTree_big.obj-8289c106fa91ca2eeef3cf6532597794.mesh"]
 
 source_file="res://Resources/Basic/EasyTree_big.obj"
-dest_files=[ "res://.import/EasyTree_big.obj-8289c106fa91ca2eeef3cf6532597794.mesh", "res://.import/EasyTree_big.obj-8289c106fa91ca2eeef3cf6532597794.mesh" ]
+dest_files=["res://.godot/imported/EasyTree_big.obj-8289c106fa91ca2eeef3cf6532597794.mesh", "res://.godot/imported/EasyTree_big.obj-8289c106fa91ca2eeef3cf6532597794.mesh"]
 
 [params]
 
 generate_tangents=true
-scale_mesh=Vector3( 1, 1, 1 )
-offset_mesh=Vector3( 0, 0, 0 )
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
 optimize_mesh=true

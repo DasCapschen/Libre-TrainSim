@@ -1,19 +1,21 @@
 [remap]
 
 importer="wavefront_obj"
+importer_version=1
 type="Mesh"
-path="res://.import/FieldWithCrops.obj-267f43d386b006d981351ef5dbbd0032.mesh"
+uid="uid://bhftxpcekwg5t"
+path="res://.godot/imported/FieldWithCrops.obj-267f43d386b006d981351ef5dbbd0032.mesh"
 
 [deps]
 
-files=[ "res://.import/FieldWithCrops.obj-267f43d386b006d981351ef5dbbd0032.mesh" ]
+files=["res://.godot/imported/FieldWithCrops.obj-267f43d386b006d981351ef5dbbd0032.mesh"]
 
 source_file="res://Resources/Basic/FieldWithCrops.obj"
-dest_files=[ "res://.import/FieldWithCrops.obj-267f43d386b006d981351ef5dbbd0032.mesh", "res://.import/FieldWithCrops.obj-267f43d386b006d981351ef5dbbd0032.mesh" ]
+dest_files=["res://.godot/imported/FieldWithCrops.obj-267f43d386b006d981351ef5dbbd0032.mesh", "res://.godot/imported/FieldWithCrops.obj-267f43d386b006d981351ef5dbbd0032.mesh"]
 
 [params]
 
 generate_tangents=true
-scale_mesh=Vector3( 1, 1, 1 )
-offset_mesh=Vector3( 0, 0, 0 )
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
 optimize_mesh=true

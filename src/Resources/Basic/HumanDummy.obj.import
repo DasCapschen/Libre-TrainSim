@@ -1,19 +1,21 @@
 [remap]
 
 importer="wavefront_obj"
+importer_version=1
 type="Mesh"
-path="res://.import/HumanDummy.obj-5327a9bba9b3f2c0570ced6aaa8b5683.mesh"
+uid="uid://4e82p1noxw26"
+path="res://.godot/imported/HumanDummy.obj-5327a9bba9b3f2c0570ced6aaa8b5683.mesh"
 
 [deps]
 
-files=[ "res://.import/HumanDummy.obj-5327a9bba9b3f2c0570ced6aaa8b5683.mesh" ]
+files=["res://.godot/imported/HumanDummy.obj-5327a9bba9b3f2c0570ced6aaa8b5683.mesh"]
 
 source_file="res://Resources/Basic/HumanDummy.obj"
-dest_files=[ "res://.import/HumanDummy.obj-5327a9bba9b3f2c0570ced6aaa8b5683.mesh", "res://.import/HumanDummy.obj-5327a9bba9b3f2c0570ced6aaa8b5683.mesh" ]
+dest_files=["res://.godot/imported/HumanDummy.obj-5327a9bba9b3f2c0570ced6aaa8b5683.mesh", "res://.godot/imported/HumanDummy.obj-5327a9bba9b3f2c0570ced6aaa8b5683.mesh"]
 
 [params]
 
 generate_tangents=true
-scale_mesh=Vector3( 1, 1, 1 )
-offset_mesh=Vector3( 0, 0, 0 )
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
 optimize_mesh=true

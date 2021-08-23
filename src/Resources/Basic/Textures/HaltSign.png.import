@@ -1,36 +1,37 @@
 [remap]
 
 importer="texture"
-type="StreamTexture"
-path.s3tc="res://.import/HaltSign.png-d6caf33f6d5abb084c3c49898a0226b4.s3tc.stex"
-path.etc2="res://.import/HaltSign.png-d6caf33f6d5abb084c3c49898a0226b4.etc2.stex"
+type="StreamTexture2D"
+uid="uid://8y82d12l2urp"
+path.s3tc="res://.godot/imported/HaltSign.png-d6caf33f6d5abb084c3c49898a0226b4.s3tc.stex"
+path.etc2="res://.godot/imported/HaltSign.png-d6caf33f6d5abb084c3c49898a0226b4.etc2.stex"
 metadata={
-"imported_formats": [ "s3tc", "etc2" ],
+"imported_formats": ["s3tc", "etc2"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://Resources/Basic/Textures/HaltSign.png"
-dest_files=[ "res://.import/HaltSign.png-d6caf33f6d5abb084c3c49898a0226b4.s3tc.stex", "res://.import/HaltSign.png-d6caf33f6d5abb084c3c49898a0226b4.etc2.stex" ]
+dest_files=["res://.godot/imported/HaltSign.png-d6caf33f6d5abb084c3c49898a0226b4.s3tc.stex", "res://.godot/imported/HaltSign.png-d6caf33f6d5abb084c3c49898a0226b4.etc2.stex"]
 
 [params]
 
 compress/mode=2
 compress/lossy_quality=0.7
-compress/hdr_mode=0
+compress/hdr_compression=1
 compress/bptc_ldr=0
 compress/normal_map=0
-flags/repeat=true
-flags/filter=true
-flags/mipmaps=true
-flags/anisotropic=false
-flags/srgb=1
+compress/channel_pack=0
+compress/streamed=false
+mipmaps/generate=false
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
+process/normal_map_invert_y=false
 process/HDR_as_SRGB=false
-process/invert_color=false
-stream=false
-size_limit=0
-detect_3d=false
+process/size_limit=0
+detect_3d/compress_to=1
 svg/scale=1.0

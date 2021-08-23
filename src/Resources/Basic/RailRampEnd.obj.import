@@ -1,19 +1,21 @@
 [remap]
 
 importer="wavefront_obj"
+importer_version=1
 type="Mesh"
-path="res://.import/RailRampEnd.obj-48cad3eb364bfcc94417a63feffc9748.mesh"
+uid="uid://dig08t8lv33cj"
+path="res://.godot/imported/RailRampEnd.obj-48cad3eb364bfcc94417a63feffc9748.mesh"
 
 [deps]
 
-files=[ "res://.import/RailRampEnd.obj-48cad3eb364bfcc94417a63feffc9748.mesh" ]
+files=["res://.godot/imported/RailRampEnd.obj-48cad3eb364bfcc94417a63feffc9748.mesh"]
 
 source_file="res://Resources/Basic/RailRampEnd.obj"
-dest_files=[ "res://.import/RailRampEnd.obj-48cad3eb364bfcc94417a63feffc9748.mesh", "res://.import/RailRampEnd.obj-48cad3eb364bfcc94417a63feffc9748.mesh" ]
+dest_files=["res://.godot/imported/RailRampEnd.obj-48cad3eb364bfcc94417a63feffc9748.mesh", "res://.godot/imported/RailRampEnd.obj-48cad3eb364bfcc94417a63feffc9748.mesh"]
 
 [params]
 
 generate_tangents=true
-scale_mesh=Vector3( 1, 1, 1 )
-offset_mesh=Vector3( 0, 0, 0 )
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
 optimize_mesh=true

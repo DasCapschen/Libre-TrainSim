@@ -1,19 +1,21 @@
 [remap]
 
 importer="wavefront_obj"
+importer_version=1
 type="Mesh"
-path="res://.import/Rail.obj-84d07ddafbc0f5e177d9748e8344ede2.mesh"
+uid="uid://cbyowcq7gys8b"
+path="res://.godot/imported/Rail.obj-84d07ddafbc0f5e177d9748e8344ede2.mesh"
 
 [deps]
 
-files=[ "res://.import/Rail.obj-84d07ddafbc0f5e177d9748e8344ede2.mesh" ]
+files=["res://.godot/imported/Rail.obj-84d07ddafbc0f5e177d9748e8344ede2.mesh"]
 
 source_file="res://Resources/Basic/Rail.obj"
-dest_files=[ "res://.import/Rail.obj-84d07ddafbc0f5e177d9748e8344ede2.mesh", "res://.import/Rail.obj-84d07ddafbc0f5e177d9748e8344ede2.mesh" ]
+dest_files=["res://.godot/imported/Rail.obj-84d07ddafbc0f5e177d9748e8344ede2.mesh", "res://.godot/imported/Rail.obj-84d07ddafbc0f5e177d9748e8344ede2.mesh"]
 
 [params]
 
 generate_tangents=true
-scale_mesh=Vector3( 1, 1, 1 )
-offset_mesh=Vector3( 0, 0, 0 )
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
 optimize_mesh=true
