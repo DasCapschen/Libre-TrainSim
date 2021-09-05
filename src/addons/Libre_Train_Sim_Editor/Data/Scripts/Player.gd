@@ -93,12 +93,19 @@ var camera_fov_soll = 42.7 # FOV user wants
 const CAMERA_FOV_MIN = 20
 const CAMERA_FOV_MAX = 60
 
-var soundMode = 0 # 0: Interior, 1: Outer   ## Not currently used
+# 0: Interior, 1: Outer   ## Not currently used
+enum SoundMode {
+	INTERIOR = 0,
+	EXTERIOR = 1,
+}
+var sound_mode = SoundMode.INTERIOR
 
+export (bool) var has_separate_cabin_mesh = false
+export (NodePath) var cabin_node_path
 
 export (Array, NodePath) var wagons 
 export var wagonDistance = 0.5 ## Distance between the wagons
-var wagonsVisible = false
+var wagonsVisible = true
 var wagonsI = [] # Over this the wagons can be accessed
 
 var automaticDriving = false # Autopilot
@@ -214,19 +221,21 @@ func ready(): ## Called by World!
 		world.activeChunk = world.pos2Chunk(self.translation) 
 	
 	spawnWagons()
+	if has_separate_cabin_mesh:
+		wagonsVisible = false
+		get_node(cabin_node_path).is_cabin_only = true
 	
 	## Prepare Signals:
 	if not ai:
 		set_signalWarnLimits()
 		set_signalAfters()
-
-		
 		
 	if ai:
-		soundMode = 1
-		wagonsVisible = true
+		sound_mode = SoundMode.EXTERIOR
 		automaticDriving = true
-		$Cabin.queue_free()
+		if has_separate_cabin_mesh:
+			wagonsVisible = true
+			get_node(cabin_node_path).queue_free()
 		$Camera.queue_free()
 		$HUD.queue_free()
 		camera_state = CameraState.CABIN_VIEW # Not for the camera, for the components who want to see, if the player sees the train from the inside or outside. AI is seen from outside whole time ;)
@@ -591,21 +600,28 @@ func remove_free_camera():
 func switch_to_cabin_view():
 	#Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	camera_state = CameraState.CABIN_VIEW
-	wagonsVisible = false
+	
 	cameraNode.transform = cameraZeroTransform
 	cameraX = -cameraNode.rotation_degrees.x
 	cameraY = cameraNode.rotation_degrees.y
 	$Camera.fov = camera_fov # reset to first person FOV (zoom)
-	$Cabin.show()
+
+	if has_separate_cabin_mesh:
+		wagonsVisible = false
+		get_node(cabin_node_path).show()
+	
 	remove_free_camera()
 	$Camera.current = true
 
 func switch_to_outer_view():
-	wagonsVisible = true
 	camera_state = CameraState.OUTER_VIEW
 	has_camera_distance_changed = true # FIX for camera not properly setting itself until 1st input
 	$Camera.fov = ref_fov # reset to reference FOV, zooming works different in this view
-	$Cabin.hide()
+
+	if has_separate_cabin_mesh:
+		wagonsVisible = true
+		get_node(cabin_node_path).hide()
+	
 	remove_free_camera()
 	$Camera.current = true
 
@@ -616,8 +632,10 @@ func handleCamera(delta):
 	if Input.is_action_just_pressed("Outer View"):
 		switch_to_outer_view()
 	if Input.is_action_just_pressed("FreeCamera"):
-		$Cabin.hide()
-		wagonsVisible = true
+		if has_separate_cabin_mesh:
+			get_node(cabin_node_path).hide()
+			wagonsVisible = true
+
 		camera_state = CameraState.FREE_VIEW
 		get_node("Camera").current = false
 		var cam = load("res://addons/Libre_Train_Sim_Editor/Data/Modules/FreeCamera.tscn").instance()
@@ -628,10 +646,11 @@ func handleCamera(delta):
 	var playerCameras = get_tree().get_nodes_in_group("PlayerCameras")
 	for i in range(3, 9):
 		if Input.is_action_just_pressed("player_camera_" + str(i)) and playerCameras.size() >= i - 2:
-			wagonsVisible = true
 			camera_state = i
 			playerCameras[i -3].current = true
-			$Cabin.hide()
+			if has_separate_cabin_mesh:
+				get_node(cabin_node_path).hide()
+				wagonsVisible = true
 			remove_free_camera()
 
 	if camera_state == CameraState.CABIN_VIEW:
@@ -1200,13 +1219,15 @@ func spawnWagons():
 		wagonsI.append(newWagon)
 	
 	# Handle Cabin:
-	$Cabin.baked_route = baked_route
-	$Cabin.baked_route_direction = baked_route_direction
-	$Cabin.forward = forward
-	$Cabin.currentRail = currentRail
-	$Cabin.distanceOnRail = nextWagonPosition
-	$Cabin.player = self
-	$Cabin.world = world
+	if has_separate_cabin_mesh:
+		var cabin_node = get_node(cabin_node_path)
+		cabin_node.baked_route = baked_route
+		cabin_node.baked_route_direction = baked_route_direction
+		cabin_node.forward = forward
+		cabin_node.currentRail = currentRail
+		cabin_node.distanceOnRail = nextWagonPosition
+		cabin_node.player = self
+		cabin_node.world = world
 
 func toggle_automatic_driving():
 	automaticDriving = !automaticDriving

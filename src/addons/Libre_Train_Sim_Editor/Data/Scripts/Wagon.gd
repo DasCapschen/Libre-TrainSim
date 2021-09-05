@@ -6,7 +6,7 @@ extends Spatial
 # var b = "text"
 export (float) var length = 17.5
 
-export (bool) var cabinMode = false
+var is_cabin_only = false  # set from Player.gd
 
 var baked_route
 var baked_route_direction
@@ -39,7 +39,7 @@ var initialSet = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pause_mode = Node.PAUSE_MODE_PROCESS
-	if cabinMode:
+	if is_cabin_only:
 		length = 4
 		return
 	registerDoors()
@@ -59,9 +59,10 @@ func _ready():
 var initialSwitchCheck = false
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if player != null and not is_cabin_only:
+		visible = player.wagonsVisible
+
 	if get_tree().paused:
-		if player != null and not cabinMode:
-			visible = player.wagonsVisible
 		return
 	
 	if player == null or player.despawning: 
@@ -74,15 +75,14 @@ func _process(delta):
 		
 	speed = player.speed
 	
-	if cabinMode:
+	if is_cabin_only:
 		drive(delta)
 		return
 	
-
 	if get_parent().name != "Players": return
 	if distanceToPlayer == -1:
 		distanceToPlayer = abs(player.distanceOnRail - distanceOnRail)
-	visible = player.wagonsVisible
+
 	if speed != 0 or not initialSet: 
 		drive(delta)
 		initialSet = true
@@ -372,10 +372,9 @@ func initialize_outside_announcement_player():
 	add_child(audioStreamPlayer)
 
 func play_outside_announcement(sound_path : String):
-	if sound_path == "":
+	if sound_path == "" or is_cabin_only:
 		return
-	if cabinMode:
-		return
+
 	var stream = load(sound_path)
 	if stream == null:
 		return

@@ -954,7 +954,7 @@ script = ExtResource( 5 )
 
 [node name="Cabin" type="Spatial" parent="."]
 script = ExtResource( 26 )
-cabinMode = true
+is_cabin_only = true
 
 [node name="ScreenMiddle" type="MeshInstance" parent="Cabin"]
 transform = Transform( -3.82021e-08, 0.177615, -0.797131, 2.89372e-08, 0.234483, 0.603806, 0.294159, 0, -1.62921e-07, 7.31889, 2.65065, 0 )
