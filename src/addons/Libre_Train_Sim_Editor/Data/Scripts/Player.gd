@@ -104,8 +104,8 @@ export (bool) var has_separate_cabin_mesh = false
 export (NodePath) var cabin_node_path
 
 export (Array, NodePath) var wagons 
-export var wagonDistance = 0.5 ## Distance between the wagons
-var wagonsVisible = true
+export var wagon_distance = 0.5 ## Distance between the wagons
+var are_wagons_visible = true
 var wagonsI = [] # Over this the wagons can be accessed
 
 var automaticDriving = false # Autopilot
@@ -222,7 +222,7 @@ func ready(): ## Called by World!
 	
 	spawnWagons()
 	if has_separate_cabin_mesh:
-		wagonsVisible = false
+		are_wagons_visible = false
 		get_node(cabin_node_path).is_cabin_only = true
 	
 	## Prepare Signals:
@@ -234,7 +234,7 @@ func ready(): ## Called by World!
 		sound_mode = SoundMode.EXTERIOR
 		automaticDriving = true
 		if has_separate_cabin_mesh:
-			wagonsVisible = true
+			are_wagons_visible = true
 			get_node(cabin_node_path).queue_free()
 		$Camera.queue_free()
 		$HUD.queue_free()
@@ -607,7 +607,7 @@ func switch_to_cabin_view():
 	$Camera.fov = camera_fov # reset to first person FOV (zoom)
 
 	if has_separate_cabin_mesh:
-		wagonsVisible = false
+		are_wagons_visible = false
 		get_node(cabin_node_path).show()
 	
 	remove_free_camera()
@@ -619,7 +619,7 @@ func switch_to_outer_view():
 	$Camera.fov = ref_fov # reset to reference FOV, zooming works different in this view
 
 	if has_separate_cabin_mesh:
-		wagonsVisible = true
+		are_wagons_visible = true
 		get_node(cabin_node_path).hide()
 	
 	remove_free_camera()
@@ -634,7 +634,7 @@ func handleCamera(delta):
 	if Input.is_action_just_pressed("FreeCamera"):
 		if has_separate_cabin_mesh:
 			get_node(cabin_node_path).hide()
-			wagonsVisible = true
+			are_wagons_visible = true
 
 		camera_state = CameraState.FREE_VIEW
 		get_node("Camera").current = false
@@ -650,7 +650,7 @@ func handleCamera(delta):
 			playerCameras[i -3].current = true
 			if has_separate_cabin_mesh:
 				get_node(cabin_node_path).hide()
-				wagonsVisible = true
+				are_wagons_visible = true
 			remove_free_camera()
 
 	if camera_state == CameraState.CABIN_VIEW:
@@ -1211,9 +1211,9 @@ func spawnWagons():
 		newWagon.distanceOnRail = nextWagonPosition
 		newWagon.world = world
 		if forward:
-			nextWagonPosition -= wagonNode.length + wagonDistance
+			nextWagonPosition -= wagonNode.length + wagon_distance
 		else:
-			nextWagonPosition += wagonNode.length + wagonDistance
+			nextWagonPosition += wagonNode.length + wagon_distance
 		get_parent().add_child(newWagon)
 		newWagon.owner = self.owner
 		wagonsI.append(newWagon)
@@ -1388,7 +1388,7 @@ func checkVisibility(delta):
 		var currentChunk = world.pos2Chunk(world.getOriginalPos_bchunk(translation))
 		rendering = world.ist_chunks.has(currentChunk)
 		self.visible = rendering
-		wagonsVisible = rendering
+		are_wagons_visible = rendering
 			 
 
 func debugLights(node):

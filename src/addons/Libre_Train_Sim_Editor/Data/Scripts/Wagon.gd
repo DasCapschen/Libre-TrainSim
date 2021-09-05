@@ -60,7 +60,7 @@ var initialSwitchCheck = false
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if player != null and not is_cabin_only:
-		visible = player.wagonsVisible
+		visible = player.are_wagons_visible
 
 	if get_tree().paused:
 		return
