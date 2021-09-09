@@ -5,13 +5,12 @@
 [ext_resource path="res://Resources/Basic/Materials/Metal.tres" type="Material" id=3]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Scripts/Hektometertafel.gd" type="Script" id=4]
 
-[sub_resource type="ViewportTexture" id=1]
+[sub_resource type="ViewportTexture" id=3]
 
-[sub_resource type="SpatialMaterial" id=2]
-resource_local_to_scene = true
-albedo_texture = SubResource( 1 )
+[sub_resource type="SpatialMaterial" id=1]
+albedo_texture = SubResource( 3 )
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=2]
 size = 300
 font_data = ExtResource( 1 )
 
@@ -22,7 +21,7 @@ script = ExtResource( 4 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.667 )
 mesh = ExtResource( 2 )
 material/0 = ExtResource( 3 )
-material/1 = SubResource( 2 )
+material/1 = SubResource( 1 )
 
 [node name="Viewport" type="Viewport" parent="."]
 size = Vector2( 586, 878 )
@@ -55,9 +54,9 @@ __meta__ = {
 [node name="km" type="Label" parent="Viewport/Control/VBoxContainer"]
 margin_right = 586.0
 margin_bottom = 445.0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
-text = "54"
+text = "0"
 align = 1
 valign = 1
 
@@ -65,8 +64,8 @@ valign = 1
 margin_top = 449.0
 margin_right = 586.0
 margin_bottom = 894.0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
-text = "7"
+text = "0"
 align = 1
 valign = 1
