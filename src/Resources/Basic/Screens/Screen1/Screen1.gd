@@ -36,7 +36,10 @@ func _ready():
 	CommandPointerZero = $CommandPointer.rotation_degrees
 	CommandPerPercent = (CommandPointerRotationAt100-CommandPointerZero)/100.0
 	#print("DISPLAY: " + String(SpeedPerKmH) + " " + String(SpeedPointerZero) + " " + String(SpeedPointerRotationAt100))
-	pass # Replace with function body.
+	
+	$Sifa.visible = false
+	pass
+
 
 var SollCommandPointer = 0
 var SollSpeedLimitPointer = 0

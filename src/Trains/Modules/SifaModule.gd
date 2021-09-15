@@ -1,7 +1,6 @@
 extends SecuritySystem
 
 var is_sifa_enabled = true
-
 var was_sifa_reset = false
 
 # trigger a lamp in the trains cabin
@@ -26,10 +25,10 @@ func _on_settings_changed():
 
 
 func _process(delta: float) -> void:
-	if player.speed < 3:
-		$WarningTimer.stop()
-	elif $WarningTimer.is_stopped():
-		$WarningTimer.start()
+	if player.speed < Math.kmHToSpeed(3):
+		$SifaTimer.stop()
+	elif $SifaTimer.is_stopped():
+		$SifaTimer.start()
 
 
 func _unhandled_key_input(event: InputEventKey) -> void:
@@ -39,22 +38,30 @@ func _unhandled_key_input(event: InputEventKey) -> void:
 		$SifaSound.stop()
 		emit_signal("sifa_visual_hint", false)
 		was_sifa_reset = true
+		release_emergency_brakes()
 
-
+var stage = 0
 func _on_SifaTimer_timeout() -> void:
 	emit_signal("sifa_visual_hint", true)
 	$WarningTimer.start()
 	was_sifa_reset = false
 	
+	stage = 1
+	
 	yield( $WarningTimer, "timeout" )
 	if was_sifa_reset:
+		stage = 0
 		return
-		
+	
+	stage = 2
+	
 	$SifaSound.play()
 	$WarningTimer.start()
 	
 	yield( $WarningTimer, "timeout" )
 	if was_sifa_reset:
+		stage = 0
 		return
 	
-	player.enforced_braking = true
+	stage = 3
+	enable_emergency_brakes()
