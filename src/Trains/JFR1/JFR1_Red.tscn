@@ -717,7 +717,7 @@ far = 1000.0
 
 [node name="SecuritySystems" type="Node" parent="."]
 
-[node name="Sifa" parent="SecuritySystems" instance=ExtResource( 43 )]
+[node name="SifaModule" parent="SecuritySystems" instance=ExtResource( 43 )]
 
 [node name="PZBModule" parent="SecuritySystems" instance=ExtResource( 42 )]
 
@@ -1861,4 +1861,4 @@ light_color = Color( 1, 0.890196, 0.890196, 1 )
 light_energy = 3.0
 
 [connection signal="passed_signal" from="." to="SecuritySystems/PZBModule" method="_on_passed_signal"]
-[connection signal="sifa_visual_hint" from="SecuritySystems/Sifa" to="Cabin/DisplayMiddle/Display" method="_on_sifa_visual_hint"]
+[connection signal="sifa_visual_hint" from="SecuritySystems/SifaModule" to="Cabin/DisplayMiddle/Display" method="_on_sifa_visual_hint"]

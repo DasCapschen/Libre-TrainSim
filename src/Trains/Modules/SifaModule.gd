@@ -27,7 +27,7 @@ func _on_settings_changed():
 func _process(delta: float) -> void:
 	if player.speed < Math.kmHToSpeed(3):
 		$SifaTimer.stop()
-	elif $SifaTimer.is_stopped():
+	elif $SifaTimer.is_stopped() and stage == 0:
 		$SifaTimer.start()
 
 
@@ -38,11 +38,13 @@ func _unhandled_key_input(event: InputEventKey) -> void:
 		$SifaSound.stop()
 		emit_signal("sifa_visual_hint", false)
 		was_sifa_reset = true
+		stage = 0
 		release_emergency_brakes()
 
 var stage = 0
 func _on_SifaTimer_timeout() -> void:
 	emit_signal("sifa_visual_hint", true)
+	$SifaTimer.stop()
 	$WarningTimer.start()
 	was_sifa_reset = false
 	
@@ -50,7 +52,6 @@ func _on_SifaTimer_timeout() -> void:
 	
 	yield( $WarningTimer, "timeout" )
 	if was_sifa_reset:
-		stage = 0
 		return
 	
 	stage = 2
@@ -60,7 +61,6 @@ func _on_SifaTimer_timeout() -> void:
 	
 	yield( $WarningTimer, "timeout" )
 	if was_sifa_reset:
-		stage = 0
 		return
 	
 	stage = 3

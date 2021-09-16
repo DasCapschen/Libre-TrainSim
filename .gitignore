@@ -1,6 +1,7 @@
 src/Worlds/*
 !src/Worlds/Tutorial/
 !src/Worlds/Tutorials/
+!src/Worlds/German-Safety-Tutorials/
 
 src/Resources/*
 !src/Resources/Tutorials

@@ -1,0 +1,84 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Scripts/World.gd" type="Script" id=1]
+[ext_resource path="res://Resources/Basic/Enviroment/BasicSun.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Resources/Basic/Materials/Grass.tres" type="Material" id=3]
+[ext_resource path="res://Resources/Basic/Objects/grass.obj" type="ArrayMesh" id=4]
+[ext_resource path="res://Worlds/German-Safety-Tutorials/SafetyTutorialScript.gd" type="Script" id=5]
+[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/Rail.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Resources/Basic/Enviroment/BasicWorldEnviroment.tres" type="Environment" id=7]
+[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Scripts/BuildingsNode.gd" type="Script" id=9]
+[ext_resource path="res://addons/jean28518.jTools/jSaveManager/jSaveModule.tscn" type="PackedScene" id=10]
+
+[node name="World" type="Spatial"]
+script = ExtResource( 1 )
+FileName = "German-Safety-Tutorials"
+
+[node name="DirectionalLight" parent="." instance=ExtResource( 2 )]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource( 7 )
+
+[node name="Players" type="Spatial" parent="."]
+
+[node name="Grass" type="Spatial" parent="."]
+visible = false
+
+[node name="grass" type="MeshInstance" parent="Grass"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.515472, 0 )
+material_override = ExtResource( 3 )
+mesh = ExtResource( 4 )
+material/0 = null
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Signals" type="Spatial" parent="."]
+
+[node name="Rails" type="Spatial" parent="."]
+
+[node name="Rail" parent="Rails" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2883, 0, -11.4469 )
+visible = false
+length = 200.0
+visibleSegments = 223.222
+startpos = Vector3( 16.2883, 0, -11.4469 )
+endpos = Vector3( 216.288, 0, -11.4469 )
+automaticTendency = false
+isSwitchPart = [ "", "" ]
+
+[node name="Rail2" parent="Rails" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 216.288, 0, -11.4469 )
+visible = false
+length = 1000.0
+visibleSegments = 1112.11
+startpos = Vector3( 216.288, 0, -11.4469 )
+endpos = Vector3( 1216.29, 0, -11.4469 )
+automaticTendency = false
+isSwitchPart = [ "", "" ]
+
+[node name="Rail3" parent="Rails" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1216.29, 0, -11.4469 )
+visible = false
+length = 500.0
+visibleSegments = 556.556
+startpos = Vector3( 1216.29, 0, -11.4469 )
+endpos = Vector3( 1716.29, 0, -11.4469 )
+automaticTendency = false
+isSwitchPart = [ "", "" ]
+
+[node name="Buildings" type="Spatial" parent="."]
+script = ExtResource( 9 )
+
+[node name="Flora" type="Spatial" parent="."]
+
+[node name="TrackObjects" type="Spatial" parent="."]
+
+[node name="jSaveModule" parent="." instance=ExtResource( 10 )]
+save_path = "/home/dascapschen/Projects/Games/Libre-TrainSim-Editor//Worlds/German-Safety-Tutorials/German-Safety-Tutorials.save"
+
+[node name="jSaveModuleScenarios" parent="." instance=ExtResource( 10 )]
+save_path = "/home/dascapschen/Projects/Games/Libre-TrainSim-Editor//Worlds/German-Safety-Tutorials/German-Safety-Tutorials-scenarios.cfg"
+
+[node name="Scripting" type="Node" parent="."]
+script = ExtResource( 5 )
