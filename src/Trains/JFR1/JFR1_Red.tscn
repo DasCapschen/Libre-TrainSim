@@ -9,13 +9,13 @@
 [ext_resource path="res://Resources/Basic/Materials/Metal.tres" type="Material" id=7]
 [ext_resource path="res://Resources/Basic/Materials/LightBlue_Plastic.tres" type="Material" id=8]
 [ext_resource path="res://Resources/Basic/Screens/ScreenReverser/reverser.tscn" type="PackedScene" id=9]
-[ext_resource path="res://Trains/Modules/PZBModule.tscn" type="PackedScene" id=42]
+[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/PZBModule.tscn" type="PackedScene" id=43]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/PassengerDoor.tscn" type="PackedScene" id=10]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/PassengerPathNode.tscn" type="PackedScene" id=11]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/PassengerSeat.tscn" type="PackedScene" id=12]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/AdvancedEngineSound.tscn" type="PackedScene" id=13]
 [ext_resource path="res://Resources/Basic/reverser.obj" type="ArrayMesh" id=14]
-[ext_resource path="res://Trains/Modules/SifaModule.tscn" type="PackedScene" id=43]
+[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/SifaModule.tscn" type="PackedScene" id=44]
 [ext_resource path="res://Resources/Basic/Materials/ScreenBook.tres" type="Material" id=15]
 [ext_resource path="res://Resources/Basic/Screens/ScreenLeft/ScreenLeft.png" type="Texture" id=16]
 [ext_resource path="res://Resources/Basic/Sounds/DoorsClosing2.ogg" type="AudioStream" id=17]
@@ -50,15 +50,16 @@
 [ext_resource path="res://Trains/JFR1/Pantograph_1_T2.obj" type="ArrayMesh" id=48]
 [ext_resource path="res://Trains/JFR1/Pantograph_1_B.obj" type="ArrayMesh" id=49]
 
-[sub_resource type="SpatialMaterial" id=1]
+[sub_resource type="SpatialMaterial" id=38]
 albedo_color = Color( 0, 0, 0, 1 )
 metallic = 0.1
 roughness = 0.9
 emission_enabled = true
-emission = Color( 0.603922, 0.603922, 0.603922, 1 )
+emission = Color( 1, 1, 1, 1 )
 emission_energy = 1.0
 emission_operator = 1
 emission_on_uv2 = false
+emission_texture = ExtResource( 42 )
 
 [sub_resource type="QuadMesh" id=2]
 size = Vector2( 1, 0.75 )
@@ -68,7 +69,7 @@ albedo_color = Color( 0, 0, 0, 1 )
 metallic = 0.1
 roughness = 0.9
 emission_enabled = true
-emission = Color( 0.603922, 0.603922, 0.603922, 1 )
+emission = Color( 1, 1, 1, 1 )
 emission_energy = 1.0
 emission_operator = 1
 emission_on_uv2 = false
@@ -82,7 +83,7 @@ albedo_color = Color( 0, 0, 0, 1 )
 metallic = 0.1
 roughness = 0.9
 emission_enabled = true
-emission = Color( 0.603922, 0.603922, 0.603922, 1 )
+emission = Color( 1, 1, 1, 1 )
 emission_energy = 1.0
 emission_operator = 1
 emission_on_uv2 = false
@@ -715,11 +716,11 @@ transform = Transform( -1.62921e-07, 0.0770497, -0.997027, 0, 0.997027, 0.077049
 fov = 42.7
 far = 1000.0
 
-[node name="SecuritySystems" type="Node" parent="."]
+[node name="SafetySystems" type="Node" parent="."]
 
-[node name="SifaModule" parent="SecuritySystems" instance=ExtResource( 43 )]
+[node name="SifaModule" parent="SafetySystems" instance=ExtResource( 44 )]
 
-[node name="PZBModule" parent="SecuritySystems" instance=ExtResource( 42 )]
+[node name="PZBModule" parent="SafetySystems" instance=ExtResource( 43 )]
 
 [node name="SpecificScripting" type="Node" parent="."]
 script = ExtResource( 5 )
@@ -730,7 +731,7 @@ cabinMode = true
 
 [node name="ScreenMiddle" type="MeshInstance" parent="Cabin"]
 transform = Transform( -3.82021e-08, 0.177615, -0.797131, 2.89372e-08, 0.234483, 0.603806, 0.294159, 0, -1.62921e-07, 7.31889, 2.65065, 0 )
-material_override = SubResource( 1 )
+material_override = SubResource( 38 )
 cast_shadow = 0
 mesh = SubResource( 2 )
 material/0 = null
@@ -1860,5 +1861,5 @@ transform = Transform( -3.30409e-08, 0.654701, -0.755888, 2.86179e-08, 0.755888,
 light_color = Color( 1, 0.890196, 0.890196, 1 )
 light_energy = 3.0
 
-[connection signal="passed_signal" from="." to="SecuritySystems/PZBModule" method="_on_passed_signal"]
-[connection signal="sifa_visual_hint" from="SecuritySystems/SifaModule" to="Cabin/DisplayMiddle/Display" method="_on_sifa_visual_hint"]
+[connection signal="passed_signal" from="." to="SafetySystems/PZBModule" method="_on_passed_signal"]
+[connection signal="sifa_visual_hint" from="SafetySystems/SifaModule" to="Cabin/DisplayMiddle/Display" method="_on_sifa_visual_hint"]

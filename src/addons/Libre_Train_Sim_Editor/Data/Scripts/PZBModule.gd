@@ -209,6 +209,7 @@ func _on_700m_reached():
 		return
 	pzb_mode &= ~PZBMode._1000Hz  # disable 1000Hz
 	pzb_mode |= PZBMode._HIDDEN   # enable hidden
+	emit_signal("pzb_changed", self)
 
 func _on_1250m_reached():
 	if pzb_mode != PZBMode.EMERGENCY:
