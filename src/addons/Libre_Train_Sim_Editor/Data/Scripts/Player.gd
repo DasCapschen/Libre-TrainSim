@@ -1236,9 +1236,9 @@ func check_security():
 	var oldEnforcedBrake = enforced_braking
 
 	enforced_braking = not engine
-	for secsys in $SecuritySystems.get_children():
-		enforced_braking = enforced_braking or secsys.requires_emergency_braking
-
+	for sys in $SafetySystems.get_children():
+		enforced_braking = enforced_braking or sys.requires_emergency_braking
+	
 	if not oldEnforcedBrake and enforced_braking and speed > 0 and not ai:
 		$Sound/EnforcedBrake.play()
 
