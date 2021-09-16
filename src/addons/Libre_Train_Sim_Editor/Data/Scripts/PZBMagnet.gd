@@ -16,22 +16,23 @@ export(NodePath) var attached_rail setget set_attached_rail
 var attached_rail_node
 func set_attached_rail(val):
 	attached_rail = val
-	attached_rail_node = get_node(val)
+	attached_rail_node = self.get_node(val)
 
 export(NodePath) var attached_signal setget set_attached_signal
 var attached_signal_node
 func set_attached_signal(val):
 	attached_signal = val
-	attached_signal_node = get_node(val)
+	attached_signal_node = self.get_node(val)
 
-var active = false
+var is_active = false
 
 func _ready():
 	if attached_signal_node == null:
 		attached_signal_node = get_node(attached_signal)
+		#print(name, ": Attached to: ", attached_signal_node.name)
 		if attached_signal_node == null:
 			print(name, ": CAN'T FIND ATTACHED SIGNAL NODE! (", attached_signal,")")
-			queue_free()
+			#queue_free()
 			return
 	
 	attached_signal_node.connect("status_changed", self, "update_active")
@@ -42,6 +43,7 @@ func _ready():
 	update_active(true)
 
 func update_active(_val):
+	#print(name, ": Updating is_active!")
 	# handle combined magnets (yes, they exist, at Ks signals)
 	if attached_signal_node.signal_type == attached_signal_node.SignalType.COMBINED:
 		if attached_signal_node.status == SignalStatus.RED:
@@ -51,9 +53,9 @@ func update_active(_val):
 	
 	# handle activation
 	if hz == 500 or hz == 2000:
-		active = (attached_signal_node.status == SignalStatus.RED)
+		is_active = (attached_signal_node.status == SignalStatus.RED)
 	elif hz == 1000:
-		active = (attached_signal_node.status == SignalStatus.ORANGE) or (attached_signal_node.warn_speed > 0 and attached_signal_node.warn_speed < Math.kmHToSpeed(80))
+		is_active = (attached_signal_node.status == SignalStatus.ORANGE) or (attached_signal_node.warn_speed > 0 and attached_signal_node.warn_speed < Math.kmHToSpeed(80))
 		# TODO: special case: warn_speed 80 or 90 still need Ack, but limit to different speeds
 		# warn speeds 100 and above are NOT checked and don't require PZB Ack
 
@@ -62,7 +64,7 @@ func set_to_rail(newvar):
 		attached_rail_node = get_node(attached_rail)
 		if attached_rail_node == null:
 			print(name, ": CAN'T FIND ATTACHED RAIL NODE! (", attached_rail, ")")
-			queue_free()
+			#queue_free()
 			return
 
 	attached_rail_node.register_signal(self.name, on_rail_position)

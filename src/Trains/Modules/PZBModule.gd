@@ -135,7 +135,8 @@ func mode_1000hz():
 	# if monitoring was on before (ie 2x 1000Hz magnet within 1250m)
 	# then we SKIP the 23 seconds timer!
 	if not was_already_monitoring:
-		yield( get_tree().create_timer(23), "timeout" )
+		# the false is important, it prevents the timer from running when the game is paused
+		yield( get_tree().create_timer(23, false), "timeout" )
 	set_speed_limit(Math.kmHToSpeed(85))
 
 
@@ -157,7 +158,7 @@ func mode_500hz():
 
 # TODO: trigger restrictive mode when reverser is set to forward
 #       this is the so called "start program"
-func restrictive_mode(startup_mode = false):
+func restrictive_mode():
 	pzb_mode &= ~PZBMode.MASK_MODE   # disable current mode
 	pzb_mode |= PZBMode.RESTRICTIVE  # enable restrictive
 
@@ -169,15 +170,15 @@ func restrictive_mode(startup_mode = false):
 
 	# start mode is equal to RESTRICTIVE_HIDDEN (ie. 1000Hz mode after 700m)
 	# this means it deactivates after 550 meters
-	if startup_mode:
+	if (pzb_mode & PZBMode.MASK_MAGNET) == 0:  # if no magnet is active
 		$"1250mMonitor".start()
-		$"1250mMonitor"._start_dist = player.distance + 700
+		$"1250mMonitor"._start_dist = player.distance - 700
 	
 	emit_signal("pzb_changed", self)
 
 
 func _on_passed_signal(signal_instance) -> void:
-	if signal_instance.type == "PZBMagnet" and signal_instance.active:
+	if signal_instance.type == "PZBMagnet" and signal_instance.is_active:
 		monitored_signal = signal_instance.attached_signal
 		match signal_instance.hz:
 			1000:
@@ -196,14 +197,16 @@ func emergency_brake():
 
 
 func _on_153m_reached():
-	assert(pzb_mode & PZBMode._500Hz)
+	if not pzb_mode & PZBMode._500Hz:
+		return
 	if pzb_mode & PZBMode.MONITORING:
 		set_speed_limit(Math.kmHToSpeed(45))
 	elif pzb_mode & PZBMode.RESTRICTIVE:
 		set_speed_limit(Math.kmHToSpeed(25))
 
 func _on_700m_reached():
-	assert(pzb_mode & PZBMode._1000Hz)
+	if not pzb_mode & PZBMode._1000Hz:
+		return
 	pzb_mode &= ~PZBMode._1000Hz  # disable 1000Hz
 	pzb_mode |= PZBMode._HIDDEN   # enable hidden
 

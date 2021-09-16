@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Scripts/World.gd" type="Script" id=1]
 [ext_resource path="res://Resources/Basic/Enviroment/BasicSun.tscn" type="PackedScene" id=2]
@@ -7,8 +7,10 @@
 [ext_resource path="res://Worlds/German-Safety-Tutorials/SafetyTutorialScript.gd" type="Script" id=5]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/Rail.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Resources/Basic/Enviroment/BasicWorldEnviroment.tres" type="Environment" id=7]
+[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/Signal.tscn" type="PackedScene" id=8]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Scripts/BuildingsNode.gd" type="Script" id=9]
 [ext_resource path="res://addons/jean28518.jTools/jSaveManager/jSaveModule.tscn" type="PackedScene" id=10]
+[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/PZBMagnet.tscn" type="PackedScene" id=11]
 
 [node name="World" type="Spatial"]
 script = ExtResource( 1 )
@@ -35,6 +37,38 @@ __meta__ = {
 
 [node name="Signals" type="Spatial" parent="."]
 
+[node name="Signal" parent="Signals" instance=ExtResource( 8 )]
+visible = false
+signal_type = 2
+status = 2
+visual_instance_path = "VisualInstance"
+attached_rail = "Rail"
+on_rail_position = 3
+
+[node name="Signal2" parent="Signals" instance=ExtResource( 8 )]
+visible = false
+signal_type = 1
+visual_instance_path = "VisualInstance"
+attached_rail = "Rail2"
+on_rail_position = 1000
+
+[node name="PZBMagnet" parent="Signals" instance=ExtResource( 11 )]
+hz = 1000
+attached_rail = NodePath("../../Rails/Rail")
+attached_signal = NodePath("../Signal")
+
+[node name="PZBMagnet2" parent="Signals" instance=ExtResource( 11 )]
+hz = 500
+on_rail_position = 700
+attached_rail = NodePath("../../Rails/Rail2")
+attached_signal = NodePath("../Signal2")
+
+[node name="PZBMagnet3" parent="Signals" instance=ExtResource( 11 )]
+hz = 2000
+on_rail_position = 998
+attached_rail = NodePath("../../Rails/Rail2")
+attached_signal = NodePath("../Signal2")
+
 [node name="Rails" type="Spatial" parent="."]
 
 [node name="Rail" parent="Rails" instance=ExtResource( 6 )]
@@ -60,10 +94,20 @@ isSwitchPart = [ "", "" ]
 [node name="Rail3" parent="Rails" instance=ExtResource( 6 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1216.29, 0, -11.4469 )
 visible = false
-length = 500.0
+length = 1000.0
 visibleSegments = 556.556
 startpos = Vector3( 1216.29, 0, -11.4469 )
 endpos = Vector3( 1716.29, 0, -11.4469 )
+automaticTendency = false
+isSwitchPart = [ "", "" ]
+
+[node name="Rail4" parent="Rails" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -483.712, 0, -11.447 )
+visible = false
+length = 500.0
+visibleSegments = 556.556
+startpos = Vector3( -483.712, 0, -11.447 )
+endpos = Vector3( 16.288, 0, -11.447 )
 automaticTendency = false
 isSwitchPart = [ "", "" ]
 
