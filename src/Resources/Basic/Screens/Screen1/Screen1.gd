@@ -37,8 +37,7 @@ func _ready():
 	CommandPerPercent = (CommandPointerRotationAt100-CommandPointerZero)/100.0
 	#print("DISPLAY: " + String(SpeedPerKmH) + " " + String(SpeedPointerZero) + " " + String(SpeedPointerRotationAt100))
 	
-	$Sifa.visible = false
-	pass
+	$Info/Sifa.visible = false
 
 
 var SollCommandPointer = 0
@@ -71,14 +70,14 @@ func update_display(speed, command, doorLeft, doorRight, doorsClosing, enforced_
 	$Time.text = Math.time2String(world.time)
 	
 	## Engine:
-	$Engine.visible = !engine
+	$Info/Engine.visible = !engine
 	
 	## Enforced Breaking
 	if enforced_braking:
-		$EnforcedBraking.visible = blinkStatus
+		$Info/EnforcedBraking.visible = blinkStatus
 	else:
-		$EnforcedBraking.visible = false
-
+		$Info/EnforcedBraking.visible = false
+	
 	## Doors:
 	if doorsClosing:
 		$Doors.visible = blinkStatus
@@ -94,9 +93,9 @@ func update_display(speed, command, doorLeft, doorRight, doorsClosing, enforced_
 
 #	if not lastAutoPilot and autopilot:
 #		$AnimationPlayerAutoPilot.play("autopilot")
-	$Autopilot.visible = autopilot and blinkStatus
+	$Info/Autopilot.visible = autopilot and blinkStatus
 #	lastAutoPilot = autopilot
 
 
 func _on_sifa_visual_hint(is_turned_on) -> void:
-	$Sifa.visible = is_turned_on
+	$Info/Sifa.visible = is_turned_on
