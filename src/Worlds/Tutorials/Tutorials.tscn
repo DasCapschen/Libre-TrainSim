@@ -241,8 +241,8 @@ script = ExtResource( 10 )
 
 [node name="jSaveModule" type="Node" parent="." instance=ExtResource( 11 )]
 script = ExtResource( 4 )
-save_path = "/home/jean/Libre-TrainSim-Editor//Worlds/Tutorials/Tutorials.save"
+save_path = "/home/jean/Libre-TrainSim-Editor//Worlds/Tutorials/Tutorials-chunks.tres"
 
 [node name="jSaveModuleScenarios" type="Node" parent="." instance=ExtResource( 11 )]
 script = ExtResource( 4 )
-save_path = ""
+save_path = "/home/jean/Libre-TrainSim-Editor//Worlds/Tutorials/Tutorials-scenarios.tres"

@@ -271,8 +271,8 @@ func test_track_pck():
 	packer.pck_start(pck_path)
 	
 	packer.add_file("res://Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+".tscn", editor_directory + "/Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+".tscn")
-	packer.add_file("res://Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+".save", editor_directory + "/Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+".save")
-	packer.add_file("res://Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+"-scenarios.cfg", editor_directory + "/Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+"-scenarios.cfg")
+	packer.add_file("res://Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+"-chunks.tres", editor_directory + "/Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+"-chunks.tres")
+	packer.add_file("res://Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+"-scenarios.tres", editor_directory + "/Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+"-scenarios.tres")
 	packer.flush()
 
 	if ProjectSettings.load_resource_pack(pck_path, true):
@@ -289,7 +289,7 @@ func export_track_pck(export_path):
 	## Handle dependencies
 	var dependencies_raw = ResourceLoader.get_dependencies(editor_directory + "/Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+".tscn")
 
-	$World/jSaveModuleScenarios.set_save_path(editor_directory + "/Worlds/" + track_name + "/" + track_name + "-scenarios.cfg")
+	$World/jSaveModuleScenarios.set_save_path(editor_directory + "/Worlds/" + track_name + "/" + track_name + "-scenarios.tres")
 	var scenario_data = $World/jSaveModuleScenarios.get_value("scenario_data")
 	for scenario in scenario_data.keys():
 		for train in scenario_data[scenario]["Trains"].keys():
@@ -361,8 +361,8 @@ func export_track_pck(export_path):
 		packer.add_file(dependence, dependence)
 	
 	packer.add_file("res://Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+".tscn", editor_directory + "/Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+".tscn")
-	packer.add_file("res://Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+".save", editor_directory + "/Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+".save")
-	packer.add_file("res://Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+"-scenarios.cfg", editor_directory + "/Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+"-scenarios.cfg")
+	packer.add_file("res://Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+"-chunks.tres", editor_directory + "/Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+"-chunks.tres")
+	packer.add_file("res://Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+"-scenarios.tres", editor_directory + "/Worlds/"+Root.current_editor_track+"/"+Root.current_editor_track+"-scenarios.tres")
 	packer.add_file("res://Worlds/"+Root.current_editor_track+"/screenshot.png", editor_directory + "/Worlds/"+Root.current_editor_track+"/screenshot.png")
 	
 	packer.flush()

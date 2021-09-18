@@ -16,9 +16,9 @@ func update_save_path():
 		return null
 	var FileName = world.trackName + "/" + world.trackName
 	if Root.Editor:
-		save_path = find_parent("Editor").editor_directory + "/Worlds/" + Root.current_editor_track + "/" + Root.current_editor_track + "-scenarios.cfg"
+		save_path = find_parent("Editor").editor_directory + "/Worlds/" + Root.current_editor_track + "/" + Root.current_editor_track + "-scenarios.tres"
 	else:
-		save_path = "res://Worlds/" + FileName + "-scenarios.cfg"
+		save_path = "res://Worlds/" + FileName + "-scenarios.tres"
 	$jSaveModule.set_save_path(save_path)
 
 func check_duplicate_scenario(sName): # gives true, if duplicate was found

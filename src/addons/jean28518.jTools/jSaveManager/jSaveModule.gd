@@ -9,66 +9,67 @@ func set_save_path(save_path : String):
 	reload()
 
 func save_value(key : String, value):
-	_value_changed = true
-	_cache_main[key] = value
+	_save.data[key] = value
 
 func get_value(key,  default_value = null):
-	if _cache_main.has(key):
-		return _cache_main[key]
-	if _config == null:
+	if save_path == "":
 		print_debug("Save path not configured correctly. Returning default_value.")
 		return default_value
-	if _config.has_section_key("Main", key):
-		var value =  _config.get_value("Main", key, default_value)
-		_cache_main[key] = value
+	elif _save.data.has(key):
+		var value =  _save.data.get(key, default_value)
 		return value
-	return default_value
+	else:
+		return default_value
 
 func reload():
-	_invalidate_cache()
 	_load_current_config()
 
 func write_to_disk():
-	if _config == null:
-		print_debug("Save path not configured correctly. Don't saving anything...")
+	if save_path == "":
+		print_debug("Save path not configured correctly. Not saving anything...")
 		return
-	for key in _cache_main.keys():
-		_config.set_value("Main", key, _cache_main[key])
-	_config.save(save_path)
-	
-func load_everything_into_cache():
-	reload()
-	for key in _config.get_section_keys("Main"):
-		_cache_main[key] = _config.get_value("Main", key, null)
-	
+	ResourceSaver.save(save_path, _save)
 
 ## Internal Code ###############################################################
-var _config
-var _cache_main = {}
-var _value_changed = false
-
-func _invalidate_cache():
-	_cache_main = {}
+var _save = SaveableDictionary.new()
 
 func _ready():
 	_load_current_config()
 
 func _load_current_config():
+	if _save == null:
+		_save = SaveableDictionary.new()
 	if save_path == "":
-		print_debug("Save path not configured correctly. Not initializing jSaveModlue "+ name + ".")
-	_config = ConfigFile.new()
+		print_debug("Save path not configured correctly. Not initializing jSaveModule "+ name + ".")
+		return
 
 	var dir = Directory.new()
 	if not dir.dir_exists(save_path.get_base_dir()):
 		dir.make_dir_recursive(save_path.get_base_dir())
 
-	_config.load(save_path)
+	if dir.file_exists(save_path):
+		_save = load(save_path)
+		if _save == null:
+			printerr("even bigger wtf, was null after load!!")
+			_save = SaveableDictionary.new() # fix for crash (why???)
+	else:
+		var old_path1 = save_path.replace(".tres", ".cfg")
+		var old_path2 = save_path.replace("-chunks.tres", ".save")
+		if dir.file_exists(old_path1):
+			migrate(old_path1)
+		elif dir.file_exists(old_path2):
+			migrate(old_path2)
+			
 
+func migrate(old_path):
+	var _config = ConfigFile.new()
+	_config.load(old_path)
+	for key in _config.get_section_keys("Main"):
+		_save.data[key] = _config.get_value("Main", key, null)
+	write_to_disk()
 
 func _enter_tree():
 	pass
 
-
 func _exit_tree():
-	if _value_changed:
-		write_to_disk()
+	write_to_disk()

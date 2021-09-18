@@ -41,6 +41,5 @@ script = ExtResource( 9 )
 [node name="TrackObjects" type="Spatial" parent="."]
 
 [node name="jSaveModule" parent="." instance=ExtResource( 10 )]
-save_path = "res://Worlds/Name Me!/Name Me!.save"
 
 [node name="jSaveModuleScenarios" parent="." instance=ExtResource( 10 )]

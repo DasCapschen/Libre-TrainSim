@@ -1,13 +1,11 @@
-[Main]
+[gd_resource type="Resource" load_steps=2 format=2]
 
-world_config={
-"Author": "Jean",
-"ReleaseDate": [ 27.0, 11.0, 2020.0 ],
-"ThumbnailPath": "res://Worlds/Tutorials/screenshot.png",
-"TrackDesciption": "TUTORIAL_TRACK_DESCRIPTION"
-}
-scenario_list=[ "The Basics", "Advanced Train Driving", "Free Driving", "The Basics - Mobile Version" ]
-scenario_data={
+[ext_resource path="res://addons/jean28518.jTools/jSaveManager/saveable_dict.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+data = {
+"scenario_data": {
 "": {
 "Trains": {
 "Player": {
@@ -193,6 +191,7 @@ scenario_data={
 "haltTime": [ 5.0, 10.0 ],
 "leavingPersons": [ 0.0, 100.0 ],
 "nodeName": [ "City1", "City2" ],
+"passed": [ false, false ],
 "stationName": [ "Tutorialhausen", "Tutorialbach" ],
 "stopType": [ 2, 3 ],
 "waitingPersons": [ 100.0, 30.0 ]
@@ -283,5 +282,13 @@ scenario_data={
 }
 }
 }
+}
+},
+"scenario_list": [ "The Basics", "Advanced Train Driving", "Free Driving", "The Basics - Mobile Version" ],
+"world_config": {
+"Author": "Jean",
+"ReleaseDate": [ 27.0, 11.0, 2020.0 ],
+"ThumbnailPath": "res://Worlds/Tutorials/screenshot.png",
+"TrackDesciption": "TUTORIAL_TRACK_DESCRIPTION"
 }
 }

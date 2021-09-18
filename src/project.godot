@@ -24,6 +24,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/Enums/PlatformSide.gd"
 }, {
+"base": "Resource",
+"class": "SaveableDictionary",
+"language": "GDScript",
+"path": "res://addons/jean28518.jTools/jSaveManager/saveable_dict.gd"
+}, {
 "base": "Reference",
 "class": "SignalStatus",
 "language": "GDScript",
@@ -38,6 +43,7 @@ _global_script_class_icons={
 "Authors": "",
 "InputLabel": "",
 "PlatformSide": "",
+"SaveableDictionary": "",
 "SignalStatus": "",
 "TimeField": ""
 }
@@ -76,6 +82,9 @@ window/size/height="600"
 window/handheld/orientation="sensor_landscape"
 window/size/heigt="720"
 
+[editor]
+
+convert_text_resources_to_binary_on_export=true
 [editor_plugins]
 
 enabled=PoolStringArray( "res://addons/Libre_Train_Sim_Editor/plugin.cfg", "res://addons/jean28518.jTools/plugin.cfg" )

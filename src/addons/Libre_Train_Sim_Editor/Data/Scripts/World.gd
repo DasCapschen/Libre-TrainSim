@@ -57,9 +57,9 @@ func _ready():
 		trackName = FileName
 	print("trackName: " +trackName + " " + FileName)
 	if Root.Editor:
-		$jSaveModule.set_save_path(String(find_parent("Editor").editor_directory + "/Worlds/" + trackName + "/" + trackName + ".save"))
+		$jSaveModule.set_save_path(String(find_parent("Editor").editor_directory + "/Worlds/" + trackName + "/" + trackName + "-chunks.tres"))
 	else:
-		$jSaveModule.set_save_path(String("res://Worlds/" + trackName + "/" + trackName + ".save"))
+		$jSaveModule.set_save_path(String("res://Worlds/" + trackName + "/" + trackName + "-chunks.tres"))
 	
 	if not Root.Editor:
 		$Grass.show()
@@ -79,8 +79,8 @@ func _ready():
 		currentScenario = Root.currentScenario
 		set_scenario_to_world()
 		
-		jEssentials.call_delayed(1.0, self, "load_configs_to_cache")
-		
+		$jSaveModule.reload()
+		$jSaveModuleScenarios.reload()
 		
 		## Create Persons-Node:
 		var personsNode = Spatial.new()
@@ -543,7 +543,7 @@ func get_signal_scenario_data():
 	return signals
 	
 func set_scenario_to_world():
-	var Ssave_path = "res://Worlds/" + trackName + "/" + trackName + "-scenarios.cfg"
+	var Ssave_path = "res://Worlds/" + trackName + "/" + trackName + "-scenarios.tres"
 	$jSaveModuleScenarios.set_save_path(Ssave_path)
 	var sData = $jSaveModuleScenarios.get_value("scenario_data")
 	var scenario = sData[currentScenario]
@@ -780,11 +780,6 @@ func get_chunks_around_position(position):
 	var neighbour_chunks = getChunkeighbours(mid_chunk)
 	neighbour_chunks.append(mid_chunk)
 	return neighbour_chunks
-
-
-func load_configs_to_cache():
-	$jSaveModule.load_everything_into_cache()
-	$jSaveModuleScenarios.load_everything_into_cache()
 
 
 func _exit_tree():

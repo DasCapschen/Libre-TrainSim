@@ -159,7 +159,7 @@ func _on_PlayPlay_pressed():
 	$Loading.show()
 	## Load 
 	var track_name = foundTracks[index].get_basename().get_file()
-	var save_path = foundTracks[index].get_basename() + "-scenarios.cfg"
+	var save_path = foundTracks[index].get_basename() + "-scenarios.tres"
 	
 	if currentTrack.get_basename().get_file() == "Tutorials":
 		$Background.texture = load("res://Worlds/"+track_name + "/screenshot.png")
@@ -180,7 +180,7 @@ func _on_ItemList_itemTracks_selected(index):
 	currentTrack = foundTracks[index]
 	Root.checkAndLoadTranslationsForTrack(currentTrack.get_file().get_basename())
 	currentScenario = ""
-	var save_path = foundTracks[index].get_basename() + "-scenarios.cfg"
+	var save_path = foundTracks[index].get_basename() + "-scenarios.tres"
 	$jSaveModule.set_save_path(save_path)
 
 	var wData = $jSaveModule.get_value("world_config", null)
@@ -241,7 +241,7 @@ func _on_ReloadContent_pressed():
 
 func _on_ItemList_scenario_selected(index):
 	currentScenario = $Play/Selection/Scenarios/ItemList.get_item_text(index)
-	var save_path = foundTracks[$Play/Selection/Tracks/ItemList.get_selected_items()[0]].get_basename() + "-scenarios.cfg"
+	var save_path = foundTracks[$Play/Selection/Tracks/ItemList.get_selected_items()[0]].get_basename() + "-scenarios.tres"
 	var sData = $jSaveModule.get_value("scenario_data")
 	$Play/Info/Description.text = TranslationServer.translate(sData[currentScenario]["Description"])
 	$Play/Info/Info/Duration.text = TranslationServer.translate("MENU_DURATION")+": " + String(sData[currentScenario]["Duration"]) + " min"
