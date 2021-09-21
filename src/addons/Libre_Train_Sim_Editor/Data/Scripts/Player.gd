@@ -150,8 +150,6 @@ var route # String conataining all importand Railnames for e.g. switches. Set by
 var distance_on_rail = 0  # It is the current position on the rail.
 var distance_on_route = 0 # Current position on the whole route
 var currentRail # Node Reference to the current Rail on which we are driving.
-var route_index = 0 # Index of the baked route Array.
-var next_signal_index = 0 # Index of NEXT signal on baked route signal array
 var startRail # Rail, on which the train is starting. Set by the scenario manger of the world
 
 # Reference delta at 60fps
@@ -180,7 +178,6 @@ func ready(): ## Called by World!
 	world = get_parent().get_parent()
 	
 	route = route.split(" ")
-	bake_route()
 	
 	if Root.EasyMode or ai:
 		pantograph = true
@@ -258,14 +255,13 @@ var processLongDelta = 0.5 # Definition of Period, every which seconds the funct
 func processLong(delta): ## All functions in it are called every (processLongDelta * 1 second).
 	updateNextSignal(delta)
 	updateNextSpeedLimit(delta)
-	updateNextStation(delta)
+	updatenext_station(delta)
 	checkDespawn()
 	checkSpeedLimit(delta)
 	check_for_next_station(delta)
 	check_for_player_help(delta)
 	get_time()
 	checkFreeLastSignal(delta)
-	fixObsoleteStations()
 	checkVisibility(delta)
 	if automaticDriving:
 		autopilot(delta)
@@ -557,21 +553,9 @@ func change_to_next_rail():
 	if not forward and (reverser == ReverserState.REVERSE):
 		distance_on_rail -= currentRail.length
 
-	if not ai:
-		print("Player: Changing Rail...")
-
-	if reverser == ReverserState.REVERSE:
-		route_index -= 1
-	else:
-		route_index += 1
-
-	if baked_route.size() == route_index:
-		print(name + ": Route no more rail found, despawning me...")
-		despawn()
-		return
-
-	currentRail =  world.get_node("Rails").get_node(baked_route[route_index])
-	forward = baked_route_direction[route_index]
+	var next_rail = world.get_node("Rails").get_next_rail(currentRail, forward)
+	currentRail = world.get_node("Rails").get_node(next_rail.name)
+	forward = next_rail.forward
 
 	var new_radius = currentRail.radius
 	if forward:
@@ -584,9 +568,9 @@ func change_to_next_rail():
 		
 	
 	# Get radius difference:
-	if old_radius == 0: # prevent diviging through Zero, and take a very very big curve radius instead. 
+	if old_radius == 0: # prevent dividing by Zero, and take a very very big curve radius instead. 
 		old_radius = 1000000000
-	if new_radius == 0: # prevent diviging through Zero, and take a very very big curve radius instead. 
+	if new_radius == 0: # prevent dividing by Zero, and take a very very big curve radius instead. 
 		new_radius = 1000000000
 	var radius_difference_factor = abs(1/new_radius - 1/old_radius)*2000
 	
@@ -924,18 +908,18 @@ func check_station(delta):
 func leave_current_station():
 	stations["passed"][stations["stationName"].find(currentStationName)] = true
 	currentStationName = ""
-	nextStation = ""
+	next_station = ""
 	isInStation = false
-	nextStationNode = null
+	next_stationNode = null
 	currentStationNode = null
 	update_waiting_persons_on_next_station()
 
 
 func update_waiting_persons_on_next_station():
-	var station_nodes = get_all_upcoming_signals_of_types(["Station"])
-	if station_nodes.size() != 0:
-		var station_node = world.get_node("Signals/"+station_nodes[0])
-		var index = stations["nodeName"].find(station_node.name)
+	var station_name = get_next_signal_of_types(["Station"])
+	if station_name != null:
+		var station_node = world.get_node("Signals/"+station_name)
+		var index = stations["nodeName"].find(station_name)
 		station_node.set_waiting_persons(stations["waitingPersons"][index]/100.0 * world.default_persons_at_station)
 
 
@@ -1029,130 +1013,72 @@ func check_doors(delta):
 		doorRight = false
 		doorLeft = false
 		doorsClosingTimer = 0
-		
-	
-## BAKING
-func sort_signals_by_distance(a, b):
-	if a["distance"] < b["distance"]:
-		return true
-	return false
-	
-var baked_route ## Route, which will be generated at start of the game.
-var baked_route_direction
-var baked_route_railLength
-var baked_route_signal_names = [] # sorted array of all signal names along the route
-var baked_route_signal_positions = {} # dictionary of all signal positions along the route (key = signal name)
-func bake_route(): ## Generate the whole route for the train.
-	baked_route = []
-	baked_route_direction = [forward]
-	
-	baked_route.append(startRail)
-	var currentR = world.get_node("Rails").get_node(baked_route[0]) ## imagine: current rail, which the train will drive later
-	baked_route_railLength = [currentR.length]
-	var currentpos
-	var currentrot
-	var currentF = forward
-	if currentF: ## Forward
-		currentpos = currentR.endpos
-		currentrot = currentR.endrot
-	else: ## Backward
-		currentpos = currentR.startpos
-		currentrot = currentR.startrot - 180.0
 
-	var sum_route_length = 0
 
-	var rail_signals = currentR.attachedSignals
-	rail_signals.sort_custom(self, "sort_signals_by_distance")
-	if not currentF: 
-		rail_signals.invert()
-	for signal_dict in rail_signals:
-		var signal_instance = world.get_node("Signals/"+signal_dict["name"])
-		if signal_instance.forward != currentF: 
-			continue
-		var position_on_route = sum_route_length
-		if currentF: 
-			position_on_route += signal_dict["distance"]
-		else: 
-			position_on_route += currentR.length - signal_dict["distance"]
-		baked_route_signal_names.append(signal_dict["name"])
-		baked_route_signal_positions[signal_dict["name"]] = position_on_route
-	sum_route_length += currentR.length
-
-	while(true): ## Find next Rail
-		var possibleRails = []
-		for rail in world.get_node("Rails").get_children(): ## Get Rails, which are in the near of the endposition of current rail:
-			# Could be useful for debugging:
-#			if rail.name == "HarrasPConnector" and currentR.name == "HarrasP":
-#				print("########")
-#				print(currentpos)
-#				print(rail.startpos)
-#				print(rail.endpos)
-#				print(currentrot)
-#				print(rail.startrot)
-#				print(rail.endrot)
-#				print(currentpos.distance_to(rail.endpos))
-#				print(Math.angle_distance_deg(currentrot, rail.endrot+180))
-			if rail.name != currentR.name and currentpos.distance_to(rail.startpos) < 0.2 and Math.angle_distance_deg(currentrot, rail.startrot) < 1:
-				possibleRails.append(rail.name)
-			elif rail.name != currentR.name and currentpos.distance_to(rail.endpos) < 0.2 and Math.angle_distance_deg(currentrot, rail.endrot+180) < 1:
-				possibleRails.append(rail.name)
-		
-		if possibleRails.size() == 0: ## If no Rail was found
-			break
-		elif possibleRails.size() == 1: ## If only one Rail is possible to switch
-			baked_route.append(possibleRails[0])
-		else: ## if more Rails are available:
-			var selectedRail = possibleRails[0]
-			for rail in possibleRails:
-				for routeName in route:
-					if routeName == rail:
-						selectedRail = rail
-						break
-			baked_route.append(selectedRail)
-		
-		
-		## Set Rail to "End" of newly added Rail
-		currentR = world.get_node("Rails").get_node(baked_route[baked_route.size()-1]) ## Get "current Rail"
-		if currentpos.distance_to(currentR.translation) < currentpos.distance_to(currentR.endpos):
-			currentF = true
-		else:
-			currentF = false
-
-		baked_route_direction.append(currentF)
-		baked_route_railLength.append(currentR.length)
-
-		# bake signals
-		rail_signals = currentR.attachedSignals
-		rail_signals.sort_custom(self, "sort_signals_by_distance")
-		if not currentF: 
-			rail_signals.invert()
-		for signal_dict in rail_signals:
-			var signal_instance = world.get_node("Signals/"+signal_dict["name"])
-			if signal_instance.forward != currentF: 
-				continue
-			var position_on_route = sum_route_length
-			if currentF: 
-				position_on_route += signal_dict["distance"]
-			else: 
-				position_on_route += currentR.length - signal_dict["distance"]
-			baked_route_signal_names.append(signal_dict["name"])
-			baked_route_signal_positions[signal_dict["name"]] = position_on_route
-		sum_route_length += currentR.length
-
-		if currentF: ## Forward
-			currentpos = currentR.endpos
-			currentrot = currentR.endrot
-		else: ## Backward
-			currentpos = currentR.startpos
-			currentrot = currentR.startrot - 180.0
-	print(name + ": Baking Route finished:")
-	print(name + ": Baked Route: "+ String(baked_route))
-	print(name + ": Baked Route: Direction "+ String(baked_route_direction))
-	
-	
 func show_textbox_message(string):
 	$HUD.show_textbox_message(string)
+
+
+func get_next_signal_of_types(types: Array, signal_to_check = null):
+	var rail_to_check
+	if signal_to_check == null:
+		rail_to_check = currentRail
+	else:
+		var signalN = world.get_node("Signals").get_node(signal_to_check)
+		rail_to_check = signalN.attached_rail
+	var forward_to_check = forward
 	
+	if world.get_node("Signals").get_child_count() == 0:
+		return null
+	
+	while(true):
+		for signal_name in rail_to_check.attachedSignals.keys():
+			var signal_node = world.get_node("Signals").get_node(signal_name)
+			if not is_instance_valid(signal_node):
+				continue
+			if not types.has(signal_node.type):
+				continue
+			if rail_to_check != currentRail:
+				return signal_name
+			elif forward_to_check and signal_node.on_rail_position > distanceOnRail:
+				return signal_name
+			elif not forward_to_check and signal_node.on_rail_position < distanceOnRail:
+				return signal_name
+		
+		var next_rail = world.get_node("Rails").get_next_rail(rail_to_check, forward_to_check)
+		rail_to_check = next_rail.name
+		forward_to_check = next_rail.forward
+
+
+func get_distance_to_signal(signalName):
+	var signalN = world.get_node("Signals").get_node(signalName)
+	
+	# handle simple case, signal is on this rail
+	if signalN.attached_rail == currentRail.name:
+		if forward:
+			return signalN.on_rail_position - distanceOnRail
+		else:
+			return distanceOnRail - signalN.on_rail_position
+	
+	# complex case, signal is not on this rail
+	var return_value = 0
+	var path = world.get_node("Rails").get_any_path_from_to(currentRail, signalN.attached_rail)
+	for path_node in path:
+		if path_node.name == currentRail.name:
+			if forward:
+				return_value += currentRail.length - distanceOnRail
+			else:
+				return_value += distanceOnRail
+		elif path_node.name == signalN.attached_rail:
+			if path_node.forward:
+				return_value += signalN.on_rail_position
+			else:
+				return_value += path_node.length - signalN.on_rail_position
+			break
+		else:
+			return_value += path_node.length
+	return return_value
+
 func get_all_upcoming_signals_of_types(types : Array): # returns an sorted array with the names of the signals. The first entry is the nearest.
 	var return_value = []
 	var search_array = baked_route_signal_names.slice(next_signal_index, baked_route_signal_names.size()-1)
@@ -1174,38 +1100,38 @@ func get_all_previous_signals_of_types(types: Array): # returns an sorted array 
 			return_value.append(signal_name)
 	return return_value
 
-func get_distance_to_signal(signal_name):
-	return baked_route_signal_positions[signal_name] - distance_on_route
+#func get_distance_to_signal(signal_name):
+#	return baked_route_signal_positions[signal_name] - distance_on_route
 
-var nextStation = ""
+var next_station = ""
 var check_for_next_stationTimer = 0
 var stationMessageSent = false
 func check_for_next_station(delta):  ## Used for displaying (In 1000m there is ...)
 	check_for_next_stationTimer += delta
-	if check_for_next_stationTimer < 1: return
+	if check_for_next_stationTimer < 1: 
+		return
 	else:
 		check_for_next_stationTimer = 0
-		if nextStation == "":
-			var nextStations = get_all_upcoming_signals_of_types(["Station"])
-#			print(name + ": "+String(nextStations))
-			if nextStations.size() == 0:
+		if next_station == "":
+			var upcoming_station = get_next_signal_of_types(["Station"])
+			if upcoming_station == null:
 				stationMessageSent = true
 				return
-			nextStation = nextStations[0]
+			next_station = upcoming_station
 			stationMessageSent = false
 		
-		if not stationMessageSent and get_distance_to_signal(nextStation) < 1001 and stations["nodeName"].has(nextStation) and stations["stopType"][stations["nodeName"].find(nextStation)] != 0 and not isInStation:
-			var station = world.get_node("Signals").get_node(nextStation)
+		if not stationMessageSent and get_distance_to_signal(next_station) < 1001 and stations["nodeName"].has(next_station) and stations["stopType"][stations["nodeName"].find(next_station)] != 0 and not isInStation:
+			var station = world.get_node("Signals").get_node(next_station)
 			stationMessageSent = true
-			var distanceS = String(int(get_distance_to_signal(nextStation)/100)*100+100)
+			var distanceS = String(int(get_distance_to_signal(next_station)/100)*100+100)
 			if distanceS == "1000":
 				distanceS = "1km"
 			else:
 				distanceS+= "m"
-			send_message(tr("THE_NEXT_STATION_IS_1") + " " + stations["stationName"][stations["nodeName"].find(nextStation)]+ ". " + tr("THE_NEXT_STATION_IS_2")+ " " + distanceS + " " + tr("THE_NEXT_STATION_IS_3"))
+			send_message(tr("THE_NEXT_STATION_IS_1") + " " + stations["stationName"][stations["nodeName"].find(next_station)]+ ". " + tr("THE_NEXT_STATION_IS_2")+ " " + distanceS + " " + tr("THE_NEXT_STATION_IS_3"))
 			if camera_state != CameraState.OUTER_VIEW and camera_state != CameraState.FREE_VIEW and not ai:
 #				print(name + ": Playing Sound.......................................................")
-				jTools.call_delayed(10, jAudioManager, "play_game_sound", [stations["approachAnnouncePath"][stations["nodeName"].find(nextStation)]])
+				jTools.call_delayed(10, jAudioManager, "play_game_sound", [stations["approachAnnouncePath"][stations["nodeName"].find(next_station)]])
 #				jAudioManager.play_game_sound(stations["approachAnnouncePath"][current_station_index+1])
 		
 
@@ -1254,10 +1180,16 @@ func check_sifa(delta):
 		sifaTimer = 0
 	sifa =  sifaTimer > 25
 	$Sound/SiFa.stream_paused = not sifaTimer > 30
-		
+
+
 func set_signalWarnLimits(): # Called in the beginning of the route
-	var signals = get_all_upcoming_signals_of_types(["Signal"])
-	var speedLimits = get_all_upcoming_signals_of_types(["Speed"])
+	for signal_node in world.get_node("Signals").get_children():
+		if signal_node.type != "Signal":
+			continue
+		var next_signal = get_next_signal_of_types(["Signal", "Speed"])
+	
+	var signals = get_all_upcoming_signalPoints_of_types(["Signal"])
+	var speedLimits = get_all_upcoming_signalPoints_of_types(["Speed"])
 	for speedLimit in speedLimits:
 		signals.append(speedLimit)
 	var signalT = {"name" : signals, "position" : []}
@@ -1275,6 +1207,7 @@ func set_signalWarnLimits(): # Called in the beginning of the route
 				if signalNBefore.type == "Signal":
 					signalNBefore.warn_speed = signalN.speed
 			limit = signalN.speed
+
 
 func set_signalAfters():
 	var signals = get_all_upcoming_signals_of_types(["Signal"])
@@ -1363,17 +1296,17 @@ func get_next_SpeedLimit(): #
 			
 
 
-var nextStationNode = null
-var distanceToNextStation = 0
-var updateNextStationTimer = 0
-func updateNextStation(delta):  ## Used for Autopilot
-	if nextStationNode == null:
-		var upcoming = get_next_station()
-		if upcoming == null:
-			return
-		nextStationNode = world.get_node("Signals").get_node(upcoming)
-		nextStationNode.set_waiting_persons(stations["waitingPersons"][0]/100.0 * world.default_persons_at_station)
-	distanceToNextStation = get_distance_to_signal(nextStationNode.name) + nextStationNode.stationLength
+var next_stationNode = null
+var distanceTonext_station = 0
+var updatenext_stationTimer = 0
+func updatenext_station(delta):  ## Used for Autopilot
+	distanceTonext_station -= speed*delta
+	if next_stationNode == null:
+		if get_all_upcoming_signalPoints_of_types(["Station"]).size() > 0:
+			next_stationNode = world.get_node("Signals").get_node(get_all_upcoming_signalPoints_of_types(["Station"])[0])
+			next_stationNode.set_waiting_persons(stations["waitingPersons"][0]/100.0 * world.default_persons_at_station)
+			distanceTonext_station = get_distance_to_signal(next_stationNode.name) + next_stationNode.stationLength
+
 
 func get_next_station():
 	var all = get_all_upcoming_signals_of_types(["Station"])
@@ -1414,14 +1347,14 @@ func autopilot(delta):
 	## Next Station:
 	sollSpeedArr[2] = speedLimit
 	
-	if nextStationNode != null:
-		if stations["nodeName"].has(nextStationNode.name):
+	if next_stationNode != null:
+		if stations["nodeName"].has(next_stationNode.name):
 
-			sollSpeedArr[2] = min(sqrt(15*distanceToNextStation+20), (distanceToNextStation+10)/4.0)
+			sollSpeedArr[2] = min(sqrt(15*distanceTonext_station+20), (distanceTonext_station+10)/4.0)
 			if sollSpeedArr[2] < 10:
 				sollSpeedArr[2] = 0
 		else:
-			nextStationNode = null
+			next_stationNode = null
 
 			
 	## Open Doors:
@@ -1429,10 +1362,10 @@ func autopilot(delta):
 		if nextStationNode.platform_side == PlatformSide.LEFT:
 			doorLeft = true
 			$Sound/DoorsOpen.play()
-		elif nextStationNode.platform_side == PlatformSide.RIGHT:
+		elif next_stationNode.platform_side == PlatformSide.RIGHT:
 			doorRight = true
 			$Sound/DoorsOpen.play()
-		elif nextStationNode.platform_side == PlatformSide.BOTH:
+		elif next_stationNode.platform_side == PlatformSide.BOTH:
 			doorLeft = true
 			doorRight = true
 			$Sound/DoorsOpen.play()
@@ -1525,21 +1458,8 @@ func checkFreeLastSignal(delta): #called by process
 		signal_to_free = null # sucessfully freed, don't do it again :)
 		
 func freeLastSignalBecauseOfDespawn():
-	if  last_driven_signal != null:
-		last_driven_signal.give_signal_free()
-	
-func fixObsoleteStations(): ## Checks, if there are stations in the stations table, wich are not passed, but unreachable. For them it sets them to passed. Thats good for the Screen in the train.
-	pass # doesn't work as expected..
-#	for i in range(stations.nodeName.size()):
-#		var stationNodeName = stations.nodeName[i]
-#		var obsolete = true
-#		for nextStationsNodeName in get_all_upcoming_signals_of_types(["Station"]):
-#			if nextStationsNodeName == stationNodeName:
-#					obsolete = false
-#					break
-#		if obsolete:
-#			if not stationNodeName == currentStationName and stations.stopType[i] != 2:
-#				stations.passed[i] = true
+	if  lastDrivenSignal != null:
+		lastDrivenSignal.give_signal_free()
 
 func updateTrainAudioBus():
 	if camera_state == CameraState.FREE_VIEW or camera_state == CameraState.OUTER_VIEW:
@@ -1600,17 +1520,14 @@ func updateSwitchOnNextChange():
 		switch_on_next_change = true
 		return
 	
-	if baked_route.size() > route_index+1:
-		var nextRail = world.get_node("Rails").get_node(baked_route[route_index+1])
-		var nextForward = baked_route_direction[route_index+1]
-		if nextForward and nextRail.isSwitchPart[0] != "":
-			switch_on_next_change = true
-			return
-		elif not nextForward and nextRail.isSwitchPart[1] != "":
-			switch_on_next_change = true
-			return
-			
+	var next = world.get_node("Rails").get_next_rail(currentRail, forward)
+	var next_rail = world.get_node("Rails").get_node(next.name)
+	
 	switch_on_next_change = false
+	if next.forward and next_rail.isSwitchPart[0] != "":
+		switch_on_next_change = true
+	elif not next.forward and next_rail.isSwitchPart[1] != "":
+		switch_on_next_change = true
 
 var last_switch_rail = null ## Last Rail, where was overdriven a switch
 func check_overdriving_a_switch():

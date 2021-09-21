@@ -60,16 +60,17 @@ var line2HeightChangingFactor = 0.9
 var overheadLineBuilded = false
 
 var parRail
-
 var railTypeNode 
-
-
 
 onready var world = find_parent("World")
 onready var buildings = world.get_node("Buildings")
 
-
-var attachedSignals = []
+# TODO: attached signals should also be export, and set in the editor only!!
+var attachedSignals = {}
+export var rails_before = []  # all rails connected to the START of this rail
+export var rails_after = []  # all rails connected to the END of this rail
+export var active_rail_before = 0  # index into rails_before
+export var active_rail_after = 0  # index into rails_after
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

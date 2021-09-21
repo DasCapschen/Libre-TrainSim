@@ -8,9 +8,6 @@ export (float) var length = 17.5
 
 export (bool) var cabinMode = false
 
-var baked_route
-var baked_route_direction
-var route_index = 0
 var forward
 var currentRail 
 var distance_on_rail = 0
@@ -141,18 +138,9 @@ func change_to_next_rail():
 	if not forward and (player.reverser == ReverserState.REVERSE):
 		distance_on_rail -= currentRail.length
 
-	if player.reverser == ReverserState.REVERSE:
-		route_index -= 1
-	else:
-		route_index += 1
-
-	if baked_route.size() == route_index:
-		print(name + ": Route no more rail found, despawning me...")
-		queue_free()
-		return
-
-	currentRail =  world.get_node("Rails").get_node(baked_route[route_index])
-	forward = baked_route_direction[route_index]
+	var next = world.get_node("Rails").get_next_rail(currentRail, forward)
+	currentRail = world.get_node("Rails").get_node(next.name)
+	forward = next.forward
 
 	updateSwitchOnNextChange()
 
@@ -193,33 +181,6 @@ func check_pantograph():
 	lastPantographUp = player.pantographUp
 
 
-## This function is very very basic.. It only checks, if the "end" of the current Rail, or the "beginning" of the next rail is a switch. Otherwise it sets nextSwitchRail to null..
-#var nextSwitchRail = null
-#var nextSwitchOnBeginning = false
-#func findNextSwitch():
-#	if forward and currentRail.isSwitchPart[1] != "":
-#		nextSwitchRail = currentRail
-#		nextSwitchOnBeginning = false
-#		return
-#	elif not forward and currentRail.isSwitchPart[0] != "":
-#		nextSwitchRail = currentRail
-#		nextSwitchOnBeginning = true
-#		return
-#
-#	if baked_route.size() > route_index+1:
-#		var nextRail = baked_route[route_index+1]
-#		var nextForward = baked_route_direction[route_index+1]
-#		if nextForward and nextRail.isSwitchPart[0] != "":
-#			nextSwitchRail = nextRail
-#			nextSwitchOnBeginning = true
-#			return
-#		elif not nextForward and nextRail.isSwitchPart[1] != "":
-#			nextSwitchRail = nextRail
-#			nextSwitchOnBeginning = true
-#			return
-#
-#	nextSwitchRail = null
-	
 
 
 func registerDoors():
@@ -410,14 +371,11 @@ func updateSwitchOnNextChange(): ## Exact function also in player.gd. But these 
 		switch_on_next_change = true
 		return
 	
-	if baked_route.size() > route_index+1:
-		var nextRail = world.get_node("Rails").get_node(baked_route[route_index+1])
-		var nextForward = baked_route_direction[route_index+1]
-		if nextForward and nextRail.isSwitchPart[0] != "":
-			switch_on_next_change = true
-			return
-		elif not nextForward and nextRail.isSwitchPart[1] != "":
-			switch_on_next_change = true
-			return
-			
+	var next = world.get_node("Rails").get_next_rail(currentRail, forward)
+	var next_rail = world.get_node("Rails").get_node(next.name)
+	
 	switch_on_next_change = false
+	if next.forward and next_rail.isSwitchPart[0] != "":
+		switch_on_next_change = true
+	elif not next.forward and next_rail.isSwitchPart[1] != "":
+		switch_on_next_change = true
