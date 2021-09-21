@@ -158,15 +158,17 @@ func load_world():
 	generate_grass_panes()
 	
 	Root.fix_frame_drop()
-	 
-	
+
+
 func save_world():
 	## Save Camera Position
 	var last_editor_camera_transforms = jSaveManager.get_value("last_editor_camera_transforms", {})
 	last_editor_camera_transforms[Root.current_editor_track] = $FreeCamera.transform
 	jSaveManager.save_value("last_editor_camera_transforms", last_editor_camera_transforms)
-
-	$World.unload_and_save_all_chunks()
+	
+	$World.load_all_chunks()  # load everything to make sure all Rails are there
+	$World.get_node("Rails").build_rail_graph()  # now we can generate the rail graph
+	$World.unload_and_save_all_chunks()  # and save it
 	
 	jEssentials.call_delayed(0.1, self, "save_world_step_2")
 
@@ -187,11 +189,7 @@ func save_world_step_2():
 	
 #	$World.force_load_all_chunks()
 	send_message("World successfully saved!")
-	
-	
-	
 	generate_grass_panes()
-
 
 
 func _on_SaveWorldButton_pressed():
