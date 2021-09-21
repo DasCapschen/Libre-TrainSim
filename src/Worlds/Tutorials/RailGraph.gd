@@ -23,12 +23,13 @@ func get_next_rail(current_rail, current_forward):
 		next = rail_node.rails_before[rail_node.active_rail_before]
 	
 	var next_forward = current_forward
-	if next["flip_forward"]:
+	if next.flip_forward:
 		next_forward = !current_forward
 	
 	return {
-		"name": next["name"],
-		"forward": next_forward
+		"name": next.name,
+		"forward": next_forward,
+		"length": next.length
 	}
 
 
@@ -89,7 +90,7 @@ func get_any_path_from_to(from, to, forward) -> Array:
 	# build path backwards
 	var path = []
 	while(rail != null):
-		path.append({"name": rail.name, "forward": visited_rails[rail.name]})
+		path.append({"name": rail.name, "forward": visited_rails[rail.name], "length": rail.length})
 		rail = previous[rail.name]
 	
 	path.invert()  # invert() reverses the order of the array in-place
