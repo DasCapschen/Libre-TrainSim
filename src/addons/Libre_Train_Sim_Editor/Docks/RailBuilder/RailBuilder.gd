@@ -271,8 +271,8 @@ func _on_Connect_pressed():
 		return
 	print("Rails connected.")
 	
-	firstRail._update(true)
-	secondRail._update(true)
+	firstRail.update()
+	secondRail.update()
 	var pos1
 	var rot1
 	if $RailConnector/FirstRail/OptionButton.selected == 0:
