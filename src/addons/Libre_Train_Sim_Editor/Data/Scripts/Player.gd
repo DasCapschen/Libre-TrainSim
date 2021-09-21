@@ -255,7 +255,7 @@ var processLongDelta = 0.5 # Definition of Period, every which seconds the funct
 func processLong(delta): ## All functions in it are called every (processLongDelta * 1 second).
 	updateNextSignal(delta)
 	updateNextSpeedLimit(delta)
-	updatenext_station(delta)
+	update_next_station(delta)
 	checkDespawn()
 	checkSpeedLimit(delta)
 	check_for_next_station(delta)
@@ -910,7 +910,7 @@ func leave_current_station():
 	currentStationName = ""
 	next_station = ""
 	isInStation = false
-	next_stationNode = null
+	next_station_node = null
 	currentStationNode = null
 	update_waiting_persons_on_next_station()
 
@@ -1183,38 +1183,24 @@ func check_sifa(delta):
 
 
 func set_signalWarnLimits(): # Called in the beginning of the route
+	var limit = speedLimit
+	
 	for signal_node in world.get_node("Signals").get_children():
 		if signal_node.type != "Signal":
 			continue
-		var next_signal = get_next_signal_of_types(["Signal", "Speed"])
-	
-	var signals = get_all_upcoming_signalPoints_of_types(["Signal"])
-	var speedLimits = get_all_upcoming_signalPoints_of_types(["Speed"])
-	for speedLimit in speedLimits:
-		signals.append(speedLimit)
-	var signalT = {"name" : signals, "position" : []}
-	for signalS in signalT["name"]:
-		signalT["position"].append(get_distance_to_signal(signalS))
-	var sortedSignals = Math.sort_signals(signalT, true)
-#	print(signalT)
-#	print(sortedSignals)
-	var limit = speedLimit
-	for i in range(0,sortedSignals.size()):
-		var signalN = world.get_node("Signals").get_node(sortedSignals[i])
-		if signalN.speed != -1:
-			if signalN.speed < limit and i > 0:
-				var signalNBefore = world.get_node("Signals").get_node(sortedSignals[i-1])
-				if signalNBefore.type == "Signal":
-					signalNBefore.warn_speed = signalN.speed
-			limit = signalN.speed
+		var next_signal = get_next_signal_of_types(["Signal", "Speed"], signal_node.name)
+		if next_signal == null:
+			break
+		next_signal = world.get_node("Signals").get_node(next_signal)
+		if next_signal.speed != -1 and next_signal.speed < limit:
+			signal_node.warn_speed = next_signal.speed
+		limit = next_signal.speed
 
 
 func set_signalAfters():
-	var signals = get_all_upcoming_signals_of_types(["Signal"])
-	for i in range(1,signals.size()):
-		var signalN = world.get_node("Signals").get_node(signals[i-1])
-		signalN.signal_after = signals[i]
-		
+	for signal_node in world.get_node("Signals").get_children():
+		signal_node.signal_after = get_next_signal_of_types(["Signal"], signal_node.name)
+
 
 func spawnWagons():
 	var nextWagonPosition = startPosition
@@ -1222,8 +1208,7 @@ func spawnWagons():
 		var wagonNode = get_node(wagon)
 		var newWagon = wagonNode.duplicate()
 		newWagon.show()
-		newWagon.baked_route = baked_route
-		newWagon.baked_route_direction = baked_route_direction
+		newWagon.player = self
 		newWagon.forward = forward
 		newWagon.currentRail = currentRail
 		newWagon.distance_on_rail = nextWagonPosition
@@ -1238,8 +1223,6 @@ func spawnWagons():
 		wagonsI.append(newWagon)
 	
 	# Handle Cabin:
-	$Cabin.baked_route = baked_route
-	$Cabin.baked_route_direction = baked_route_direction
 	$Cabin.forward = forward
 	$Cabin.currentRail = currentRail
 	$Cabin.distance_on_rail = nextWagonPosition
@@ -1260,11 +1243,12 @@ var autoPilotInStation = true
 var updateNextSignalTimer = 0
 func updateNextSignal(delta):
 	if nextSignal == null:
-		var upcoming = get_next_signal()
-		if upcoming == null:
+		var next = get_next_signal_of_types(["Signal"])
+		if next == null:
 			return
-		nextSignal = world.get_node("Signals/"+upcoming)
+		nextSignal = world.get_node("Signals").get_node(next)
 		updateNextSignalTimer = 1 ## Force Update Signal
+	
 	updateNextSignalTimer += delta
 	if updateNextSignalTimer > 0.2:
 		distanceToNextSignal = get_distance_to_signal(nextSignal.name)
@@ -1288,25 +1272,28 @@ func updateNextSpeedLimit(delta):
 		distanceToNextSpeedLimit = get_distance_to_signal(nextSpeedLimitNode.name)
 		updateNextSpeedLimitTimer = 0
 
-func get_next_SpeedLimit(): #
-	var allLimits = get_all_upcoming_signals_of_types(["Speed", "Signal"])
-	for limit in allLimits:
-		if world.get_node("Signals/" + limit).speed != -1:
-			return world.get_node("Signals/" + limit)
-			
+func get_next_SpeedLimit():
+	var signal_node = world.get_node("Signals").get_node(get_next_signal_of_types(["Signal", "Speed"]))
+	var limit = -1
+	
+	while(limit < 0):
+		signal_node = world.get_node("Signals").get_node(get_next_signal_of_types(["Signal", "Speed"], signal_node.name))
+		limit = signal_node.speed
+	
+	return signal_node
 
 
-var next_stationNode = null
+var next_station_node = null
 var distanceTonext_station = 0
-var updatenext_stationTimer = 0
-func updatenext_station(delta):  ## Used for Autopilot
+var update_next_stationTimer = 0
+func update_next_station(delta):  ## Used for Autopilot
 	distanceTonext_station -= speed*delta
-	if next_stationNode == null:
-		if get_all_upcoming_signalPoints_of_types(["Station"]).size() > 0:
-			next_stationNode = world.get_node("Signals").get_node(get_all_upcoming_signalPoints_of_types(["Station"])[0])
-			next_stationNode.set_waiting_persons(stations["waitingPersons"][0]/100.0 * world.default_persons_at_station)
-			distanceTonext_station = get_distance_to_signal(next_stationNode.name) + next_stationNode.stationLength
-
+	if next_station_node == null:
+		var next = get_next_signal_of_types(["Station"])
+		if next != null:
+			next_station_node = world.get_node("Signals").get_node(next)
+			next_station_node.set_waiting_persons(stations["waitingPersons"][0]/100.0 * world.default_persons_at_station)
+			distanceTonext_station = get_distance_to_signal(next_station_node.name) + next_station_node.stationLength
 
 func get_next_station():
 	var all = get_all_upcoming_signals_of_types(["Station"])
@@ -1347,14 +1334,14 @@ func autopilot(delta):
 	## Next Station:
 	sollSpeedArr[2] = speedLimit
 	
-	if next_stationNode != null:
-		if stations["nodeName"].has(next_stationNode.name):
+	if next_station_node != null:
+		if stations["nodeName"].has(next_station_node.name):
 
 			sollSpeedArr[2] = min(sqrt(15*distanceTonext_station+20), (distanceTonext_station+10)/4.0)
 			if sollSpeedArr[2] < 10:
 				sollSpeedArr[2] = 0
 		else:
-			next_stationNode = null
+			next_station_node = null
 
 			
 	## Open Doors:
@@ -1362,10 +1349,10 @@ func autopilot(delta):
 		if nextStationNode.platform_side == PlatformSide.LEFT:
 			doorLeft = true
 			$Sound/DoorsOpen.play()
-		elif next_stationNode.platform_side == PlatformSide.RIGHT:
+		elif next_station_node.platform_side == PlatformSide.RIGHT:
 			doorRight = true
 			$Sound/DoorsOpen.play()
-		elif next_stationNode.platform_side == PlatformSide.BOTH:
+		elif next_station_node.platform_side == PlatformSide.BOTH:
 			doorLeft = true
 			doorRight = true
 			$Sound/DoorsOpen.play()
