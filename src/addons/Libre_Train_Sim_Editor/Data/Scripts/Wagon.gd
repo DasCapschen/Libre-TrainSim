@@ -371,7 +371,7 @@ func updateSwitchOnNextChange(): ## Exact function also in player.gd. But these 
 		switch_on_next_change = true
 		return
 	
-	var next = world.get_node("Rails").get_next_rail(currentRail, forward)
+	var next = world.get_node("Rails").get_next_rail(currentRail.name, forward)
 	var next_rail = world.get_node("Rails").get_node(next.name)
 	
 	switch_on_next_change = false

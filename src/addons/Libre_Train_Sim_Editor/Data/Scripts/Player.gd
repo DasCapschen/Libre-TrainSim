@@ -161,7 +161,6 @@ onready var cameraNode = $Camera
 var cameraZeroTransform # Saves the camera position at the beginning. The Camera Position will be changed, when the train is accelerating, or braking
 
 func ready(): ## Called by World!
-	
 	pause_mode = Node.PAUSE_MODE_PROCESS
 	$Camera.pause_mode = Node.PAUSE_MODE_PROCESS
 	
@@ -177,7 +176,9 @@ func ready(): ## Called by World!
 		$Camera.current = true
 	world = get_parent().get_parent()
 	
-	route = route.split(" ")
+	var last_station = world.get_node("Signals").get_node(stations.nodeName[-1])
+	route = world.get_node('Rails').get_any_path_from_to(startRail, last_station.attached_rail, forward)
+	world.get_node('Rails').set_switches_for_route(route)
 	
 	if Root.EasyMode or ai:
 		pantograph = true
@@ -1020,12 +1021,18 @@ func show_textbox_message(string):
 
 
 func get_next_signal_of_types(types: Array, signal_to_check = null):
+	var first_rail
 	var rail_to_check
+	var position_on_rail
 	if signal_to_check == null:
 		rail_to_check = currentRail
+		first_rail = currentRail
+		position_on_rail = distance_on_rail
 	else:
 		var signalN = world.get_node("Signals").get_node(signal_to_check)
-		rail_to_check = signalN.attached_rail
+		rail_to_check = world.get_node("Rails").get_node(signalN.attached_rail)
+		first_rail = rail_to_check
+		position_on_rail = signalN.on_rail_position
 	var forward_to_check = forward
 	
 	if world.get_node("Signals").get_child_count() == 0:
@@ -1034,19 +1041,23 @@ func get_next_signal_of_types(types: Array, signal_to_check = null):
 	while(true):
 		for signal_name in rail_to_check.attachedSignals.keys():
 			var signal_node = world.get_node("Signals").get_node(signal_name)
+			
 			if not is_instance_valid(signal_node):
 				continue
+			
 			if not types.has(signal_node.type):
 				continue
-			if rail_to_check != currentRail:
+			
+			if rail_to_check != first_rail:
+				# TODO
+				pass
+			elif forward_to_check and signal_node.on_rail_position > position_on_rail:
 				return signal_name
-			elif forward_to_check and signal_node.on_rail_position > distanceOnRail:
-				return signal_name
-			elif not forward_to_check and signal_node.on_rail_position < distanceOnRail:
+			elif not forward_to_check and signal_node.on_rail_position < position_on_rail:
 				return signal_name
 		
-		var next_rail = world.get_node("Rails").get_next_rail(rail_to_check, forward_to_check)
-		rail_to_check = next_rail.name
+		var next_rail = world.get_node("Rails").get_next_rail(rail_to_check.name, forward_to_check)
+		rail_to_check = world.get_node("Rails").get_node(next_rail.name)
 		forward_to_check = next_rail.forward
 
 
@@ -1056,19 +1067,19 @@ func get_distance_to_signal(signalName):
 	# handle simple case, signal is on this rail
 	if signalN.attached_rail == currentRail.name:
 		if forward:
-			return signalN.on_rail_position - distanceOnRail
+			return signalN.on_rail_position - distance_on_rail
 		else:
-			return distanceOnRail - signalN.on_rail_position
+			return distance_on_rail - signalN.on_rail_position
 	
 	# complex case, signal is not on this rail
 	var return_value = 0
-	var path = world.get_node("Rails").get_any_path_from_to(currentRail, signalN.attached_rail)
+	var path = world.get_node("Rails").get_any_path_from_to(currentRail.name, signalN.attached_rail, forward)
 	for path_node in path:
 		if path_node.name == currentRail.name:
 			if forward:
-				return_value += currentRail.length - distanceOnRail
+				return_value += currentRail.length - distance_on_rail
 			else:
-				return_value += distanceOnRail
+				return_value += distance_on_rail
 		elif path_node.name == signalN.attached_rail:
 			if path_node.forward:
 				return_value += signalN.on_rail_position
@@ -1199,6 +1210,8 @@ func set_signalWarnLimits(): # Called in the beginning of the route
 
 func set_signalAfters():
 	for signal_node in world.get_node("Signals").get_children():
+		if signal_node.type != "Signal":
+			continue
 		signal_node.signal_after = get_next_signal_of_types(["Signal"], signal_node.name)
 
 
@@ -1212,7 +1225,6 @@ func spawnWagons():
 		newWagon.forward = forward
 		newWagon.currentRail = currentRail
 		newWagon.distance_on_rail = nextWagonPosition
-		newWagon.player = self
 		newWagon.world = world
 		if forward:
 			nextWagonPosition -= wagonNode.length + wagonDistance
@@ -1284,16 +1296,16 @@ func get_next_SpeedLimit():
 
 
 var next_station_node = null
-var distanceTonext_station = 0
+var distance_to_next_station = 0
 var update_next_stationTimer = 0
 func update_next_station(delta):  ## Used for Autopilot
-	distanceTonext_station -= speed*delta
+	distance_to_next_station -= speed*delta
 	if next_station_node == null:
 		var next = get_next_signal_of_types(["Station"])
 		if next != null:
 			next_station_node = world.get_node("Signals").get_node(next)
 			next_station_node.set_waiting_persons(stations["waitingPersons"][0]/100.0 * world.default_persons_at_station)
-			distanceTonext_station = get_distance_to_signal(next_station_node.name) + next_station_node.stationLength
+			distance_to_next_station = get_distance_to_signal(next_station_node.name) + next_station_node.stationLength
 
 func get_next_station():
 	var all = get_all_upcoming_signals_of_types(["Station"])
@@ -1337,7 +1349,7 @@ func autopilot(delta):
 	if next_station_node != null:
 		if stations["nodeName"].has(next_station_node.name):
 
-			sollSpeedArr[2] = min(sqrt(15*distanceTonext_station+20), (distanceTonext_station+10)/4.0)
+			sollSpeedArr[2] = min(sqrt(15*distance_to_next_station+20), (distance_to_next_station+10)/4.0)
 			if sollSpeedArr[2] < 10:
 				sollSpeedArr[2] = 0
 		else:
@@ -1507,7 +1519,7 @@ func updateSwitchOnNextChange():
 		switch_on_next_change = true
 		return
 	
-	var next = world.get_node("Rails").get_next_rail(currentRail, forward)
+	var next = world.get_node("Rails").get_next_rail(currentRail.name, forward)
 	var next_rail = world.get_node("Rails").get_node(next.name)
 	
 	switch_on_next_change = false

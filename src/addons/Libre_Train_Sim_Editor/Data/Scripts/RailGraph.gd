@@ -97,6 +97,27 @@ func get_any_path_from_to(from, to, forward) -> Array:
 	return path
 
 
+# this code is so fucking ugly
+func set_switches_for_route(route: Array, forward: bool):
+	if route.size() <= 1:
+		return
+	
+	for i in range(route.size()-1):
+		var rail = get_node(route[i])
+		if forward:
+			for j in range(rail.rails_after.size()):
+				if rail.rails_after[j].name == route[i+1]:
+					rail.active_rail_after = j
+					if rail.rails_after[j].flip_forward:
+						forward = !forward
+		else:
+			for j in range(rail.rails_before.size()):
+				if rail.rails_before[j].name == route[i+1]:
+					rail.active_rail_before = j
+					if rail.rails_before[j].flip_forward:
+						forward = !forward
+	pass
+
 # determines which rails are connected, and how they are connected
 func build_rail_graph():
 	for rail in get_children():
