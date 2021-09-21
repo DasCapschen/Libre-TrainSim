@@ -1513,10 +1513,10 @@ func get_camera_shaking(delta):
 		
 var switch_on_next_change = false
 func updateSwitchOnNextChange():
-	if forward and currentRail.isSwitchPart[1] != "":
+	if forward and currentRail.rails_after.size() > 1:
 		switch_on_next_change = true
 		return
-	elif not forward and currentRail.isSwitchPart[0] != "":
+	elif not forward and currentRail.rails_before.size() > 1:
 		switch_on_next_change = true
 		return
 	
@@ -1524,9 +1524,9 @@ func updateSwitchOnNextChange():
 	var next_rail = world.get_node("Rails").get_node(next.name)
 	
 	switch_on_next_change = false
-	if next.forward and next_rail.isSwitchPart[0] != "":
+	if next.forward and next_rail.rails_before.size() > 1:
 		switch_on_next_change = true
-	elif not next.forward and next_rail.isSwitchPart[1] != "":
+	elif not next.forward and next_rail.rails_after.size() > 1:
 		switch_on_next_change = true
 
 var last_switch_rail = null ## Last Rail, where was overdriven a switch

@@ -81,39 +81,12 @@ func _ready():
 		$Beginning.queue_free()
 		$Ending.queue_free()
 		$Mid.queue_free()
-	pass # Replace with function body.
 
-#var EditorUpdateTimer = 0
-#func _process(delta):
-#	checkVisualInstance()
-#	if visible and not overheadLineBuilded:
-#		updateOverheadLine()
-#		overheadLineBuilded = true
-#	if Engine.is_editor_hint() or Root.Editor:
-#		EditorUpdateTimer += delta
-#		if EditorUpdateTimer < 0.25:
-#			return
-#		EditorUpdateTimer = 0
-#		## Disable moving in editor, if manual Moving is false:
-##		print("checking transofrmation....")
-#		if fixedTransform == null:
-#			fixedTransform = transform
-#		if not manualMoving:
-#			transform = fixedTransform
-#		else:
-#			fixedTransform = transform
-#		if name.match(" "):
-#			name = name.replace(" ", "_")
-#		## Move Buildings to the Buildings Node
-#		for child in get_children():
-#			if not child.owner == self and not child.is_in_group("Gizmo"):
-#				remove_child(child)
-#				buildings.add_child(child)
-#				child.owner = world
 
 func _exit_tree():
 	for track_object in trackObjects:
 		track_object.queue_free()
+
 
 func rename(new_name):
 	var old_name = name
@@ -121,6 +94,7 @@ func rename(new_name):
 	for track_object in trackObjects:
 		track_object.name = name + " " + track_object.description
 		track_object.attached_rail = name
+
 
 func update_parallel_rail_settings():
 	if parallelRail == "":
@@ -139,6 +113,7 @@ func update_parallel_rail_settings():
 	translation = parRail.get_shifted_pos_at_RailDistance(0, distanceToParallelRail) ## Hier verstehe ich das minus nicht
 	rotation_degrees.y = parRail.rotation_degrees.y
 	fixedTransform = transform
+
 
 # Thread safe
 func calculate_update():
@@ -254,12 +229,14 @@ func get_transform_at_rail_distance(distance):
 	var locTransform = get_local_transform_at_rail_distance(distance)
 	return Transform(locTransform.basis.rotated(Vector3(0,1,0), deg2rad(rotation_degrees.y)) ,translation + locTransform.origin.rotated(Vector3(0,1,0), deg2rad(rotation_degrees.y)))
 
+
 # completely global
 func get_global_transform_at_rail_distance(distance):
 	var locTransform = get_local_transform_at_rail_distance(distance)
 	var global_rot = global_transform.basis.get_euler()
 	var global_pos = global_transform.origin
 	return Transform(locTransform.basis.rotated(Vector3(0,1,0), global_rot.y), global_pos + locTransform.origin.rotated(Vector3(0,1,0), global_rot.y))
+
 
 # local to this rail
 func get_local_transform_at_rail_distance(distance):
@@ -271,50 +248,33 @@ func get_local_transform_at_rail_distance(distance):
 		var parDistance = distance/length * parRail.length
 		return Transform(Basis().rotated(Vector3(1,0,0),deg2rad(parRail.get_tend_at_rail_distance(parDistance))).rotated(Vector3(0,0,1), deg2rad(parRail.get_heightRot(parDistance))).rotated(Vector3(0,1,0), deg2rad(parRail.circle_get_deg(parRail.radius, parDistance))), parRail.get_shifted_local_pos_at_RailDistance(parDistance, distanceToParallelRail)+ ((parRail.startpos-startpos).rotated(Vector3(0,1,0), deg2rad(-rotation_degrees.y))))#+(-translation+parRail.translation).rotated(Vector3(0,1,0), deg2rad(rotation_degrees.y)) )
 
+
 func speedToKmH(speed):
 	return speed*3.6
 
-## warning-ignore:unused_argument
-#func calcParallelRail(newvar):
-#	if radius == 0:
-#		otherRadius = 0
-#		otherLength = length
-#		return
-#	var U = 2.0* PI * radius
-#	otherRadius = radius + othersDistance
-#	if U == 0:
-#		otherLength = length
-#	else:
-#		otherLength = (length / U) * (2.0 * PI * otherRadius)
-
-## warning-ignore:unused_argument
-#func calcShift(newvar):
-#	if radius == 0:
-#		Outlength = length
-#		return
-#	var angle = rad2deg(acos((radius-InShift)/radius))
-#
-#	if String(angle) == "nan":
-#		Outlength = length
-#		return
-#	Outlength = 2.0 * PI * radius * angle / 360.0
 
 func register_signal(name, distance):
 	print("Signal " + name + " registered at rail.")
 	attachedSignals.append({"name": name, "distance": distance})
 
+
 func get_pos_at_RailDistance(distance):
 	var circlePos = circle_get_pos(radius, distance)
 	return(Vector3(circlePos.x, get_height(distance), -circlePos.y)).rotated(Vector3(0,1,0), deg2rad(startrot))+startpos
+
 
 func get_local_pos_at_RailDistance(distance):
 	var circlePos = circle_get_pos(radius, distance)
 	return(Vector3(circlePos.x, get_height(distance), -circlePos.y))
 
+
 func get_deg_at_RailDistance(distance):
 	return circle_get_deg(radius, distance) + startrot
+
+
 func get_local_deg_at_RailDistance(distance):
 	return circle_get_deg(radius, distance)
+
 
 # completely global
 func get_shifted_global_pos_at_RailDistance(distance, shift):
@@ -323,11 +283,11 @@ func get_shifted_global_pos_at_RailDistance(distance, shift):
 	var global_pos = global_transform.origin
 	return global_pos + local_pos.rotated(Vector3(0,1,0), global_rot.y)
 
+
 # local to "Rails" node
 func get_shifted_pos_at_RailDistance(distance, shift):
 	return get_shifted_local_pos_at_RailDistance(distance, shift).rotated(Vector3(0,1,0),deg2rad(rotation_degrees.y)) + startpos
-#	var railpos = get_pos_at_RailDistance(distance)
-#	return railpos + (Vector3(1, 0, 0).rotated(Vector3(0,1,0), deg2rad(get_deg_at_RailDistance(distance)+90))*shift)
+
 
 # local to this rail
 func get_shifted_local_pos_at_RailDistance(distance, shift):
@@ -339,8 +299,6 @@ func get_shifted_local_pos_at_RailDistance(distance, shift):
 		newDistance = distance * ((newRadius)/(radius))
 	var circlePos = circle_get_pos(newRadius, newDistance)
 	return(Vector3(circlePos.x, get_height(distance), -circlePos.y+shift))
-
-
 
 
 ################################################### Easy Circle Functions:
@@ -363,6 +321,7 @@ func circle_get_deg(radius, distance):
 	var extend = radius * 2.0 * PI
 	return float(distance / extend * 360)
 
+
 #### Height Functions:
 func get_height(distance):
 	if parRail != null:
@@ -381,6 +340,7 @@ func get_height(distance):
 		return basicHeight
 	var heightRadius = (360*length)/(2*PI*(endGradient - startGradient))
 	return circle_get_pos(heightRadius, distance).y + basicHeight
+
 
 func get_heightRot(distance): ## Get Slope
 	if parRail != null:
@@ -419,6 +379,7 @@ func get_tend_at_rail_distance(distance):
 	return -(startTend + (endTend-startTend) * (distance/length))
 	return 0
 
+
 func get_tendSlopeData():
 	var d = {}
 	var s = self
@@ -433,6 +394,7 @@ func get_tendSlopeData():
 	d.automaticTendency = s.automaticTendency
 	return d
 
+
 func set_tendSlopeData(data):
 	var d = self
 	var s = data
@@ -446,6 +408,7 @@ func set_tendSlopeData(data):
 	d.tend2 = s.tend2
 	d.automaticTendency = s.automaticTendency
 
+
 var automaticPointDistance = 50
 func updateAutomaticTendency():
 	if automaticTendency and radius != 0 and length > 3*automaticPointDistance:
@@ -457,9 +420,6 @@ func updateAutomaticTendency():
 	elif automaticTendency and radius == 0:
 		tend1 = 0
 		tend2 = 0
-
-
-
 
 
 ###############################################################################
@@ -504,8 +464,6 @@ func calculate_overhadline_mesh():
 		
 	if polePositions[polePositions.size()-2] != length:
 		buildOverheadLineSegment(polePositions[polePositions.size()-2], length)
-		
-		
 	
 	var mesh = ArrayMesh.new()
 
@@ -517,6 +475,7 @@ func calculate_overhadline_mesh():
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 	mesh.surface_set_material(0, preload("res://Resources/Basic/Materials/Black_Plastic.tres"))
 	return mesh
+
 
 func buildOverheadLineSegment(start, end):
 	var startPos = get_local_pos_at_RailDistance(start)+Vector3(0,overheadLineHeight1,0)
@@ -540,9 +499,7 @@ func buildOverheadLineSegment(start, end):
 		currentPos1+=directVector*segmentDistance
 		currentPos2+=directVector*segmentDistance
 	return {"vertices" : vertices, "indices" : indices}
-	
-	
-	
+
 
 func create3DLine(start, end, thinkness):
 	var x = vertices.size()
@@ -559,7 +516,8 @@ func create3DLine(start, end, thinkness):
 	var indices_array = PoolIntArray([0+x, 2+x, 4+x,  2+x, 4+x, 6+x,  1+x, 5+x, 7+x,  1+x, 7+x, 3+x])
 
 	indices.append_array(indices_array)
-	
+
+
 func create3DLineUp(start, end, thinkness):
 	var x = vertices.size()
 	vertices.push_back(start + Vector3(thinkness,0,0))
@@ -576,74 +534,9 @@ func create3DLineUp(start, end, thinkness):
 
 	indices.append_array(indices_array)
 
-###############################################################################
+
 func update_positions_and_rotations():
 	startpos = self.get_translation()
 	startrot = self.rotation_degrees.y
 	endrot = get_deg_at_RailDistance(length)
 	endpos = get_pos_at_RailDistance(length)
-
-export var isSwitchPart = ["", ""]
-# 0: is Rail at beginning part of switch? 1: is the rail at end part of switch if not 
-# It is saved the name of the other rail which is part of switch
-func update_is_switch_part():
-	isSwitchPart = ["", ""]
-	var foundRailsAtBeginning = []
-	var foundRailsAtEnding = []
-	for rail in world.get_node("Rails").get_children():
-		if rail == self:
-			continue
-		# Check for beginning
-		if startpos.distance_to(rail.startpos) < 0.1 and abs(Math.normDeg(startrot) - Math.normDeg(rail.startrot)) < 1:
-			foundRailsAtBeginning.append(rail.name)
-		elif startpos.distance_to(rail.endpos) < 0.1 and abs(Math.normDeg(startrot) - Math.normDeg(rail.endrot+180)) < 1:
-			foundRailsAtBeginning.append(rail.name)
-		#check for ending
-		if endpos.distance_to(rail.startpos) < 0.1 and abs((Math.normDeg(endrot) - Math.normDeg(rail.startrot+180))) < 1:
-			foundRailsAtEnding.append(rail.name)
-		elif endpos.distance_to(rail.endpos) < 0.1 and abs((Math.normDeg(endrot) - Math.normDeg(rail.endrot))) < 1:
-			foundRailsAtEnding.append(rail.name)
-			
-	if foundRailsAtBeginning.size() > 0:
-		isSwitchPart[0] = foundRailsAtBeginning[0]
-		pass
-	
-	if foundRailsAtEnding.size() > 0:
-		isSwitchPart[1] = foundRailsAtEnding[0]
-		pass
-
-
-var _connected_rails_at_beginning = [] # Array of rail nodes
-var _connected_rails_at_ending = [] # Array of rail nodes
-# The code of update_connections and update_is_switch_part can't be summarized, because 
-# we are searching for different rails in these functions. (Rotation of searched 
-# rails differs by 180 degrees)
-
-# This function should be called before get_connected_rails_at_beginning() 
-# or get_connected_rails_at_ending once.
-func update_connections():
-	print("HUHU")
-	_connected_rails_at_beginning = []
-	_connected_rails_at_ending = []
-	for rail in world.get_node("Rails").get_children():
-		if rail == self:
-			continue
-		# Check for beginning
-		if startpos.distance_to(rail.startpos) < 0.1 and abs(Math.normDeg(startrot) - Math.normDeg(rail.startrot+180)) < 1:
-			_connected_rails_at_beginning.append(rail)
-		elif startpos.distance_to(rail.endpos) < 0.1 and abs(Math.normDeg(startrot) - Math.normDeg(rail.endrot)) < 1:
-			_connected_rails_at_beginning.append(rail)
-		#check for ending
-		if endpos.distance_to(rail.startpos) < 0.1 and abs((Math.normDeg(endrot) - Math.normDeg(rail.startrot))) < 1:
-			_connected_rails_at_ending.append(rail)
-		elif endpos.distance_to(rail.endpos) < 0.1 and abs((Math.normDeg(endrot) - Math.normDeg(rail.endrot+180))) < 1:
-			_connected_rails_at_ending.append(rail)
-
-# Returns array of rail nodes
-func get_connected_rails_at_beginning():
-	return _connected_rails_at_beginning
-
-# Returns array of rail nodes
-func get_connected_rails_at_ending():
-	return _connected_rails_at_ending
-
