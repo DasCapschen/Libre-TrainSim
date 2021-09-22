@@ -29,7 +29,7 @@ func ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	if player.ai: return
 	if not is_ready: 
 		is_ready = true

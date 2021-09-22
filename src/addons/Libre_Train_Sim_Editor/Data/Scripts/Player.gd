@@ -260,11 +260,11 @@ func generate_hectometer_boards():
 	var total_route_dist = 0
 	for length in baked_route_railLength:
 		total_route_dist += length
-	var hektometer_prefab = preload("res://Resources/Basic/Objects/Hektometertafel.tscn")
+	var hektometer_prefab = preload("res://addons/Libre_Train_Sim_Editor/Data/Modules/Hektometertafel.tscn")
 	for i in range(0,total_route_dist+1,200):
 		var inst = hektometer_prefab.instance()
+		inst.distance = i
 		world.get_node("TrackObjects").add_child(inst)
-		inst.set_distance(i)
 		inst.transform = get_transform_at_route_distance(i)
 
 

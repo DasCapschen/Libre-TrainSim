@@ -26,10 +26,15 @@ func _ready():
 	match signal_logic.signal_type:
 		signal_logic.SignalType.MAIN:
 			$HpTafel.visible = true
+			$VoTafel.visible = false
+			$KsTafel.visible = false
 		signal_logic.SignalType.PRESIGNAL:
+			$HpTafel.visible = false
 			$VoTafel.visible = true
+			$KsTafel.visible = false
 		signal_logic.SignalType.COMBINED:
 			$HpTafel.visible = true
+			$VoTafel.visible = false
 			$KsTafel.visible = true
 	
 	# initialize signal

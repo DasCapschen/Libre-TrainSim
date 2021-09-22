@@ -28,6 +28,7 @@ func _ready():
 		set_to_rail()
 	
 	if not Engine.is_editor_hint():
+		$Mesh.set_surface_material(2, $Mesh.get_surface_material(2).duplicate(true))
 		$Mesh.get_surface_material(2).albedo_texture = $Viewport.get_texture()
 		set_to_rail()
 

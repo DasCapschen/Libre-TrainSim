@@ -24,8 +24,8 @@ func green():
 func orange():
 	anim_fsm.travel("Vr0")  # Halt erwarten
 
-func update_speed(new_speed):
+func update_speed(_new_speed):
 	pass
 
-func update_warn_speed(new_speed):
+func update_warn_speed(_new_speed):
 	update_status(signal_logic)

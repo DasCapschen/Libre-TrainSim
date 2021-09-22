@@ -12,6 +12,8 @@ func _ready():
 
 # presignal cannot be red!
 func update_status(instance):
+	if instance == null or instance.signal_after_node == null:
+		return
 	match instance.status:
 		SignalStatus.ORANGE: vr0()
 		SignalStatus.GREEN: vr1()
@@ -46,8 +48,8 @@ func off():
 	$GreenVo1.visible = false
 	$GreenVo2.visible = false
 
-func update_speed(new_speed):
+func update_speed(_new_speed):
 	update_status(signal_logic)
 
-func update_warn_speed(new_speed):
+func update_warn_speed(_new_speed):
 	update_status(signal_logic)
