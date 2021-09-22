@@ -118,12 +118,30 @@ func set_switches_for_route(route: Array, forward: bool):
 						forward = !forward
 	pass
 
+
+func _sort_attached_signals(a, b):
+	if a.distance < b.distance:
+		return true
+	return false
+
+
 # determines which rails are connected, and how they are connected
 func build_rail_graph():
 	for rail in get_children():
 		rail.rails_before = []
 		rail.rails_after = []
+		rail.attachedSignals = []
+	
+	# register signals (they get sorted later)
+	for signal_node in get_node("../Signals").get_children():
+		var rail = get_node(signal_node.attached_rail)
+		rail.attachedSignals.append({"name": signal_node.name, "distance": signal_node.on_rail_position})
+	
+	for rail in get_children():
+		# sort signals
+		rail.attachedSignals.sort_custom(self, "_sort_attached_signals")
 		
+		# find connected rails
 		for other in get_children():
 			if rail.name == other.name:
 				continue
@@ -139,3 +157,4 @@ func build_rail_graph():
 				rail.rails_after.append({ "name": other.name, "flip_forward": false, "length": other.length })
 			elif rail.endpos.distance_to(other.endpos) < 0.2 and Math.angle_distance_deg(rail.endrot, other.endrot+180.0) < 1:
 				rail.rails_after.append({ "name": other.name, "flip_forward": true, "length": other.length })
+	

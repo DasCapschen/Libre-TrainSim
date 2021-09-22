@@ -6,95 +6,8 @@ unloaded_chunks=[  ]
 },
 "Flora": {
 },
-"Rails": [ "Rail", "Rail2" ],
+"Rails": [ "Rail", "Rail2", "Rail3", "Rail7Connector", "@Rail7Connector@852" ],
 "TrackObjects": {
-"Rail Tree": {
-"data": {
-"applySlopeRotation": false,
-"attached_rail": "Rail",
-"description": "Tree",
-"distanceLength": 13.0,
-"distanceRows": 13.0,
-"height": 3.0,
-"length": 1000.0,
-"materialPaths": [ "res://Resources/Basic/Materials/EasyTree.tres" ],
-"objectPath": "res://Resources/Basic/Objects/EasyTree_big.obj",
-"on_rail_position": 0,
-"placeLast": false,
-"randomLocation": true,
-"randomLocationFactor": 0.3,
-"randomRotation": true,
-"randomScale": true,
-"randomScaleFactor": 0.2,
-"randomSeed": -230917.0,
-"rotationObjects": 0.0,
-"rows": 4.0,
-"shift": 20.0,
-"sides": 3,
-"spawnRate": 1.0,
-"wholeRail": true
-},
-"name": "Rail Tree",
-"transform": Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
-},
-"Rail2 Poles": {
-"data": {
-"applySlopeRotation": false,
-"attached_rail": "Rail2",
-"description": "Poles",
-"distanceLength": 50.0,
-"distanceRows": 0.0,
-"height": 0.0,
-"length": 1000.0,
-"materialPaths": [ "res://Resources/Basic/Materials/Beton.tres", "res://Resources/Basic/Materials/Metal_Green.tres", "res://Resources/Basic/Materials/Metal.tres", "res://Resources/Basic/Materials/Metal_Brown.tres" ],
-"objectPath": "res://Resources/Basic/Objects/Pole1.obj",
-"on_rail_position": 0,
-"placeLast": true,
-"randomLocation": false,
-"randomLocationFactor": 0.3,
-"randomRotation": false,
-"randomScale": false,
-"randomScaleFactor": 0.2,
-"randomSeed": 0,
-"rotationObjects": 90.0,
-"rows": 1.0,
-"shift": 0.0,
-"sides": 1,
-"spawnRate": 1.0,
-"wholeRail": true
-},
-"name": "Rail2 Poles",
-"transform": Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 993.347, 0, 99.667 )
-},
-"Rail2 Tree": {
-"data": {
-"applySlopeRotation": false,
-"attached_rail": "Rail2",
-"description": "Tree",
-"distanceLength": 13.0,
-"distanceRows": 13.0,
-"height": 3.0,
-"length": 1000.0,
-"materialPaths": [ "res://Resources/Basic/Materials/EasyTree.tres" ],
-"objectPath": "res://Resources/Basic/Objects/EasyTree_big.obj",
-"on_rail_position": 0,
-"placeLast": false,
-"randomLocation": true,
-"randomLocationFactor": 0.3,
-"randomRotation": true,
-"randomScale": true,
-"randomScaleFactor": 0.2,
-"randomSeed": -601170.0,
-"rotationObjects": 0.0,
-"rows": 4.0,
-"shift": 20.0,
-"sides": 1,
-"spawnRate": 1.0,
-"wholeRail": true
-},
-"name": "Rail2 Tree",
-"transform": Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 993.347, 0, 99.667 )
-}
 },
 "position": Vector3( 0, 0, 0 )
 }
@@ -113,7 +26,7 @@ unloaded_chunks=[  ]
 },
 "Flora": {
 },
-"Rails": [  ],
+"Rails": [ "Rail4", "Rail5", "Rail6", "Rail7", "@Rail6Connector@851" ],
 "TrackObjects": {
 "Rail2 Bumper": {
 "data": {
@@ -252,7 +165,7 @@ notes=""
 },
 "Flora": {
 },
-"Rails": [  ],
+"Rails": [ "Rail6Connector", "Rail6Connector2" ],
 "TrackObjects": {
 },
 "position": Vector3( 2, 0, 0 )
@@ -266,4 +179,34 @@ notes=""
 "TrackObjects": {
 },
 "position": Vector3( 2, 0, -1 )
+}
+3,1={
+"Buildings": {
+},
+"Flora": {
+},
+"Rails": [  ],
+"TrackObjects": {
+},
+"position": Vector3( 3, 0, 1 )
+}
+3,0={
+"Buildings": {
+},
+"Flora": {
+},
+"Rails": [  ],
+"TrackObjects": {
+},
+"position": Vector3( 3, 0, 0 )
+}
+3,-1={
+"Buildings": {
+},
+"Flora": {
+},
+"Rails": [  ],
+"TrackObjects": {
+},
+"position": Vector3( 3, 0, -1 )
 }

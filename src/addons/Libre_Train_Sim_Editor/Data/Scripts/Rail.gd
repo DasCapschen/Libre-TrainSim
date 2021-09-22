@@ -66,7 +66,7 @@ onready var world = find_parent("World")
 onready var buildings = world.get_node("Buildings")
 
 # TODO: attached signals should also be export, and set in the editor only!!
-var attachedSignals = {}
+export var attachedSignals = []  # array of dicts {name, distance} sorted by distance
 export var rails_before = []  # all rails connected to the START of this rail
 export var rails_after = []  # all rails connected to the END of this rail
 export var active_rail_before = 0  # index into rails_before
@@ -251,11 +251,6 @@ func get_local_transform_at_rail_distance(distance):
 
 func speedToKmH(speed):
 	return speed*3.6
-
-
-func register_signal(name, distance):
-	print("Signal " + name + " registered at rail.")
-	attachedSignals.append({"name": name, "distance": distance})
 
 
 func get_pos_at_RailDistance(distance):

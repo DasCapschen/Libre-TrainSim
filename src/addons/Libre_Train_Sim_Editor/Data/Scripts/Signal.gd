@@ -157,7 +157,6 @@ func set_to_rail(newvar):
 		return
 	if world.has_node("Rails/"+attached_rail) and attached_rail != "":
 		var rail = get_parent().get_parent().get_node("Rails/"+attached_rail)
-		rail.register_signal(self.name, on_rail_position)
 		self.translation = rail.get_pos_at_RailDistance(on_rail_position)
 		self.rotation_degrees.y = rail.get_deg_at_RailDistance(on_rail_position)
 		if not forward:
