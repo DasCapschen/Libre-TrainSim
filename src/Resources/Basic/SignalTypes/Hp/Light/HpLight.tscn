@@ -1,6 +1,6 @@
 [gd_scene load_steps=15 format=2]
 
-[ext_resource path="res://Resources/Basic/Materials/hp_tafel.tres" type="Material" id=1]
+[ext_resource path="res://Resources/Basic/SignalTypes/hp_tafel.tres" type="Material" id=1]
 [ext_resource path="res://Resources/Basic/SignalTypes/Hp/Light/Hp-Sig.obj" type="ArrayMesh" id=2]
 [ext_resource path="res://Resources/Basic/Textures/KS-Signal.png" type="Texture" id=3]
 [ext_resource path="res://Resources/Basic/SignalTypes/HpTafel.obj" type="ArrayMesh" id=4]

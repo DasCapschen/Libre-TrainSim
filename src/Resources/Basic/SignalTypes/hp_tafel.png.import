@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/vo_tafel.png-441a9de36f1d9e6e6f88b1bcc972a17d.s3tc.stex"
-path.etc2="res://.import/vo_tafel.png-441a9de36f1d9e6e6f88b1bcc972a17d.etc2.stex"
+path.s3tc="res://.import/hp_tafel.png-25926d054c914bb5f3a2c62d8d5d0272.s3tc.stex"
+path.etc2="res://.import/hp_tafel.png-25926d054c914bb5f3a2c62d8d5d0272.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Resources/Basic/Textures/vo_tafel.png"
-dest_files=[ "res://.import/vo_tafel.png-441a9de36f1d9e6e6f88b1bcc972a17d.s3tc.stex", "res://.import/vo_tafel.png-441a9de36f1d9e6e6f88b1bcc972a17d.etc2.stex" ]
+source_file="res://Resources/Basic/SignalTypes/hp_tafel.png"
+dest_files=[ "res://.import/hp_tafel.png-25926d054c914bb5f3a2c62d8d5d0272.s3tc.stex", "res://.import/hp_tafel.png-25926d054c914bb5f3a2c62d8d5d0272.etc2.stex" ]
 
 [params]
 
@@ -24,7 +24,7 @@ compress/normal_map=0
 flags/repeat=true
 flags/filter=true
 flags/mipmaps=true
-flags/anisotropic=false
+flags/anisotropic=true
 flags/srgb=1
 process/fix_alpha_border=true
 process/premult_alpha=false

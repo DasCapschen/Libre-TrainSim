@@ -8,9 +8,9 @@
 [ext_resource path="res://Resources/Basic/SignalTypes/HpTafel.obj" type="ArrayMesh" id=6]
 [ext_resource path="res://Resources/Basic/SignalTypes/KsTafel.obj" type="ArrayMesh" id=7]
 [ext_resource path="res://Resources/Basic/SignalTypes/VoTafel.obj" type="ArrayMesh" id=8]
-[ext_resource path="res://Resources/Basic/Materials/hp_tafel.tres" type="Material" id=9]
-[ext_resource path="res://Resources/Basic/Materials/ks_tafel.tres" type="Material" id=10]
-[ext_resource path="res://Resources/Basic/Materials/vo_tafel.tres" type="Material" id=11]
+[ext_resource path="res://Resources/Basic/SignalTypes/hp_tafel.tres" type="Material" id=9]
+[ext_resource path="res://Resources/Basic/SignalTypes/ks_tafel.tres" type="Material" id=10]
+[ext_resource path="res://Resources/Basic/SignalTypes/vo_tafel.tres" type="Material" id=11]
 
 [sub_resource type="SpatialMaterial" id=1]
 params_cull_mode = 2

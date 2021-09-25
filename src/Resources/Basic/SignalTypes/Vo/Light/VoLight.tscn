@@ -4,7 +4,7 @@
 [ext_resource path="res://Resources/Basic/SignalTypes/Vo/Light/Vo-Sig.obj" type="ArrayMesh" id=2]
 [ext_resource path="res://Resources/Basic/SignalTypes/Vo/Light/VoLight.gd" type="Script" id=3]
 [ext_resource path="res://Resources/Basic/SignalTypes/VoTafel.obj" type="ArrayMesh" id=4]
-[ext_resource path="res://Resources/Basic/Materials/vo_tafel.tres" type="Material" id=5]
+[ext_resource path="res://Resources/Basic/SignalTypes/vo_tafel.tres" type="Material" id=5]
 
 [sub_resource type="SpatialMaterial" id=1]
 params_cull_mode = 2

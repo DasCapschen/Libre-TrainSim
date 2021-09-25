@@ -7,7 +7,7 @@
 [ext_resource path="res://Resources/Basic/SignalTypes/Vo/Form/scheibe.mesh" type="ArrayMesh" id=5]
 [ext_resource path="res://Resources/Basic/SignalTypes/Vo/Form/ScriptingVoForm.gd" type="Script" id=6]
 [ext_resource path="res://Resources/Basic/SignalTypes/VoTafel.obj" type="ArrayMesh" id=7]
-[ext_resource path="res://Resources/Basic/Materials/vo_tafel.tres" type="Material" id=8]
+[ext_resource path="res://Resources/Basic/SignalTypes/vo_tafel.tres" type="Material" id=8]
 
 [sub_resource type="SpatialMaterial" id=1]
 albedo_color = Color( 1, 0.658824, 0.00392157, 1 )
