@@ -18,13 +18,20 @@ func update_status(instance):
 func green():
 	if signal_logic.speed > 0 and signal_logic.speed <= 60:
 		anim_fsm.travel("Hp2") # Langsamfahrt
+		$formsignal_hp/Armature/Skeleton/upperLightAttachment/Red.visible = false
+		$formsignal_hp/Armature/Skeleton/upperLightAttachment/Green.visible = true
+		$formsignal_hp/Armature/Skeleton/lowerLightAttachment/Orange.visible = true
 	else:
 		anim_fsm.travel("Hp1") # Fahrt
-		pass
+		$formsignal_hp/Armature/Skeleton/upperLightAttachment/Green.visible = true
+		$formsignal_hp/Armature/Skeleton/upperLightAttachment/Red.visible = false
+		$formsignal_hp/Armature/Skeleton/lowerLightAttachment/Orange.visible = false
 
 func red():
 	anim_fsm.travel("Hp0") # Halt
-
+	$formsignal_hp/Armature/Skeleton/upperLightAttachment/Red.visible = true
+	$formsignal_hp/Armature/Skeleton/upperLightAttachment/Green.visible = false
+	$formsignal_hp/Armature/Skeleton/lowerLightAttachment/Orange.visible = false
 
 func update_speed(_new_speed):
 	update_status(signal_logic)
