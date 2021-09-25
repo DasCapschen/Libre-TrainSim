@@ -8,10 +8,10 @@ func _ready():
 	# force the signal to be a pre-signal
 	signal_logic.signal_type = signal_logic.SignalType.PRESIGNAL
 	# initialize signal
-	update_status(signal_logic)
+	update_visual_instance(signal_logic)
 
 # presignal cannot be red!
-func update_status(instance):
+func update_visual_instance(instance):
 	if instance == null or instance.signal_after_node == null:
 		return
 	match instance.status:
@@ -47,9 +47,3 @@ func off():
 	$GreenHp.visible = false
 	$GreenVo1.visible = false
 	$GreenVo2.visible = false
-
-func update_speed(_new_speed):
-	update_status(signal_logic)
-
-func update_warn_speed(_new_speed):
-	update_status(signal_logic)

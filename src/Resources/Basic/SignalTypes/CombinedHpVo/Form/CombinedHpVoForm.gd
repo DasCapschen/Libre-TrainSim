@@ -10,9 +10,9 @@ func _ready():
 	signal_logic.signal_type = signal_logic.SignalType.COMBINED
 	if signal_logic.signal_after == "":
 		$Vo.queue_free()
-	update_status(signal_logic)
+	update_visual_instance(signal_logic)
 
-func update_status(instance):
+func update_visual_instance(instance):
 	if instance.status == SignalStatus.RED:
 		hp_anim_fsm.travel("Hp0")  # Halt
 	else:
@@ -30,9 +30,3 @@ func update_status(instance):
 			else:
 				vo_anim_fsm.travel("Vr1")  # Fahrt erwarten
 
-func update_speed(new_speed):
-	update_status(signal_logic)
-
-# main signals do not react to the next signal at all
-func update_warn_speed(new_speed):
-	update_status(signal_logic)

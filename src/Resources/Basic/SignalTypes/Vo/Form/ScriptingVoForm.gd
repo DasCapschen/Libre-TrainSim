@@ -7,10 +7,10 @@ onready var anim_fsm = $AnimationTree.get("parameters/playback")
 func _ready():
 	# force the signal to be a pre-signal
 	signal_logic.signal_type = signal_logic.SignalType.PRESIGNAL
-	update_status(signal_logic)
+	update_visual_instance(signal_logic)
 
 # this is a MAIN signal, it CANNOT be orange!
-func update_status(instance):
+func update_visual_instance(instance):
 	match instance.status:
 		SignalStatus.ORANGE: orange()
 		SignalStatus.GREEN: green()
@@ -23,9 +23,3 @@ func green():
 
 func orange():
 	anim_fsm.travel("Vr0")  # Halt erwarten
-
-func update_speed(_new_speed):
-	pass
-
-func update_warn_speed(_new_speed):
-	update_status(signal_logic)

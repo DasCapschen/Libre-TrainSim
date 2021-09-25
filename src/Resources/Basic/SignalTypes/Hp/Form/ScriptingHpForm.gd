@@ -7,10 +7,10 @@ onready var anim_fsm = $AnimationTree.get("parameters/playback")
 func _ready():
 	# force the signal to be a main signal
 	signal_logic.signal_type = signal_logic.SignalType.MAIN
-	update_status(signal_logic)
+	update_visual_instance(signal_logic)
 
 # this is a MAIN signal, it CANNOT be orange!
-func update_status(instance):
+func update_visual_instance(instance):
 	match instance.status:
 		SignalStatus.RED: red()
 		SignalStatus.GREEN: green()
@@ -32,10 +32,3 @@ func red():
 	$formsignal_hp/Armature/Skeleton/upperLightAttachment/Red.visible = true
 	$formsignal_hp/Armature/Skeleton/upperLightAttachment/Green.visible = false
 	$formsignal_hp/Armature/Skeleton/lowerLightAttachment/Orange.visible = false
-
-func update_speed(_new_speed):
-	update_status(signal_logic)
-
-# main signals do not react to the next signal at all
-func update_warn_speed(_new_speed):
-	pass

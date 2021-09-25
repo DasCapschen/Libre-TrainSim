@@ -8,10 +8,10 @@ func _ready():
 	# force the signal to be a combined signal
 	signal_logic.signal_type = signal_logic.SignalType.COMBINED
 	# initialize signal
-	update_status(signal_logic)
+	update_visual_instance(signal_logic)
 
 
-func update_status(instance):
+func update_visual_instance(instance):
 	match instance.status:
 		SignalStatus.RED: hp0()
 		SignalStatus.GREEN: hp1()
@@ -65,8 +65,3 @@ func off():
 	$GreenVo1.visible = false
 	$GreenVo2.visible = false
 
-func update_speed(new_speed):
-	update_status(signal_logic)
-
-func update_warn_speed(new_speed):
-	update_status(signal_logic)

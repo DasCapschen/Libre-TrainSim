@@ -38,7 +38,7 @@ func _ready():
 			$KsTafel.visible = true
 	
 	# initialize signal
-	update_status(signal_logic)
+	update_visual_instance(signal_logic)
 	$Viewport2/Node2D/Label.text = make_speed_str(signal_logic.speed)
 	$Viewport/Node2D/Label.text = make_speed_str(signal_logic.warn_speed)
 
@@ -47,12 +47,24 @@ func blink():
 	$Green.visible = !$Green.visible
 
 
-func update_status(instance):
+func update_visual_instance(instance):
 	match instance.status:
 		SignalStatus.RED: red()
 		SignalStatus.GREEN: green()
 		SignalStatus.ORANGE: orange()
 		SignalStatus.OFF: off()
+	
+	if instance.speed < 0:
+		$Screen2.visible = false
+	else:
+		$Viewport2/Node2D/Label.text = make_speed_str(instance.speed)
+		$Screen2.visible = true
+	
+	if instance.warn_speed < 0:
+		$Screen1.visible = false
+	else:
+		$Viewport/Node2D/Label.text = make_speed_str(instance.warn_speed)
+		$Screen1.visible = true
 
 
 func green():
@@ -98,21 +110,3 @@ func make_speed_str(speed):
 		string = " " + str(outputSpeed)
 	return string
 
-func update_speed(new_speed):
-	if new_speed < 0:
-		$Screen2.visible = false
-	else:
-		$Viewport2/Node2D/Label.text = make_speed_str(new_speed)
-		$Screen2.visible = true
-
-
-func update_warn_speed(new_speed):
-	if new_speed < 0:
-		$Screen1.visible = false
-	else:
-		$Viewport/Node2D/Label.text = make_speed_str(new_speed)
-		$Screen1.visible = true
-
-		# start blinking in case we updated warn_speed after state
-		if signal_logic.status == SignalStatus.GREEN:
-			blink_timer.start()

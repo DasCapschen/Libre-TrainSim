@@ -18,7 +18,7 @@ func _ready():
 	timer.connect("timeout", self, "_blink")
 	self.add_child(timer)
 	
-	update_status(signal_logic)
+	update_visual_instance(signal_logic)
 
 
 func _blink():
@@ -28,7 +28,7 @@ func _blink():
 		$Orange1.visible = !$Orange1.visible
 
 
-func update_status(instance):
+func update_visual_instance(instance):
 	# signal = red
 	if instance.status == SignalStatus.RED:
 		hl13()  # halt  (main signal)
@@ -238,11 +238,3 @@ func hl13():
 	$OrangeStripe.visible = false
 	orange1_blink = false
 	green1_blink = false
-
-
-func update_speed(new_speed):
-	update_status(signal_logic)
-
-
-func update_warn_speed(new_speed):
-	update_status(signal_logic)
