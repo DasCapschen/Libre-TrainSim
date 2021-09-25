@@ -18,8 +18,20 @@ func update_visual_instance(instance):
 func green():
 	if signal_logic.warn_speed > 0 and signal_logic.warn_speed <= 60:
 		anim_fsm.travel("Vr2")  # Langsamfahrt erwarten
+		$formsignal_vo/Armature/Skeleton/lowerLight/Orange.visible = true
+		$formsignal_vo/Armature/Skeleton/upperLight/Green.visible = true
+		$formsignal_vo/Armature/Skeleton/upperLight/Orange.visible = false
+		$formsignal_vo/Armature/Skeleton/lowerLight/Green.visible = false
 	else:
 		anim_fsm.travel("Vr1")  # Fahrt erwarten
+		$formsignal_vo/Armature/Skeleton/lowerLight/Green.visible = true
+		$formsignal_vo/Armature/Skeleton/upperLight/Green.visible = true
+		$formsignal_vo/Armature/Skeleton/lowerLight/Orange.visible = false
+		$formsignal_vo/Armature/Skeleton/upperLight/Orange.visible = false
 
 func orange():
 	anim_fsm.travel("Vr0")  # Halt erwarten
+	$formsignal_vo/Armature/Skeleton/lowerLight/Orange.visible = true
+	$formsignal_vo/Armature/Skeleton/upperLight/Orange.visible = true
+	$formsignal_vo/Armature/Skeleton/lowerLight/Green.visible = false
+	$formsignal_vo/Armature/Skeleton/upperLight/Green.visible = false
