@@ -25,7 +25,7 @@ func _process(delta: float) -> void:
 
 "
 
-[node name="Sifa" type="Node"]
+[node name="SifaModule" type="Node"]
 pause_mode = 1
 script = ExtResource( 1 )
 

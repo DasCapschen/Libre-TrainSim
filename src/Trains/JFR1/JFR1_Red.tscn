@@ -1,4 +1,4 @@
-[gd_scene load_steps=81 format=2]
+[gd_scene load_steps=82 format=2]
 
 [ext_resource path="res://Resources/Basic/Materials/White_Plastic.tres" type="Material" id=1]
 [ext_resource path="res://Resources/Basic/Materials/Black_Plastic.tres" type="Material" id=2]
@@ -9,13 +9,11 @@
 [ext_resource path="res://Resources/Basic/Materials/Metal.tres" type="Material" id=7]
 [ext_resource path="res://Resources/Basic/Materials/LightBlue_Plastic.tres" type="Material" id=8]
 [ext_resource path="res://Resources/Basic/Screens/ScreenReverser/reverser.tscn" type="PackedScene" id=9]
-[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/PZBModule.tscn" type="PackedScene" id=43]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/PassengerDoor.tscn" type="PackedScene" id=10]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/PassengerPathNode.tscn" type="PackedScene" id=11]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/PassengerSeat.tscn" type="PackedScene" id=12]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/AdvancedEngineSound.tscn" type="PackedScene" id=13]
 [ext_resource path="res://Resources/Basic/reverser.obj" type="ArrayMesh" id=14]
-[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/SifaModule.tscn" type="PackedScene" id=44]
 [ext_resource path="res://Resources/Basic/Materials/ScreenBook.tres" type="Material" id=15]
 [ext_resource path="res://Resources/Basic/Screens/ScreenLeft/ScreenLeft.png" type="Texture" id=16]
 [ext_resource path="res://Resources/Basic/Sounds/DoorsClosing2.ogg" type="AudioStream" id=17]
@@ -44,13 +42,15 @@
 [ext_resource path="res://Resources/Basic/Materials/Metal_Brown.tres" type="Material" id=40]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/WagonSound.tscn" type="PackedScene" id=41]
 [ext_resource path="res://Resources/Basic/Screens/Screen1/Screen1.png" type="Texture" id=42]
+[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/PZBModule.tscn" type="PackedScene" id=43]
+[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/SifaModule.tscn" type="PackedScene" id=44]
 [ext_resource path="res://Resources/Basic/Objects/ICE4.obj" type="ArrayMesh" id=45]
 [ext_resource path="res://Resources/Basic/Objects/Control-Roll.obj" type="ArrayMesh" id=46]
 [ext_resource path="res://Trains/JFR1/Pantograph_1_T.obj" type="ArrayMesh" id=47]
 [ext_resource path="res://Trains/JFR1/Pantograph_1_T2.obj" type="ArrayMesh" id=48]
 [ext_resource path="res://Trains/JFR1/Pantograph_1_B.obj" type="ArrayMesh" id=49]
 
-[sub_resource type="SpatialMaterial" id=38]
+[sub_resource type="SpatialMaterial" id=1]
 albedo_color = Color( 0, 0, 0, 1 )
 metallic = 0.1
 roughness = 0.9
@@ -731,7 +731,7 @@ cabinMode = true
 
 [node name="ScreenMiddle" type="MeshInstance" parent="Cabin"]
 transform = Transform( -3.82021e-08, 0.177615, -0.797131, 2.89372e-08, 0.234483, 0.603806, 0.294159, 0, -1.62921e-07, 7.31889, 2.65065, 0 )
-material_override = SubResource( 38 )
+material_override = SubResource( 1 )
 cast_shadow = 0
 mesh = SubResource( 2 )
 material/0 = null
@@ -798,7 +798,7 @@ material/0 = ExtResource( 2 )
 
 [node name="ScreenReverser" type="MeshInstance" parent="Cabin"]
 transform = Transform( -6.11959e-09, 0.14, 4.37114e-08, 0, -6.11959e-09, 1, 0.14, 6.11959e-09, 1.91069e-15, 7.046, 2.51304, 0 )
-material_override = SubResource( 38 )
+material_override = SubResource( 1 )
 cast_shadow = 0
 mesh = SubResource( 2 )
 material/0 = null

@@ -1,5 +1,5 @@
 extends Node
-class_name SecuritySystem
+class_name SafetySystem
 
 var requires_emergency_braking = false
 

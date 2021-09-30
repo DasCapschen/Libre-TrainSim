@@ -7,10 +7,8 @@
 [ext_resource path="res://Resources/Basic/Materials/Metal_Grey.tres" type="Material" id=5]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Scripts/Player.gd" type="Script" id=6]
 [ext_resource path="res://Resources/Basic/reverser.obj" type="ArrayMesh" id=7]
-[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/SifaModule.tscn" type="PackedScene" id=47]
 [ext_resource path="res://Trains/JFR1/Wagon_1_WithDriverStand.obj" type="ArrayMesh" id=8]
 [ext_resource path="res://Resources/Basic/Screens/ScreenReverser/reverser.tscn" type="PackedScene" id=9]
-[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/PZBModule.tscn" type="PackedScene" id=46]
 [ext_resource path="res://Resources/Basic/Sounds/DoorsOpening.ogg" type="AudioStream" id=10]
 [ext_resource path="res://Resources/Basic/Materials/ScreenBook.tres" type="Material" id=11]
 [ext_resource path="res://Resources/Basic/Objects/ICE4.obj" type="ArrayMesh" id=12]
@@ -48,6 +46,8 @@
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/PassengerSeat.tscn" type="PackedScene" id=44]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/WagonSound.tscn" type="PackedScene" id=45]
 [ext_resource path="res://Resources/Basic/Objects/Control-Roll.obj" type="ArrayMesh" id=48]
+[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/PZBModule.tscn" type="PackedScene" id=46]
+[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/SifaModule.tscn" type="PackedScene" id=47]
 
 [sub_resource type="SpatialMaterial" id=1]
 albedo_color = Color( 0, 0, 0, 1 )
@@ -253,7 +253,7 @@ tracks/5/keys = {
 "values": [ Vector3( 5.05345, 1.02943, -1.51171 ), Vector3( 5.05345, 1.02943, -1.5828 ), Vector3( 5.76987, 1.02943, -1.5828 ) ]
 }
 
-[sub_resource type="Animation" id=12]
+[sub_resource type="Animation" id=14]
 length = 4.0
 tracks/0/type = "value"
 tracks/0/path = NodePath("DoorR1:translation")
@@ -328,7 +328,7 @@ tracks/5/keys = {
 "values": [ Vector3( 5.05345, 1.02943, 1.51497 ), Vector3( 5.05345, 1.02943, 1.56736 ), Vector3( 5.80366, 1.02943, 1.56736 ) ]
 }
 
-[sub_resource type="Animation" id=13]
+[sub_resource type="Animation" id=15]
 length = 4.0
 tracks/0/type = "value"
 tracks/0/path = NodePath("DoorR12:translation")
@@ -403,11 +403,11 @@ tracks/5/keys = {
 "values": [ Vector3( 5.05345, 1.02943, -1.51171 ), Vector3( 5.05345, 1.02943, -1.5828 ), Vector3( 5.76987, 1.02943, -1.5828 ) ]
 }
 
-[sub_resource type="SphereMesh" id=14]
+[sub_resource type="SphereMesh" id=16]
 radius = 0.06
 height = 0.12
 
-[sub_resource type="SpatialMaterial" id=15]
+[sub_resource type="SpatialMaterial" id=17]
 emission_enabled = true
 emission = Color( 1, 1, 1, 1 )
 emission_energy = 1.0
@@ -417,7 +417,7 @@ distance_fade_mode = 1
 distance_fade_min_distance = 50.0
 distance_fade_max_distance = 150.0
 
-[sub_resource type="SpatialMaterial" id=16]
+[sub_resource type="SpatialMaterial" id=18]
 albedo_color = Color( 0.717647, 1, 0.968627, 1 )
 emission_enabled = true
 emission = Color( 0.839216, 1, 0.996078, 1 )
@@ -425,7 +425,7 @@ emission_energy = 1.0
 emission_operator = 0
 emission_on_uv2 = false
 
-[sub_resource type="Animation" id=17]
+[sub_resource type="Animation" id=19]
 length = 5.0
 tracks/0/type = "value"
 tracks/0/path = NodePath("Pantograph_1_B:rotation_degrees")
@@ -551,7 +551,7 @@ tracks/5/keys = {
 "values": [ Vector3( 5.05345, 1.02943, 1.51497 ), Vector3( 5.05345, 1.02943, 1.56736 ), Vector3( 5.80366, 1.02943, 1.56736 ) ]
 }
 
-[sub_resource type="Animation" id=25]
+[sub_resource type="Animation" id=27]
 length = 4.0
 tracks/0/type = "value"
 tracks/0/path = NodePath("DoorR12:translation")
@@ -626,7 +626,7 @@ tracks/5/keys = {
 "values": [ Vector3( 5.05345, 1.02943, -1.51171 ), Vector3( 5.05345, 1.02943, -1.5828 ), Vector3( 5.76987, 1.02943, -1.5828 ) ]
 }
 
-[sub_resource type="SpatialMaterial" id=26]
+[sub_resource type="SpatialMaterial" id=28]
 albedo_color = Color( 1, 0.211765, 0, 1 )
 emission_enabled = true
 emission = Color( 1, 0, 0, 1 )
@@ -637,11 +637,11 @@ distance_fade_mode = 1
 distance_fade_min_distance = 50.0
 distance_fade_max_distance = 150.0
 
-[sub_resource type="SphereMesh" id=27]
+[sub_resource type="SphereMesh" id=29]
 radius = 0.06
 height = 0.12
 
-[sub_resource type="SpatialMaterial" id=28]
+[sub_resource type="SpatialMaterial" id=30]
 albedo_color = Color( 1, 0, 0, 1 )
 emission_enabled = true
 emission = Color( 1, 0, 0, 1 )
@@ -649,7 +649,7 @@ emission_energy = 1.0
 emission_operator = 0
 emission_on_uv2 = false
 
-[sub_resource type="Animation" id=29]
+[sub_resource type="Animation" id=31]
 length = 5.0
 tracks/0/type = "value"
 tracks/0/path = NodePath("Pantograph_1_B:rotation_degrees")
@@ -725,9 +725,11 @@ far = 1000.0
 [node name="SpecificScripting" type="Node" parent="."]
 script = ExtResource( 17 )
 
-[node name="PZBModule" parent="." instance=ExtResource( 46 )]
+[node name="SafetySystems" type="Node" parent="."]
 
-[node name="Sifa" parent="." instance=ExtResource( 47 )]
+[node name="PZBModule" parent="SafetySystems" instance=ExtResource( 46 )]
+
+[node name="SifaModule" parent="SafetySystems" instance=ExtResource( 47 )]
 
 [node name="Cabin" type="Spatial" parent="."]
 script = ExtResource( 33 )
@@ -842,7 +844,7 @@ material/14 = ExtResource( 30 )
 material/15 = ExtResource( 18 )
 
 [node name="DoorRight" type="AnimationPlayer" parent="Wagon1"]
-anims/open = SubResource( 10 )
+anims/open = SubResource( 12 )
 
 [node name="DoorR1" type="MeshInstance" parent="Wagon1"]
 transform = Transform( -1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, -5.05109, 1.02943, 1.51497 )
@@ -881,7 +883,7 @@ material/0 = null
 material/1 = null
 
 [node name="DoorLeft" type="AnimationPlayer" parent="Wagon1"]
-anims/open = SubResource( 11 )
+anims/open = SubResource( 13 )
 
 [node name="DoorR12" type="MeshInstance" parent="Wagon1"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5.05109, 1.02943, -1.51171 )
@@ -1126,7 +1128,7 @@ material/19 = ExtResource( 29 )
 material/20 = ExtResource( 30 )
 
 [node name="DoorRight" type="AnimationPlayer" parent="DriverCabinF"]
-anims/open = SubResource( 12 )
+anims/open = SubResource( 14 )
 
 [node name="DoorR1" type="MeshInstance" parent="DriverCabinF"]
 transform = Transform( -1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, -5.05109, 1.02943, 1.51497 )
@@ -1165,7 +1167,7 @@ material/0 = null
 material/1 = null
 
 [node name="DoorLeft" type="AnimationPlayer" parent="DriverCabinF"]
-anims/open = SubResource( 13 )
+anims/open = SubResource( 15 )
 
 [node name="DoorR12" type="MeshInstance" parent="DriverCabinF"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5.05109, 1.02943, -1.51171 )
@@ -1220,33 +1222,33 @@ omni_range = 0.6
 
 [node name="LightBulb" type="MeshInstance" parent="DriverCabinF"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.92197, 1.59974, 1.05747 )
-mesh = SubResource( 14 )
-material/0 = SubResource( 15 )
+mesh = SubResource( 16 )
+material/0 = SubResource( 17 )
 
 [node name="LightBulb2" type="MeshInstance" parent="DriverCabinF"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.92197, 1.59974, -1.07249 )
-mesh = SubResource( 14 )
-material/0 = SubResource( 15 )
+mesh = SubResource( 16 )
+material/0 = SubResource( 17 )
 
 [node name="LightBulb3" type="MeshInstance" parent="DriverCabinF"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.12134, 3.50845, -0.0044162 )
-mesh = SubResource( 14 )
-material/0 = SubResource( 15 )
+mesh = SubResource( 16 )
+material/0 = SubResource( 17 )
 
 [node name="LightBulb4" type="MeshInstance" parent="DriverCabinF"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.95602, 1.61265, 1.05747 )
-mesh = SubResource( 14 )
-material/0 = SubResource( 16 )
+mesh = SubResource( 16 )
+material/0 = SubResource( 18 )
 
 [node name="LightBulb5" type="MeshInstance" parent="DriverCabinF"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.95602, 1.61265, -1.06143 )
-mesh = SubResource( 14 )
-material/0 = SubResource( 16 )
+mesh = SubResource( 16 )
+material/0 = SubResource( 18 )
 
 [node name="LightBulb6" type="MeshInstance" parent="DriverCabinF"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.07961, 3.45851, -0.00425051 )
-mesh = SubResource( 14 )
-material/0 = SubResource( 16 )
+mesh = SubResource( 16 )
+material/0 = SubResource( 18 )
 
 [node name="WagonSound" parent="DriverCabinF" instance=ExtResource( 45 )]
 
@@ -1431,7 +1433,7 @@ transform = Transform( -1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, 4.16962
 visible = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="DriverCabinF/Pantograph"]
-anims/Up = SubResource( 17 )
+anims/Up = SubResource( 19 )
 
 [node name="Pantograph_1_B" type="MeshInstance" parent="DriverCabinF/Pantograph"]
 transform = Transform( 0.959599, 0.28137, 0, -0.28137, 0.959599, 0, 0, 0, 1, 0, 0, 0 )
@@ -1479,7 +1481,7 @@ material/19 = ExtResource( 29 )
 material/20 = ExtResource( 30 )
 
 [node name="DoorRight" type="AnimationPlayer" parent="DriverCabinB"]
-anims/open = SubResource( 24 )
+anims/open = SubResource( 26 )
 
 [node name="DoorR1" type="MeshInstance" parent="DriverCabinB"]
 transform = Transform( -1, 0, -3.25841e-07, 0, 1, 0, 3.25841e-07, 0, -1, -5.05109, 1.02943, 1.51497 )
@@ -1518,7 +1520,7 @@ material/0 = null
 material/1 = null
 
 [node name="DoorLeft" type="AnimationPlayer" parent="DriverCabinB"]
-anims/open = SubResource( 25 )
+anims/open = SubResource( 27 )
 
 [node name="DoorR12" type="MeshInstance" parent="DriverCabinB"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -5.05109, 1.02943, -1.51171 )
@@ -1568,23 +1570,23 @@ omni_range = 0.6
 
 [node name="LightBulb5" type="MeshInstance" parent="DriverCabinB"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.04295, 1.59974, 1.05747 )
-mesh = SubResource( 14 )
-material/0 = SubResource( 26 )
+mesh = SubResource( 16 )
+material/0 = SubResource( 28 )
 
 [node name="LightBulb6" type="MeshInstance" parent="DriverCabinB"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -9.04295, 1.59974, -1.05558 )
-mesh = SubResource( 14 )
-material/0 = SubResource( 26 )
+mesh = SubResource( 16 )
+material/0 = SubResource( 28 )
 
 [node name="LightBulb7" type="MeshInstance" parent="DriverCabinB"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8.95212, 1.61106, 1.05527 )
-mesh = SubResource( 27 )
-material/0 = SubResource( 28 )
+mesh = SubResource( 29 )
+material/0 = SubResource( 30 )
 
 [node name="LightBulb8" type="MeshInstance" parent="DriverCabinB"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8.94702, 1.61106, -1.05467 )
-mesh = SubResource( 27 )
-material/0 = SubResource( 28 )
+mesh = SubResource( 29 )
+material/0 = SubResource( 30 )
 
 [node name="WagonSound" parent="DriverCabinB" instance=ExtResource( 45 )]
 
@@ -1769,7 +1771,7 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.23426, 3.77014, 0 )
 visible = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="DriverCabinB/Pantograph"]
-anims/Up = SubResource( 29 )
+anims/Up = SubResource( 31 )
 
 [node name="Pantograph_1_B" type="MeshInstance" parent="DriverCabinB/Pantograph"]
 transform = Transform( 0.959599, 0.28137, 0, -0.28137, 0.959599, 0, 0, 0, 1, 0, 0, 0 )
@@ -1841,6 +1843,5 @@ transform = Transform( -3.30409e-08, 0.654701, -0.755888, 2.86179e-08, 0.755888,
 light_color = Color( 1, 0.890196, 0.890196, 1 )
 light_energy = 3.0
 
-[connection signal="passed_signal" from="." to="PZBModule" method="_on_passed_signal"]
-
-[connection signal="sifa_visual_hint" from="Sifa" to="Cabin/DisplayMiddle/Display" method="_on_sifa_visual_hint"]
+[connection signal="sifa_visual_hint" from="SafetySystems/SifaModule" to="Cabin/DisplayMiddle/Display" method="_on_sifa_visual_hint"]
+[connection signal="passed_signal" from="." to="SafetySystems/PZBModule" method="_on_passed_signal"]

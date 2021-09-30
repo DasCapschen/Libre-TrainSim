@@ -1,4 +1,4 @@
-extends SecuritySystem
+extends SafetySystem
 
 var is_sifa_enabled = true
 var was_sifa_reset = false

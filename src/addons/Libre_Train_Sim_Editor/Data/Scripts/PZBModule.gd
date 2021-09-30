@@ -1,4 +1,4 @@
-extends SecuritySystem
+extends SafetySystem
 
 # TODO: completely rework this
 #       1) add actual magnet "signals" to the rail system
