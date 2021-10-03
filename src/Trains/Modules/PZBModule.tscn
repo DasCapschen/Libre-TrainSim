@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Trains/Modules/PZBModule.gd" type="Script" id=1]
+[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Scripts/DistanceMonitor.gd" type="Script" id=2]
+
+[node name="PZBModule" type="Node"]
+script = ExtResource( 1 )
+
+[node name="AckTimer" type="Timer" parent="."]
+wait_time = 4.0
+one_shot = true
+
+[node name="RestrictiveTimer" type="Timer" parent="."]
+wait_time = 15.0
+one_shot = true
+
+[node name="153mMonitor" type="Node" parent="."]
+script = ExtResource( 2 )
+_distance = 153
+
+[node name="550mMonitor" type="Node" parent="."]
+script = ExtResource( 2 )
+_distance = 153
+
+[node name="700mMonitor" type="Node" parent="."]
+script = ExtResource( 2 )
+_distance = 700
+
+[node name="1250mMonitor" type="Node" parent="."]
+script = ExtResource( 2 )
+_distance = 1250
+
+[connection signal="timeout" from="AckTimer" to="." method="restrictive_mode"]
+[connection signal="timeout" from="AckTimer" to="." method="emergency_brake"]
+[connection signal="reached" from="153mMonitor" to="." method="_on_153m_reached"]
+[connection signal="reached" from="550mMonitor" to="." method="_on_550m_reached"]
+[connection signal="reached" from="700mMonitor" to="." method="_on_700m_reached"]
+[connection signal="reached" from="1250mMonitor" to="." method="_on_1250m_reached"]

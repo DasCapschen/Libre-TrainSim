@@ -9,6 +9,7 @@
 [ext_resource path="res://Resources/Basic/reverser.obj" type="ArrayMesh" id=7]
 [ext_resource path="res://Trains/JFR1/Wagon_1_WithDriverStand.obj" type="ArrayMesh" id=8]
 [ext_resource path="res://Resources/Basic/Screens/ScreenReverser/reverser.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Trains/Modules/PZBModule.tscn" type="PackedScene" id=46]
 [ext_resource path="res://Resources/Basic/Sounds/DoorsOpening.ogg" type="AudioStream" id=10]
 [ext_resource path="res://Resources/Basic/Materials/ScreenBook.tres" type="Material" id=11]
 [ext_resource path="res://Resources/Basic/Objects/ICE4.obj" type="ArrayMesh" id=12]
@@ -722,6 +723,8 @@ far = 1000.0
 
 [node name="SpecificScripting" type="Node" parent="."]
 script = ExtResource( 17 )
+
+[node name="PZBModule" parent="." instance=ExtResource( 46 )]
 
 [node name="Cabin" type="Spatial" parent="."]
 script = ExtResource( 33 )
@@ -1834,3 +1837,5 @@ visible = false
 transform = Transform( -3.30409e-08, 0.654701, -0.755888, 2.86179e-08, 0.755888, 0.654701, 1, 0, -4.37114e-08, 5.44394, 3.40882, 0 )
 light_color = Color( 1, 0.890196, 0.890196, 1 )
 light_energy = 3.0
+
+[connection signal="passed_signal" from="." to="PZBModule" method="_on_passed_signal"]

@@ -162,6 +162,10 @@ const refDelta = 0.0167 # 1.0 / 60
 onready var cameraNode = $Camera
 var cameraZeroTransform # Saves the camera position at the beginning. The Camera Position will be changed, when the train is accelerating, or braking
 
+
+signal passed_signal(signal_instance)
+
+
 func ready(): ## Called by World!
 	
 	pause_mode = Node.PAUSE_MODE_PROCESS
@@ -808,7 +812,8 @@ func handle_signal(signal_name):
 		print(name + ": Next Speed Limit: "+String(signal_passed.warn_speed))
 	elif signal_passed.type == "ContactPoint":
 		signal_passed.activateContactPoint(name)
-	pass
+
+	emit_signal("passed_signal", signal_passed)
 
 
 

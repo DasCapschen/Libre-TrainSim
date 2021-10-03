@@ -9,6 +9,7 @@
 [ext_resource path="res://Resources/Basic/Materials/Metal.tres" type="Material" id=7]
 [ext_resource path="res://Resources/Basic/Materials/LightBlue_Plastic.tres" type="Material" id=8]
 [ext_resource path="res://Resources/Basic/Screens/ScreenReverser/reverser.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Trains/Modules/PZBModule.tscn" type="PackedScene" id=42]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/PassengerDoor.tscn" type="PackedScene" id=10]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/PassengerPathNode.tscn" type="PackedScene" id=11]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/PassengerSeat.tscn" type="PackedScene" id=12]
@@ -712,6 +713,8 @@ wagons = [ NodePath("DriverCabinF"), NodePath("Wagon1"), NodePath("Wagon1"), Nod
 transform = Transform( -1.62921e-07, 0.0770497, -0.997027, 0, 0.997027, 0.0770497, 1, 1.2553e-08, -1.62437e-07, 5.80251, 3.044, 0 )
 fov = 42.7
 far = 1000.0
+
+[node name="PZBModule" parent="." instance=ExtResource( 42 )]
 
 [node name="SpecificScripting" type="Node" parent="."]
 script = ExtResource( 5 )
@@ -1851,3 +1854,5 @@ visible = false
 transform = Transform( -3.30409e-08, 0.654701, -0.755888, 2.86179e-08, 0.755888, 0.654701, 1, 0, -4.37114e-08, 5.44394, 3.40882, 0 )
 light_color = Color( 1, 0.890196, 0.890196, 1 )
 light_energy = 3.0
+
+[connection signal="passed_signal" from="." to="PZBModule" method="_on_passed_signal"]
