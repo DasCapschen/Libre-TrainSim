@@ -715,8 +715,11 @@ transform = Transform( -1.62921e-07, 0.0770497, -0.997027, 0, 0.997027, 0.077049
 fov = 42.7
 far = 1000.0
 
-[node name="PZBModule" parent="." instance=ExtResource( 42 )]
-[node name="Sifa" parent="." instance=ExtResource( 43 )]
+[node name="SecuritySystems" type="Node" parent="."]
+
+[node name="Sifa" parent="SecuritySystems" instance=ExtResource( 43 )]
+
+[node name="PZBModule" parent="SecuritySystems" instance=ExtResource( 42 )]
 
 [node name="SpecificScripting" type="Node" parent="."]
 script = ExtResource( 5 )
@@ -1857,5 +1860,5 @@ transform = Transform( -3.30409e-08, 0.654701, -0.755888, 2.86179e-08, 0.755888,
 light_color = Color( 1, 0.890196, 0.890196, 1 )
 light_energy = 3.0
 
-[connection signal="passed_signal" from="." to="PZBModule" method="_on_passed_signal"]
-[connection signal="sifa_visual_hint" from="Sifa" to="Cabin/DisplayMiddle/Display" method="_on_sifa_visual_hint"]
+[connection signal="passed_signal" from="." to="SecuritySystems/PZBModule" method="_on_passed_signal"]
+[connection signal="sifa_visual_hint" from="SecuritySystems/Sifa" to="Cabin/DisplayMiddle/Display" method="_on_sifa_visual_hint"]
