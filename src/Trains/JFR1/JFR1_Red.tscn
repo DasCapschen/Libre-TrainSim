@@ -1,4 +1,4 @@
-[gd_scene load_steps=71 format=2]
+[gd_scene load_steps=81 format=2]
 
 [ext_resource path="res://Resources/Basic/Materials/White_Plastic.tres" type="Material" id=1]
 [ext_resource path="res://Resources/Basic/Materials/Black_Plastic.tres" type="Material" id=2]
@@ -15,6 +15,7 @@
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/PassengerSeat.tscn" type="PackedScene" id=12]
 [ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Modules/AdvancedEngineSound.tscn" type="PackedScene" id=13]
 [ext_resource path="res://Resources/Basic/reverser.obj" type="ArrayMesh" id=14]
+[ext_resource path="res://Trains/Modules/SifaModule.tscn" type="PackedScene" id=43]
 [ext_resource path="res://Resources/Basic/Materials/ScreenBook.tres" type="Material" id=15]
 [ext_resource path="res://Resources/Basic/Screens/ScreenLeft/ScreenLeft.png" type="Texture" id=16]
 [ext_resource path="res://Resources/Basic/Sounds/DoorsClosing2.ogg" type="AudioStream" id=17]
@@ -715,6 +716,7 @@ fov = 42.7
 far = 1000.0
 
 [node name="PZBModule" parent="." instance=ExtResource( 42 )]
+[node name="Sifa" parent="." instance=ExtResource( 43 )]
 
 [node name="SpecificScripting" type="Node" parent="."]
 script = ExtResource( 5 )
@@ -1856,3 +1858,4 @@ light_color = Color( 1, 0.890196, 0.890196, 1 )
 light_energy = 3.0
 
 [connection signal="passed_signal" from="." to="PZBModule" method="_on_passed_signal"]
+[connection signal="sifa_visual_hint" from="Sifa" to="Cabin/DisplayMiddle/Display" method="_on_sifa_visual_hint"]
