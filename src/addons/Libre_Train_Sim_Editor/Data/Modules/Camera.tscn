@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Scripts/CameraShakePlayer.gd" type="Script" id=1]
+[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Scripts/CameraAcceleration.gd" type="Script" id=2]
+
+[node name="Camera" type="Spatial"]
+
+[node name="Camera" type="Camera" parent="."]
+
+[node name="CameraShakePlayer" type="Node" parent="."]
+script = ExtResource( 1 )
+camera_to_affect = NodePath("../Camera")
+
+[node name="CameraAcceleration" type="Node" parent="."]
+script = ExtResource( 2 )
+camera_to_affect = NodePath("../Camera")
+node_providing_acceleration = NodePath("..")

@@ -14,6 +14,21 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://authors.gd"
 }, {
+"base": "Node",
+"class": "CameraAcceleration",
+"language": "GDScript",
+"path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/CameraAcceleration.gd"
+}, {
+"base": "Resource",
+"class": "CameraShake",
+"language": "GDScript",
+"path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/CameraShake.gd"
+}, {
+"base": "Node",
+"class": "CameraShakePlayer",
+"language": "GDScript",
+"path": "res://addons/Libre_Train_Sim_Editor/Data/Scripts/CameraShakePlayer.gd"
+}, {
 "base": "Label",
 "class": "InputLabel",
 "language": "GDScript",
@@ -41,6 +56,9 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Authors": "",
+"CameraAcceleration": "",
+"CameraShake": "",
+"CameraShakePlayer": "",
 "InputLabel": "",
 "PlatformSide": "",
 "ReverserState": "",

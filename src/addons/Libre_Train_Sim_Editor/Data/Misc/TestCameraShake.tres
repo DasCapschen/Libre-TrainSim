@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://addons/Libre_Train_Sim_Editor/Data/Scripts/CameraShake.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+intensity = 1.0
+affected_translation_axes = Vector3( 1, 1, 1 )
+affected_rotation_axes = Vector3( 0, 0, 1 )
+duration_type = 0
+duration = 1.0
+decay = 0.2
+shake_type = 1
+sine_translation_multiplier = Vector3( 1, 1, 1 )
+sine_rotation_multiplier = Vector3( 1, 1, 1 )
+sine_phase_shift_degrees = Vector3( 0, 90, 0 )
