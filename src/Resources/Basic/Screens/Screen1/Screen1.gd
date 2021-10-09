@@ -59,7 +59,7 @@ func _process(delta):
 
 	
 var lastAutoPilot = false
-func update_display(speed, command, doorLeft, doorRight, doorsClosing, enforced_braking, autopilot, speedLimit, engine):
+func update_display(speed, command, doorLeft, doorRight, doorsClosing, enforced_braking, autopilot, speedLimit, engine, reverser):
 	## Tachos:
 	$SpeedPointer.rotation_degrees = SpeedPointerZero+SpeedPerKmH*speed 
 	SollCommandPointer = CommandPointerZero+CommandPerPercent*command*100 
