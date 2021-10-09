@@ -70,6 +70,10 @@ one_shot = true
 wait_time = 15.0
 one_shot = true
 
+[node name="250mMonitor" type="Node" parent="."]
+script = ExtResource( 2 )
+_distance = 250
+
 [node name="153mMonitor" type="Node" parent="."]
 script = ExtResource( 2 )
 _distance = 153
@@ -226,6 +230,7 @@ margin_bottom = 176.0
 
 [connection signal="timeout" from="AckTimer" to="." method="emergency_brake"]
 [connection signal="timeout" from="RestrictiveTimer" to="." method="restrictive_mode"]
+[connection signal="reached" from="250mMonitor" to="." method="_on_250m_reached"]
 [connection signal="reached" from="153mMonitor" to="." method="_on_153m_reached"]
 [connection signal="reached" from="700mMonitor" to="." method="_on_700m_reached"]
 [connection signal="reached" from="1250mMonitor" to="." method="_on_1250m_reached"]
