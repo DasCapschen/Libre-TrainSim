@@ -161,7 +161,7 @@ var cameraZeroTransform # Saves the camera position at the beginning. The Camera
 
 
 signal passed_signal(signal_instance)
-
+signal reverser_changed(reverser_state)
 
 func ready(): ## Called by World!
 	
@@ -1674,6 +1674,8 @@ func change_reverser(change):
 			if change > 0:
 				reverser = ReverserState.NEUTRAL
 				jAudioManager.play_game_sound("res://Resources/Basic/Sounds/click.ogg")
+	
+	emit_signal("reverser_changed", reverser)
 
 
 func handle_input():

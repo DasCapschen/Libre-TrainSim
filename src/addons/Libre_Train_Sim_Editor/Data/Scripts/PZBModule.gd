@@ -1,23 +1,8 @@
 extends SafetySystem
 
-# TODO: completely rework this
-#       1) add actual magnet "signals" to the rail system
-#       2) add "distance timers" that run in the bg and send a "timeout" after x meters
-
-# freeing from restrictive or non restrictive mode and passing a 1000Hz magnet
-# resets the 1250 meters of the 1000Hz monitoring
-# passing a 500 Hz magnet will cause emergency braking
-
-# 1000 Hz monitoring "hides" after 700m, but stays active until 1250m
-# this means you can free after 700m, but monitoring stays
-# if you free after 700m, you *CAN* go over 85km/h ; the 1250m monitoring STILL RUNS!!!
-# passing an *ACTIVE* 500Hz magnet in those 1250m will:
-# - if not freed: enable 500Hz mode
-# - if freed: emergency brakes
-# - if 500 Hz magnet is inactive: nothing happens
-# passing an active 1000Hz magnet within those 1250m (no matter if freed or not) will:
-# - reset the 1250 meter monitoring
-# - immediately monitor for 85km/h (or 70, or 55, see pzb_type)
+# This is a simplified version of PZB.
+# we only check speed at certain points, and not continuously
+# There might also be some Edge Cases that are not 100% correct.
 
 enum PZBType {
 	HEAVY_FREIGHT = 55, # not yet coded
@@ -48,6 +33,7 @@ var monitored_signal = null
 # most likely only needs mode and magnet, but maybe wants speed_limit as well!
 signal pzb_changed(pzb_module)
 
+
 var player
 func _ready():
 	player = find_parent("Player")
@@ -67,17 +53,21 @@ func _on_settings_changed():
 	# TODO: see _ready()
 	pass
 
+
 func set_mode(new_val):
 	pzb_mode = new_val
 	emit_signal("pzb_changed", self)
+
 
 func set_type(new_val):
 	pzb_type = new_val
 	emit_signal("pzb_changed", self)
 
+
 func set_speed_limit(new_val):
 	pzb_speed_limit = new_val
 	emit_signal("pzb_changed", self)
+
 
 func pzb_reset():
 	pzb_mode = PZBMode.IDLE
@@ -88,13 +78,12 @@ func pzb_reset():
 
 
 func _process(delta: float) -> void:
-	if player.speed > pzb_speed_limit:
-		#send_message(tr("PZB_OVER_SPEED_LIMIT"))
+	if player.speed > pzb_speed_limit and not (pzb_mode & PZBMode.EMERGENCY):
+		send_message(tr("PZB_OVER_SPEED_LIMIT"))
 		emergency_brake()
 	
-	if player.speed > 0 and player.speed < Math.kmHToSpeed(10):
-		if $RestrictiveTimer.is_stopped() and not (pzb_mode & PZBMode.RESTRICTIVE):
-			$RestrictiveTimer.start()
+	if player.speed < Math.kmHToSpeed(10) and $RestrictiveTimer.is_stopped() and (pzb_mode & PZBMode.MONITORING):
+		$RestrictiveTimer.start()
 	elif not $RestrictiveTimer.is_stopped():
 		$RestrictiveTimer.stop()
 
@@ -120,10 +109,8 @@ func _unhandled_key_input(event: InputEventKey) -> void:
 		jAudioManager.play_game_sound("res://Resources/Basic/Sounds/click.ogg")
 
 
-# TODO: won't work if you are in restrictive mode and then drive over a 1000hz magnet
-# god this system is annoying...
 func mode_1000hz():
-	var was_already_monitoring = pzb_mode & (PZBMode.MONITORING | PZBMode.RESTRICTIVE)
+	var was_already_monitoring = pzb_mode & (PZBMode.MONITORING | PZBMode.RESTRICTIVE | PZBMode._HIDDEN)
 
 	# 1000 Hz magnet ALWAYS resets to Monitoring 1000Hz!!
 	pzb_mode = PZBMode.MONITORING | PZBMode._1000Hz
@@ -156,8 +143,12 @@ func mode_500hz():
 		emit_signal("pzb_changed", self)
 
 
-# TODO: trigger restrictive mode when reverser is set to forward
-#       this is the so called "start program"
+# "start" mode, when train is first put into forward
+func _on_reverser_changed(state):
+	if state == ReverserState.FORWARD and pzb_mode == PZBMode.IDLE:
+		restrictive_mode()
+
+
 func restrictive_mode():
 	pzb_mode &= ~PZBMode.MASK_MODE   # disable current mode
 	pzb_mode |= PZBMode.RESTRICTIVE  # enable restrictive
@@ -172,7 +163,7 @@ func restrictive_mode():
 	# this means it deactivates after 550 meters
 	if (pzb_mode & PZBMode.MASK_MAGNET) == 0:  # if no magnet is active
 		$"1250mMonitor".start()
-		$"1250mMonitor"._start_dist = player.distance - 700
+		$"1250mMonitor"._start_dist = player.distance_on_route - 700
 	
 	emit_signal("pzb_changed", self)
 
@@ -182,16 +173,21 @@ func _on_passed_signal(signal_instance) -> void:
 		monitored_signal = signal_instance.attached_signal
 		match signal_instance.hz:
 			1000:
-				$AckTimer.start()
+				if signal_instance.is_active:
+					$AckTimer.start()
 			500:
-				mode_500hz()
+				if signal_instance.is_active:
+					mode_500hz()
 			2000:
-				send_message(tr("PZB_PASSED_2000HZ"))
-				emergency_brake()
+				if signal_instance.is_active:
+					send_message(tr("PZB_PASSED_2000HZ"))
+					emergency_brake()
+				elif pzb_mode & PZBMode._500Hz:
+					$"250mMonitor".start()
 
 
 func emergency_brake():
-	pzb_mode = PZBMode.EMERGENCY
+	pzb_mode = PZBMode.EMERGENCY | PZBMode._2000Hz
 	enable_emergency_brakes()
 	emit_signal("pzb_changed", self)
 
@@ -204,6 +200,7 @@ func _on_153m_reached():
 	elif pzb_mode & PZBMode.RESTRICTIVE:
 		set_speed_limit(Math.kmHToSpeed(25))
 
+
 func _on_700m_reached():
 	if not pzb_mode & PZBMode._1000Hz:
 		return
@@ -211,9 +208,19 @@ func _on_700m_reached():
 	pzb_mode |= PZBMode._HIDDEN   # enable hidden
 	emit_signal("pzb_changed", self)
 
+
+# PZB Monitoring (1000 Hz hidden) disables after 1250 meters
+# not if 500 Hz mode had enabled at any point
 func _on_1250m_reached():
+	if pzb_mode & PZBMode._HIDDEN:
+		pzb_reset()
+
+
+# PZB Monitoring stops 250m after 2000 Hz magnet
+func _on_250m_reached() -> void:
 	if pzb_mode != PZBMode.EMERGENCY:
 		pzb_reset()
+
 
 func send_message(msg):
 	player.send_message(msg)
