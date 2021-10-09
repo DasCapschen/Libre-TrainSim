@@ -74,17 +74,18 @@ config/quit_on_go_back=false
 
 Math="*res://addons/Libre_Train_Sim_Editor/Data/Scripts/Math.gd"
 Root="*res://addons/Libre_Train_Sim_Editor/Data/Scripts/Root.gd"
-jTools="*res://addons/jean28518.jTools/jTools.gd"
 jConfig="*res://addons/jean28518.jTools/jConfig.gd"
+jTools="*res://addons/jean28518.jTools/jTools.gd"
 jEssentials="*res://addons/jean28518.jTools/jEssentials/jEssentials.gd"
-jSaveManager="*res://addons/jean28518.jTools/jSaveManager/jSaveManager.gd"
 jAudioManager="*res://addons/jean28518.jTools/jAudioManager/JAudioManager.gd"
+jSaveManager="*res://addons/jean28518.jTools/jSaveManager/jSaveManager.gd"
 jSettings="*res://addons/jean28518.jTools/jSettings/JSettings.tscn"
 jListManager="*res://addons/jean28518.jTools/jList/jListManager.gd"
 
 [debug]
 
 settings/fps/force_fps=40
+settings/stdout/verbose_stdout=true
 
 [display]
 
@@ -311,11 +312,6 @@ ingame_pause={
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777225,"unicode":0,"echo":false,"script":null)
  ]
 }
-fullscreen={
-"deadzone": 0.5,
-"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":true,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777221,"unicode":0,"echo":false,"script":null)
- ]
-}
 reverser+={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":70,"unicode":0,"echo":false,"script":null)
@@ -326,6 +322,11 @@ reverser-={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":82,"unicode":0,"echo":false,"script":null)
 , Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":13,"pressure":0.0,"pressed":false,"script":null)
+ ]
+}
+fullscreen={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":true,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777221,"unicode":0,"echo":false,"script":null)
  ]
 }
 pzb_ack={
