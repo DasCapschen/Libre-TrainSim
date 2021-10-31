@@ -226,8 +226,29 @@ func _snap_simple_connector(snap_pos, snap_rot):
 
 
 func _snap_complex_connector(snap_pos, snap_rot):
-	# TODO: I don't know how to do it yet
-	pass
+	var curve = BezierCurve.new()
+	curve.from_points_and_rots(selected_object.startpos, selected_object.startrot, snap_pos, snap_rot)
+	var segments = curve.split_into_arc_segments()
+
+	# either set radius and length and call update()
+	# or calculate_from_start_end()
+	# which is better? :thinking:
+	for segment in segments:
+		var rail = _spawn_rail()
+		rail.translation = segment.start
+		rail.startpos = segment.start
+		rail.rotation_degrees.y = segment.startrot
+		rail.startrot = segment.startrot
+		#rail.radius = segment.radius
+		#rail.length = segment.length
+		#rail.update()
+		rail.calculate_from_start_end(segment.end)
+		#assert( (rail.endpos - segment.end).length() < 1 )
+		#assert( Math.angle_distance_deg(rail.endrot, segment.endrot) < 1)
+
+	selected_object.queue_free()
+	clear_selected_object()
+
 
 
 func select_object_under_mouse():
